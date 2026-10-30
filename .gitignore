@@ -6,3 +6,9 @@ coverage/
 *.log
 .env*
 !.env.example
+work/
+test-results/
+playwright-report/
+audit-production.json
+firebase-debug.log
+firestore-debug.log

@@ -1,53 +1,25 @@
 rules_version = '2';
 service cloud.firestore {
-  match /databases/{database}/documents {
-    // Helper Functions
-    function isAuthenticated() {
-      return request.auth != null;
-    }
-    function isOwner(userId) {
-      return isAuthenticated() && request.auth.uid == userId;
-    }
-    function isAdmin() {
-      return isAuthenticated() && 
-        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
-         (request.auth.token.email == "rajeevreddyakepati@gmail.com" && request.auth.token.email_verified == true));
-    }
-
-    // User Profile Rules
-    match /users/{userId} {
-      allow read: if isOwner(userId) || isAdmin();
-      allow create: if isOwner(userId);
-      allow update: if isOwner(userId) && 
-        (!request.resource.data.diff(resource.data).affectedKeys().hasAny(['role']) || isAdmin());
-      
-      // Sub-collections
-      match /cart/{itemId} {
-        allow read, write: if isOwner(userId);
-      }
-      match /orders/{orderId} {
-        allow read: if isOwner(userId);
-        allow create: if isOwner(userId);
-      }
-      match /tryons/{tryonId} {
-        allow read, write: if isOwner(userId);
-      }
-      match /sketches/{sketchId} {
-        allow read, write: if isOwner(userId);
-      }
-    }
-
-    // Support Messages
-    match /supportMessages/{messageId} {
-      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
-      allow read: if isAdmin() || (isAuthenticated() && resource.data.userId == request.auth.uid);
-      allow update, delete: if isAdmin();
-    }
-
-    // Products
-    match /products/{productId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
+ match /databases/{database}/documents {
+  function owner(uid) { return request.auth != null && request.auth.uid == uid; }
+  function admin() { return request.auth != null && 'admin' in request.auth.token && request.auth.token.admin == true; }
+  match /users/{uid} {
+   allow read: if owner(uid) || admin();
+   allow create: if owner(uid) && request.resource.data.keys().hasOnly(['uid','email','displayName','photoURL','createdAt']) && request.resource.data.uid == uid && request.resource.data.email == request.auth.token.email;
+   allow update: if owner(uid) && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['displayName','photoURL']);
+   match /cart/{id} { allow read,write: if owner(uid); }
+   match /sketches/{id} { allow read,write: if owner(uid); }
+   match /orders/{id} { allow read: if owner(uid); allow write: if false; }
+   match /tryons/{id} { allow read: if owner(uid); allow write: if false; }
   }
+  // Public catalog responses are projected by the server; internal ownership and billing fields stay private.
+  match /products/{id} { allow read,write: if admin(); }
+  match /supportMessages/{id} {
+   allow create: if request.auth != null && request.resource.data.keys().hasOnly(['userId','email','subject','message','status','createdAt']) && request.resource.data.userId == request.auth.uid && request.resource.data.email == request.auth.token.email && request.resource.data.status == 'pending' && request.resource.data.subject is string && request.resource.data.subject.size() <= 120 && request.resource.data.message is string && request.resource.data.message.size() <= 3000;
+   allow read: if admin() || (request.auth != null && resource.data.userId == request.auth.uid);
+   allow update,delete: if admin();
+  }
+  // Orders, billing, entitlements, quotes and ranking are only accessed through verified server endpoints.
+  match /{document=**} { allow read,write: if false; }
+ }
 }

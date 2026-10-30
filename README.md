@@ -1,163 +1,72 @@
-# AuraFashion 🌟
+# AURA Fashion
 
-AuraFashion is an AI-powered, full-stack virtual try-on and fashion design platform. By combining **React 19 (Vite)** on the frontend, a robust **Express/Node.js** server on the backend, and **Google Gemini 3.1 Flash-Lite** image generation models, AuraFashion lets users visualize outfits, generate designs from sketch outlines, and browse and interact with a premium shopping catalog.
+The project is maintained in `D:\AURA Fashion` and targets https://github.com/rajeevreddy23/AURA-Fashion. The initial code was imported from the existing `rajeevreddy23/AuraFashion` application because the new repository was empty.
 
----
+## Run locally
 
-## ✨ Features
+Use Node.js 22 or newer.
 
-- **🛍️ Intelligent Shopping Catalog**: Explore premium fashion collections with dynamic product filters, detail views, and interactive carts.
-- **👕 Virtual AI Try-On**: Upload a user photo and a dress image to generate a realistic representation of the user wearing that exact outfit. Includes a server-side image proxy to bypass client-side CORS issues safely.
-- **🎨 Sketch-to-Design Studio**: Hand-draw or upload a fashion sketch, add design instructions, and watch Gemini render it into a photorealistic, high-quality garment. You can even visualize the finished design on an uploaded model photo!
-- **👤 User Profiles & Subscription**: Secure authentication with **Firebase Auth** and real-time state synchronization using **Firestore**. Includes interactive subscription plans and user settings.
-- **🛡️ Secure API Layer**: All Gemini API integrations and key handshakes happen securely server-side, protecting sensitive API keys from browser exposure.
-
----
-
-## 🛠️ Tech Stack
-
-### Frontend
-- **React 19** & **Vite** — High-performance frontend rendering and asset compilation.
-- **Tailwind CSS v4** — Clean, responsive, and utility-driven styling.
-- **Motion** (`motion/react`) — Smooth transition animations, micro-interactions, and visual cue states.
-- **Lucide React** — Crisp, modern vector iconography.
-
-### Backend
-- **Express.js** & **Node.js** — Fast REST API router and static file hosting.
-- **@google/genai SDK** — Official SDK for executing high-fidelity Gemini models server-side.
-- **Esbuild** — Super-fast bundling to compile TypeScript into production-ready CommonJS (`.cjs`).
-
-### Infrastructure & Services
-- **Google Gemini 3.1 Flash-Lite (Image)** — Advanced computer vision and image generation model.
-- **Firebase Auth** — Clean user login, registration, and session management.
-- **Firebase Firestore** — Flexible, secure, real-time cloud database.
-
----
-
-## 🚀 Quick Start & Installation
-
-### Prerequisites
-Make sure you have the following installed on your machine:
-- [Node.js](https://nodejs.org/) (v18.0.0 or higher recommended)
-- [npm](https://www.npmjs.com/) (usually comes with Node.js)
-
-### 1. Clone the Repository
-```bash
-git clone https://github.com/your-username/AuraFashion.git
-cd AuraFashion
-```
-
-### 2. Install Dependencies
-```bash
-npm install
-```
-
-### 3. Environment Variables Setup
-Create a `.env` file in the root directory and add your Gemini API Key. Refer to `.env.example` for details:
-
-```env
-# Your server-side secret API keys (NEVER expose to the browser!)
-GEMINI_API_KEY=your_google_gemini_api_key_here
-PORT=3000
-NODE_ENV=development
-```
-
-> **How to get a Gemini API Key**: Visit the [Google AI Studio](https://aistudio.google.com/) to provision an API key for free.
-
-### 4. Configure Firebase
-AuraFashion utilizes Firebase for Authentication and Firestore. To connect your database:
-1. Set up a Firebase project on the [Firebase Console](https://console.firebase.google.com/).
-2. Enable **Firestore Database** and **Authentication** (Email/Password provider).
-3. Obtain your Firebase web configuration object.
-4. Place this config inside a file named `firebase-applet-config.json` in the root of the project:
-
-```json
-{
-  "apiKey": "your-api-key",
-  "authDomain": "your-project-id.firebaseapp.com",
-  "projectId": "your-project-id",
-  "storageBucket": "your-project-id.firebasestorage.app",
-  "messagingSenderId": "your-messaging-sender-id",
-  "appId": "your-app-id",
-  "firestoreDatabaseId": "(default)"
-}
-```
-
-### 5. Run the Application in Development Mode
-```bash
+```sh
+npm ci
 npm run dev
 ```
-Once started, the development server will be running on **`http://localhost:3000`** with live hot reloading.
 
----
+Open http://localhost:3000. Studio and the sample catalog work without paid-service credentials. Prices and paid actions remain unavailable until the backend is configured. The browser Firebase configuration is in `firebase-applet-config.json`; replace it with the configuration for the intended Firebase project. Firebase browser configuration is public identification, not a server credential.
 
-## 📦 Production Bundling & Build Pipeline
+## What is implemented
 
-AuraFashion employs a specialized hybrid build pipeline to ensure seamless runtime execution and high performance under server environments (like Docker containers, Render, Railway, etc.):
+- Responsive Studio with progressive tools: garment templates, drag-and-drop details, tap-to-add, pointer drawing, selection and keyboard movement, shape tools, erasing, image import, layer selection, duplication and ordering.
+- Fifty-step undo/redo, autosave on this device, JSON open/save, PNG and SVG export. A guest draft is carried into a newly used account on this device if that account has no draft.
+- Synchronized, rotatable extruded 3D concepts for shirt, dress and skirt templates. Saree panels clearly state that 3D is unsupported. Artwork maps onto the garment preview; this is not a cloth or body-fit simulation.
+- Shop filtering/search, most-liked/newest/price sorting, server-maintained unique account likes, published community designs, and visible try-on actions.
+- Stripe Checkout for one product-specific try-on, one sketch render, one publication, or a prepaid 30-day publishing pass with 30 uploads. Each try-on is paid separately. The publishing pass has no automatic renewal.
+- Payment fulfillment from signed webhooks or server-side Checkout recheck, owner-only order history, atomic job reservations, private results, manual early deletion, failure refunds, unused-job refunds, and stalled-job recovery after 20 minutes.
+- Publishing consumes a verified upload credit or a nonexpired pass upload atomically. New designs require review before try-on can be enabled.
+- Approved boutique directory, customer quote requests with explicit sharing consent, private quote history, and replies/prices from the assigned boutique account.
+- Hardened Firestore and Storage rules. Paid state, counters, quotes, and orders are server-only. Admin access uses a trusted Firebase custom `admin` claim; an email address or editable profile role cannot grant it.
 
-```bash
+## Configure paid services
+
+Copy `.env.example` to `.env` and configure these on the server, never with a `VITE_` prefix:
+
+1. Set `FIREBASE_PROJECT_ID`, `FIRESTORE_DATABASE_ID`, and `FIREBASE_STORAGE_BUCKET` to the intended project/database/bucket. Supply Application Default Credentials (locally, `GOOGLE_APPLICATION_CREDENTIALS` points to a service-account file outside the repository). Grant only the required database, storage, and token-verification permissions.
+2. Deploy `firestore.rules` and `storage.rules` to that project. Review existing user data and remove any previously self-granted subscriptions or roles; the new billing flow ignores them. Set trusted custom admin claims through the Admin SDK, then refresh the operator's login token.
+3. Configure a Stripe account for INR payments. Set `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, and the exact public HTTPS `APP_URL`, without a trailing slash. Use the same Stripe account and test/live mode for all three. Register `/api/payments/webhook` for `checkout.session.completed`, `checkout.session.async_payment_succeeded`, and `charge.refunded`. Keep Stripe retry delivery enabled.
+4. Set `GEMINI_API_KEY` and an image-capable `GEMINI_IMAGE_MODEL` available to that account. There is deliberately no assumed model or invented API price. Check current model support and pricing at https://ai.google.dev/gemini-api/docs/image-generation.
+5. Enter integer-paise prices and conservative upper cost estimates. `JOB_OVERHEAD_PAISE` should include fixed transaction fees and infrastructure overhead. Percentage payment fees and a tax reserve are configured as basis points. The try-on/render price must cover the configured provider cost, overhead, percentage reserves, and minimum margin. Failed attempts also count toward reserved daily spend. Configure `DAILY_AI_BUDGET_PAISE` and per-user daily limits. These are safeguards based on your estimates, not a guarantee of profit if estimates, taxes, exchange rates or provider charges change. Review costs before enabling sales and whenever pricing/model settings change.
+6. Review each garment's image and supported category before enabling `tryOnEnabled: true` in an administrator-managed product document. For sample products, explicitly list approved IDs in `APPROVED_TRYON_PRODUCT_IDS`. Default image hosts are Unsplash and Shopify's image CDN. Additional hosts must be trusted HTTPS CDNs, with no arbitrary URLs or redirects. Use owned/licensed product images. Accessories and shoes are not supported by this try-on flow.
+7. Create approved boutique records in `boutiques/{id}` with `name`, `city`, `active: true`, and `ownerId` equal to that boutique account's Firebase UID. The app does not invent available boutiques or send quote requests outside the application.
+8. Set a bucket lifecycle rule to delete objects under `results/` after seven days. API access expires after seven days regardless, but physical cleanup requires this lifecycle configuration. Input photos are passed to the AI provider without being saved by the app; review that provider's retention terms. Set a retention policy for financial records and an operational support/refund procedure.
+
+Verify `/api/config` reports the intended readiness and prices. Test Stripe test-mode checkout, webhook delivery/replay, real provider success/failure, refunds, authentication, and production storage permissions before accepting real payments. None of those live integrations was exercised using real customer credentials during this update.
+
+## Tests
+
+```sh
+npm run lint
+npm test
+npm run test:e2e
+npm run test:rules
 npm run build
+npm start
 ```
 
-This script triggers two parallel operations:
-1. **Frontend Compilation**: `vite build` translates and minifies client-side React code, bundling assets into static files inside the `dist/` directory.
-2. **Backend Compilation**: `esbuild` compiles and bundles the Express `server.ts` into a single, high-performance CommonJS file at `dist/server.cjs`.
+- API tests use real local HTTP, real Stripe signature verification, and simulated payment/provider/storage services. They test billing invariants and failure/concurrency behavior without charging money.
+- Browser tests use Chromium at 320×800, 390×844, 768×1024, 1024×768 and 1440×1000. Touch input is emulated for the first four sizes. Automated checks do not replace testing on physical devices, Safari, Firefox or assistive technologies.
+- Rules tests require Java 21+ and use the demo-project Firestore emulator, never a production project. A transaction integration case also exercises the actual Admin SDK/Firestore transaction adapter with simulated image storage.
+- On Windows systems where the emulator reports an invalid Unix-domain loopback connection, set `JAVA_TOOL_OPTIONS=-Djdk.net.unixdomain.tmpdir=<a-nonexistent-directory>` for the test process so Java falls back to TCP. This is a local runtime workaround, not a change to service security.
+- Browser traces/reports are in ignored `test-results/` and `playwright-report/` directories.
 
-### Running in Production
-Once compiled, you can spin up the unified full-stack server using:
+## Deployment and limits
 
-```bash
-npm run start
-```
-The server will boot from `dist/server.cjs` and automatically serve the built React files located in `dist/` while exposing all API endpoints.
+`npm run build` builds the frontend and Express entry point. `npm start` serves both. `PORT` is honored. The Vercel entry point reuses the same API implementation with raw webhook parsing. **Hosting has not been deployed or verified on Vercel or any cloud host.** Image generation can exceed serverless duration or response limits; choose a host with adequate request timeouts or add a durable background queue before high-volume deployment.
 
----
+This is an implementation with local verification, not a completed international production certification. Remaining work includes live integration acceptance, realistic cloth simulation and fitting, arbitrary-sketch-to-3D reconstruction, measurements/pattern grading, recurring subscription renewals, production moderation and intellectual-property review, localized tax/invoices and currencies, fulfillment/physical garment checkout, large-catalog pagination and scalable ranking, distributed rate limiting, durable queued AI jobs, automated operational reconciliation/alerting, and full cross-browser/manual accessibility validation. The legacy physical-cart checkout is disabled because it previously created orders without charging the customer. Existing cart storage and browsing remain available.
 
-## 🌐 Deployment to Production
+Public catalog and per-account lists currently fetch at most 100 stored records. Likes require signed-in accounts and are transactionally unique per account; fraud resistance against coordinated accounts is not implemented.
 
-Since the application uses a unified backend (serving both the APIs and the compiled React SPA), you can deploy it to any cloud host that supports Node.js.
+The classic raster sketcher remains accessible from Studio. Its AI action routes through paid rendering; rendering a person wearing an arbitrary sketch is replaced by the approved product try-on flow. Sketch images may be exported and uploaded again if returning on a different device. Draft autosave is local, not cloud synchronization.
 
-### 🚄 Deployment via Render / Railway / Fly.io
-1. Connect your GitHub repository to your hosting provider.
-2. Configure the following build settings:
-   - **Build Command**: `npm run build`
-   - **Start Command**: `npm run start`
-3. Add your Environment Variables in the provider's dashboard:
-   - Set `GEMINI_API_KEY` to your live API Key.
-   - Set `NODE_ENV` to `production`.
-   - Set `PORT` to `3000` (or leave it to be automatically injected).
+Provider success does not guarantee a faithful garment representation or accurate fit. Orders that are interrupted after reserving a job cannot be regenerated using the same payment; recover them as a refund instead. Payment disputes and publication refunds after use require an operator policy and review of already published designs.
 
-### 🐳 Deployment with Docker
-For containerized setups (such as GCP Cloud Run or AWS ECS), you can use a standard Node.js Dockerfile:
-
-```dockerfile
-FROM node:20-alpine
-
-WORKDIR /app
-
-COPY package*.json ./
-RUN npm ci
-
-COPY . .
-RUN npm run build
-
-EXPOSE 3000
-
-ENV NODE_ENV=production
-ENV PORT=3000
-
-CMD ["npm", "run", "start"]
-```
-
----
-
-## 🔒 Security Best Practices for GitHub
-
-When preparing to publish your repository to GitHub, ensure that you never leak credentials:
-- Ensure `.env` is listed in your `.gitignore` so your actual Gemini API key is never pushed.
-- Avoid committing actual `firebase-applet-config.json` files containing production secrets. Include a mock template config file or supply keys securely.
-
----
-
-## 📄 License
-This project is licensed under the MIT License - see the LICENSE file for details.
+Integration references: Stripe fulfillment https://docs.stripe.com/checkout/fulfillment and Firebase token verification https://firebase.google.com/docs/auth/admin/verify-id-tokens.

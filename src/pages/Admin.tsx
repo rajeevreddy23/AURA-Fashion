@@ -1,15 +1,26 @@
-import React, { useState } from 'react';
-import { db, auth } from '../firebase';
-import { collection, doc, writeBatch, getDoc } from 'firebase/firestore';
-import { Upload, FileText, CheckCircle, AlertCircle, Loader2, Database } from 'lucide-react';
-import Papa from 'papaparse';
-import { motion, AnimatePresence } from 'motion/react';
+import React, { useState } from "react";
+import { auth } from "../firebase";
+import { db } from "../database";
+import { collection, doc, writeBatch, getDoc } from "firebase/firestore";
+import {
+  Upload,
+  FileText,
+  CheckCircle,
+  AlertCircle,
+  Loader2,
+  Database,
+} from "lucide-react";
+import Papa from "papaparse";
+import { motion, AnimatePresence } from "motion/react";
 
 export default function AdminPage() {
   const [isAdmin, setIsAdmin] = useState<boolean | null>(null);
   const [loading, setLoading] = useState(true);
   const [uploading, setUploading] = useState(false);
-  const [status, setStatus] = useState<{ type: 'success' | 'error', message: string } | null>(null);
+  const [status, setStatus] = useState<{
+    type: "success" | "error";
+    message: string;
+  } | null>(null);
   const [parsedItems, setParsedItems] = useState<any[]>([]);
 
   const user = auth.currentUser;
@@ -24,21 +35,9 @@ export default function AdminPage() {
       setLoading(false);
       return;
     }
-    
-    // Check if user is admin based on rules: specific email or role in Firestore
-    const isAdminEmail = user.email === 'rajeevreddyakepati@gmail.com';
-    let hasAdminRole = false;
-    
-    try {
-      const userDoc = await getDoc(doc(db, 'users', user.uid));
-      if (userDoc.exists() && userDoc.data()?.role === 'admin') {
-        hasAdminRole = true;
-      }
-    } catch (e) {
-      console.error("Error checking admin role:", e);
-    }
-    
-    setIsAdmin(isAdminEmail || hasAdminRole);
+
+    const token = await user.getIdTokenResult();
+    setIsAdmin(token.claims.admin === true);
     setLoading(false);
   };
 
@@ -75,27 +74,29 @@ led-high-tops,LED High Tops,"Black high top shoes with green LED lights in the s
         const mappedData = results.data.map((item: any, index: number) => {
           // Map Shopify headers or fallback to standard ones
           const id = item.Handle || item.id || `p_${Date.now()}_${index}`;
-          const name = item.Title || item.name || 'Unknown Product';
-          const price = Number(item['Variant Price'] || item.price) || 0;
-          const image = item['Image Src'] || item.image || item.imageUrl || '';
-          
+          const name = item.Title || item.name || "Unknown Product";
+          const price = Number(item["Variant Price"] || item.price) || 0;
+          const image = item["Image Src"] || item.image || item.imageUrl || "";
+
           // Auto-category detection for Shopify data
-          let category = item.Type || item.category || 'misc';
-          if (category === 'misc' || !category) {
-            if (id.includes('shirt')) category = 'shirts';
-            else if (id.includes('jacket')) category = 'blazzers';
-            else if (id.includes('top')) category = 'tshirts';
-            else if (id.includes('bag')) category = 'watches'; // App uses watches for accessories
-            else if (id.includes('shoe')) category = 'shoes';
-            else if (id.includes('jumper') || id.includes('blouse')) category = 'shirts';
+          let category = item.Type || item.category || "misc";
+          if (category === "misc" || !category) {
+            if (id.includes("shirt")) category = "shirts";
+            else if (id.includes("jacket")) category = "blazzers";
+            else if (id.includes("top")) category = "tshirts";
+            else if (id.includes("bag"))
+              category = "watches"; // App uses watches for accessories
+            else if (id.includes("shoe")) category = "shoes";
+            else if (id.includes("jumper") || id.includes("blouse"))
+              category = "shirts";
           }
-          
-          let gender = item.Tags || item.gender || 'unisex';
-          if (gender !== 'men' && gender !== 'women') gender = 'unisex';
+
+          let gender = item.Tags || item.gender || "unisex";
+          if (gender !== "men" && gender !== "women") gender = "unisex";
 
           // Strip HTML from description
-          const description = (item['Body (HTML)'] || item.description || '')
-            .replace(/<[^>]*>?/gm, '')
+          const description = (item["Body (HTML)"] || item.description || "")
+            .replace(/<[^>]*>?/gm, "")
             .substring(0, 500);
 
           return {
@@ -107,22 +108,30 @@ led-high-tops,LED High Tops,"Black high top shoes with green LED lights in the s
             gender,
             rating: Number(item.rating) || 4.5,
             description,
-            updatedAt: new Date().toISOString()
+            updatedAt: new Date().toISOString(),
           };
         });
 
         // Filter out items without names or images (sometimes Shopify multi-variant rows are empty on these)
-        const validItems = mappedData.filter(item => item.name && item.image);
+        const validItems = mappedData.filter((item) => item.name && item.image);
 
         // Deduplicate by ID
-        const uniqueItems = Array.from(new Map(validItems.map(item => [item.id, item])).values());
+        const uniqueItems = Array.from(
+          new Map(validItems.map((item) => [item.id, item])).values(),
+        );
 
         setParsedItems(uniqueItems);
-        setStatus({ type: 'success', message: `Parsed ${uniqueItems.length} unique products from data.` });
+        setStatus({
+          type: "success",
+          message: `Parsed ${uniqueItems.length} unique products from data.`,
+        });
       },
       error: (error) => {
-        setStatus({ type: 'error', message: `Error parsing data: ${error.message}` });
-      }
+        setStatus({
+          type: "error",
+          message: `Error parsing data: ${error.message}`,
+        });
+      },
     });
   };
 
@@ -147,21 +156,21 @@ led-high-tops,LED High Tops,"Black high top shoes with green LED lights in the s
     setStatus(null);
 
     const batch = writeBatch(db);
-    const productsRef = collection(db, 'products');
+    const productsRef = collection(db, "products");
 
     try {
       parsedItems.forEach((item, index) => {
         // Ensure item has required fields or map them
         const productData = {
           id: item.id || `p_${Date.now()}_${index}`,
-          name: item.name || item.title || 'Unknown Product',
+          name: item.name || item.title || "Unknown Product",
           price: Number(item.price) || 0,
-          image: item.image || item.imageUrl || '',
-          category: item.category || 'misc',
-          gender: item.gender || 'unisex',
+          image: item.image || item.imageUrl || "",
+          category: item.category || "misc",
+          gender: item.gender || "unisex",
           rating: Number(item.rating) || 0,
-          description: item.description || '',
-          updatedAt: new Date().toISOString()
+          description: item.description || "",
+          updatedAt: new Date().toISOString(),
         };
 
         const docRef = doc(productsRef, productData.id);
@@ -169,38 +178,49 @@ led-high-tops,LED High Tops,"Black high top shoes with green LED lights in the s
       });
 
       await batch.commit();
-      setStatus({ type: 'success', message: `Successfully synced ${parsedItems.length} products to Firestore!` });
+      setStatus({
+        type: "success",
+        message: `Successfully synced ${parsedItems.length} products to Firestore!`,
+      });
       setParsedItems([]);
     } catch (error: any) {
       console.error("Sync error:", error);
-      setStatus({ type: 'error', message: `Sync failed: ${error.message}` });
+      setStatus({ type: "error", message: `Sync failed: ${error.message}` });
     } finally {
       setUploading(false);
     }
   };
 
   const downloadTemplate = () => {
-    const headers = 'id,name,price,image,category,gender,rating,description\n';
-    const example = 'm1,Example Shirt,1299,https://example.com/img.jpg,shirts,men,4.5,Cool shirt';
-    const blob = new Blob([headers + example], { type: 'text/csv' });
+    const headers = "id,name,price,image,category,gender,rating,description\n";
+    const example =
+      "m1,Example Shirt,1299,https://example.com/img.jpg,shirts,men,4.5,Cool shirt";
+    const blob = new Blob([headers + example], { type: "text/csv" });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
-    a.download = 'products_template.csv';
+    a.download = "products_template.csv";
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
   };
 
-  if (loading) return <div className="flex justify-center py-20"><Loader2 className="animate-spin" /></div>;
+  if (loading)
+    return (
+      <div className="flex justify-center py-20">
+        <Loader2 className="animate-spin" />
+      </div>
+    );
 
   if (isAdmin === false) {
     return (
       <div className="max-w-2xl mx-auto py-20 text-center space-y-4">
         <AlertCircle size={48} className="mx-auto text-red-500" />
         <h1 className="text-2xl font-black">Access Denied</h1>
-        <p className="text-gray-500 font-medium">You do not have permission to access the admin dashboard.</p>
+        <p className="text-gray-500 font-medium">
+          You do not have permission to access the admin dashboard.
+        </p>
       </div>
     );
   }
@@ -208,8 +228,12 @@ led-high-tops,LED High Tops,"Black high top shoes with green LED lights in the s
   return (
     <div className="max-w-4xl mx-auto space-y-8 pb-20">
       <header className="space-y-2">
-        <h1 className="text-4xl font-black tracking-tighter uppercase italic">Admin Dashboard</h1>
-        <p className="text-gray-500 font-medium">Manage your store inventory and data.</p>
+        <h1 className="text-4xl font-black tracking-tighter uppercase italic">
+          Admin Dashboard
+        </h1>
+        <p className="text-gray-500 font-medium">
+          Manage your store inventory and data.
+        </p>
       </header>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -220,19 +244,27 @@ led-high-tops,LED High Tops,"Black high top shoes with green LED lights in the s
               <Upload size={24} />
             </div>
             <div>
-              <h2 className="text-xl font-bold tracking-tight">Bulk Product Upload</h2>
-              <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">Import from CSV</p>
+              <h2 className="text-xl font-bold tracking-tight">
+                Bulk Product Upload
+              </h2>
+              <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">
+                Import from CSV
+              </p>
             </div>
           </div>
 
           <div className="space-y-4">
             <p className="text-sm text-gray-600 leading-relaxed font-medium">
-              Upload a CSV file to update your product catalog. The file should include headers like: 
-              <code className="bg-gray-100 px-1 rounded text-pink-600 mx-1">name, price, image, category, gender</code>.
+              Upload a CSV file to update your product catalog. The file should
+              include headers like:
+              <code className="bg-gray-100 px-1 rounded text-pink-600 mx-1">
+                name, price, image, category, gender
+              </code>
+              .
             </p>
 
             <div className="flex flex-col gap-4">
-              <button 
+              <button
                 onClick={downloadTemplate}
                 className="text-xs font-black uppercase tracking-widest text-gray-400 hover:text-black transition-colors flex items-center gap-1"
               >
@@ -241,13 +273,23 @@ led-high-tops,LED High Tops,"Black high top shoes with green LED lights in the s
 
               <label className="relative group cursor-pointer">
                 <div className="border-2 border-dashed border-gray-200 group-hover:border-black rounded-3xl p-8 transition-all flex flex-col items-center gap-2">
-                  <Database size={32} className="text-gray-300 group-hover:text-black transition-colors" />
-                  <span className="text-sm font-bold text-gray-500">Select CSV File</span>
-                  <input type="file" accept=".csv" onChange={handleFileUpload} className="hidden" />
+                  <Database
+                    size={32}
+                    className="text-gray-300 group-hover:text-black transition-colors"
+                  />
+                  <span className="text-sm font-bold text-gray-500">
+                    Select CSV File
+                  </span>
+                  <input
+                    type="file"
+                    accept=".csv"
+                    onChange={handleFileUpload}
+                    className="hidden"
+                  />
                 </div>
               </label>
 
-              <button 
+              <button
                 onClick={loadProvidedData}
                 className="w-full py-4 bg-emerald-50 text-emerald-600 rounded-2xl font-black uppercase tracking-widest hover:bg-emerald-100 transition-all flex items-center justify-center gap-2 border border-emerald-100"
               >
@@ -257,27 +299,37 @@ led-high-tops,LED High Tops,"Black high top shoes with green LED lights in the s
 
             <AnimatePresence>
               {status && (
-                <motion.div 
+                <motion.div
                   initial={{ opacity: 0, scale: 0.95 }}
                   animate={{ opacity: 1, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.95 }}
                   className={`p-4 rounded-2xl flex items-center gap-3 ${
-                    status.type === 'success' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : 'bg-red-50 text-red-600 border border-red-100'
+                    status.type === "success"
+                      ? "bg-emerald-50 text-emerald-600 border border-emerald-100"
+                      : "bg-red-50 text-red-600 border border-red-100"
                   }`}
                 >
-                  {status.type === 'success' ? <CheckCircle size={20} /> : <AlertCircle size={20} />}
+                  {status.type === "success" ? (
+                    <CheckCircle size={20} />
+                  ) : (
+                    <AlertCircle size={20} />
+                  )}
                   <span className="text-sm font-bold">{status.message}</span>
                 </motion.div>
               )}
             </AnimatePresence>
 
             {parsedItems.length > 0 && (
-              <button 
+              <button
                 onClick={syncToFirestore}
                 disabled={uploading}
                 className="w-full py-4 bg-black text-white rounded-2xl font-black uppercase tracking-widest hover:bg-gray-800 transition-all flex items-center justify-center gap-2 disabled:opacity-50"
               >
-                {uploading ? <Loader2 className="animate-spin" /> : 'Sync to Firestore'}
+                {uploading ? (
+                  <Loader2 className="animate-spin" />
+                ) : (
+                  "Sync to Firestore"
+                )}
               </button>
             )}
           </div>
@@ -285,28 +337,38 @@ led-high-tops,LED High Tops,"Black high top shoes with green LED lights in the s
 
         {/* Database Stats Section */}
         <section className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm space-y-6">
-           <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3">
             <div className="p-3 bg-indigo-50 text-indigo-600 rounded-2xl border border-indigo-100">
               <Database size={24} />
             </div>
             <div>
-              <h2 className="text-xl font-bold tracking-tight">System Status</h2>
-              <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">Firestore Health</p>
+              <h2 className="text-xl font-bold tracking-tight">
+                System Status
+              </h2>
+              <p className="text-xs text-gray-400 font-bold uppercase tracking-widest">
+                Firestore Health
+              </p>
             </div>
           </div>
 
           <div className="space-y-4">
             <div className="p-6 bg-gray-50 rounded-2xl border border-gray-100 space-y-4">
               <div className="flex justify-between items-center">
-                <span className="text-xs font-black text-gray-400 uppercase tracking-widest">Products</span>
+                <span className="text-xs font-black text-gray-400 uppercase tracking-widest">
+                  Products
+                </span>
                 <span className="font-bold">Managed</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-xs font-black text-gray-400 uppercase tracking-widest">Region</span>
+                <span className="text-xs font-black text-gray-400 uppercase tracking-widest">
+                  Region
+                </span>
                 <span className="font-bold">Global</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-xs font-black text-gray-400 uppercase tracking-widest">Auth</span>
+                <span className="text-xs font-black text-gray-400 uppercase tracking-widest">
+                  Auth
+                </span>
                 <span className="font-bold text-emerald-500 flex items-center gap-1">
                   <CheckCircle size={14} /> Active
                 </span>
@@ -315,7 +377,8 @@ led-high-tops,LED High Tops,"Black high top shoes with green LED lights in the s
 
             <div className="p-4 bg-amber-50 rounded-2xl border border-amber-100">
               <p className="text-[10px] font-bold text-amber-700 leading-normal uppercase tracking-wider">
-                Note: Syncing will overwrite existing products if they share the same ID. IDs are generated automatically if not provided in CSV.
+                Note: Syncing will overwrite existing products if they share the
+                same ID. IDs are generated automatically if not provided in CSV.
               </p>
             </div>
           </div>
@@ -326,7 +389,9 @@ led-high-tops,LED High Tops,"Black high top shoes with green LED lights in the s
       {parsedItems.length > 0 && (
         <section className="bg-white rounded-3xl border border-gray-100 shadow-sm overflow-hidden">
           <div className="p-6 border-b border-gray-100 bg-gray-50 flex justify-between items-center">
-            <h3 className="font-black uppercase tracking-widest text-sm">JSON Preview ({parsedItems.length} items)</h3>
+            <h3 className="font-black uppercase tracking-widest text-sm">
+              JSON Preview ({parsedItems.length} items)
+            </h3>
           </div>
           <div className="p-6 max-h-96 overflow-y-auto">
             <pre className="text-[10px] font-mono text-gray-600 bg-gray-50 p-4 rounded-xl">

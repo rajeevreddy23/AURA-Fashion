@@ -1,149 +1,232 @@
-import React, { useState, useMemo, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { motion } from 'motion/react';
-import { MEN_PRODUCTS, WOMEN_PRODUCTS } from '../constants';
-import { Star, ShoppingCart, Sparkles, Loader2 } from 'lucide-react';
-import { collection, getDocs, query, where } from 'firebase/firestore';
-import { db } from '../firebase';
-import { Product } from '../types';
-
-const MEN_CATEGORIES = ['all', 'shirts', 'tshirts', 'pants', 'blazzers', 'watches', 'shoes'];
-const WOMEN_CATEGORIES = ['all', 'saries', 'pants', 'shirts', 'lehangas', 'punjabhi dress'];
-
-export default function ShoppingPage() {
-  const { gender = 'men' } = useParams<{ gender: 'men' | 'women' }>();
+import React, { useEffect, useMemo, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { Heart, ArrowUpRight } from "lucide-react";
+import { MEN_PRODUCTS, WOMEN_PRODUCTS } from "../constants";
+import { api, money, useConfiguration } from "../services/api";
+import { Product } from "../types";
+import { auth } from "../firebase";
+export default function Shopping() {
+  const { gender = "women" } = useParams();
   const navigate = useNavigate();
-  const [activeCategory, setActiveCategory] = useState('all');
-  const [firestoreProducts, setFirestoreProducts] = useState<Product[]>([]);
-  const [loading, setLoading] = useState(false);
-
+  const config = useConfiguration();
+  const [products, setProducts] = useState<Product[]>([
+    ...MEN_PRODUCTS,
+    ...WOMEN_PRODUCTS,
+  ]);
+  const [category, setCategory] = useState("all");
+  const [sort, setSort] = useState("popular");
+  const [query, setQuery] = useState("");
+  const [source, setSource] = useState("all");
+  const [liked, setLiked] = useState<string[]>([]);
+  const [message, setMessage] = useState("");
+  const [pending, setPending] = useState<string | null>(null);
   useEffect(() => {
-    fetchFirestoreProducts();
-  }, [gender]);
-
-  const fetchFirestoreProducts = async () => {
-    setLoading(true);
+    let alive = true;
+    api<Product[]>("/products")
+      .then((p) => {
+        if (alive) setProducts(p);
+      })
+      .catch(() => {
+        if (alive)
+          setMessage(
+            "Community products are unavailable. Showing the sample catalog.",
+          );
+      });
+    if (auth.currentUser)
+      api<string[]>("/likes")
+        .then((v) => {
+          if (alive) setLiked(v);
+        })
+        .catch(() => {});
+    return () => {
+      alive = false;
+    };
+  }, []);
+  useEffect(() => setCategory("all"), [gender]);
+  const categories = [
+    "all",
+    ...new Set(
+      products.filter((p) => p.gender === gender).map((p) => p.category),
+    ),
+  ];
+  const filtered = useMemo(
+    () =>
+      products
+        .filter(
+          (p) =>
+            p.gender === gender &&
+            (category === "all" || p.category === category) &&
+            (source === "all" || p.source === "designer") &&
+            p.name.toLowerCase().includes(query.toLowerCase()),
+        )
+        .sort((a, b) =>
+          sort === "popular"
+            ? (b.likes || 0) - (a.likes || 0) ||
+              (b.createdAt || 0) - (a.createdAt || 0) ||
+              a.id.localeCompare(b.id)
+            : sort === "newest"
+              ? (b.createdAt || 0) - (a.createdAt || 0) ||
+                a.id.localeCompare(b.id)
+              : a.price - b.price,
+        ),
+    [products, gender, category, source, query, sort],
+  );
+  const like = async (p: Product) => {
+    setPending(p.id);
     try {
-      const q = query(collection(db, 'products'), where('gender', '==', gender));
-      const snap = await getDocs(q);
-      const docs = snap.docs.map(doc => ({ ...doc.data() } as Product));
-      setFirestoreProducts(docs);
-    } catch (err) {
-      console.error("Error fetching products from Firestore:", err);
+      const result = await api(`/products/${p.id}/like`, {
+        liked: !liked.includes(p.id),
+      });
+      setProducts((prev) =>
+        prev.map((v) => (v.id === p.id ? { ...v, likes: result.likes } : v)),
+      );
+      setLiked((prev) =>
+        result.liked ? [...prev, p.id] : prev.filter((id) => id !== p.id),
+      );
+    } catch (e: any) {
+      setMessage(e.message);
     } finally {
-      setLoading(false);
+      setPending(null);
     }
   };
-
-  const products = useMemo(() => {
-    // Priority: Firestore > Constants
-    if (firestoreProducts.length > 0) return firestoreProducts;
-    return gender === 'men' ? MEN_PRODUCTS : WOMEN_PRODUCTS;
-  }, [gender, firestoreProducts]);
-
-  const categories = useMemo(() => {
-    // Dynamically build categories from products + default categories
-    const baseCategories = gender === 'men' ? MEN_CATEGORIES : WOMEN_CATEGORIES;
-    const productCategories = Array.from(new Set(products.map(p => p.category)));
-    return Array.from(new Set(['all', ...baseCategories, ...productCategories]));
-  }, [gender, products]);
-
-  const filteredProducts = useMemo(() => {
-    if (activeCategory === 'all') return products;
-    return products.filter(p => p.category === activeCategory);
-  }, [products, activeCategory]);
-
   return (
-    <div className="space-y-8">
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+    <div>
+      <div className="page-heading">
         <div>
-          <h2 className="text-4xl font-black uppercase tracking-tighter">
-            {gender === 'men' ? "Men's Collection" : "Women's Collection"}
-          </h2>
-          <p className="text-gray-500 font-medium">Discover the perfect fit for your aura.</p>
+          <p className="eyebrow">THE AURA EDIT</p>
+          <h2>Find your next expression.</h2>
+          <p className="muted">
+            Discover garments and original designs. Bring your favorites to a
+            boutique.
+          </p>
         </div>
-        <div className="flex bg-gray-100 p-1 rounded-2xl">
+        <Link className="secondary" to="/sketch">
+          Create a design <ArrowUpRight size={17} />
+        </Link>
+      </div>
+      <div className="shop-controls">
+        <div className="segmented">
           <button
-            onClick={() => navigate('/shopping/men')}
-            className={`px-6 py-2 rounded-xl text-sm font-bold transition-all ${gender === 'men' ? 'bg-white shadow-sm text-black' : 'text-gray-500'}`}
-          >
-            Men
-          </button>
-          <button
-            onClick={() => navigate('/shopping/women')}
-            className={`px-6 py-2 rounded-xl text-sm font-bold transition-all ${gender === 'women' ? 'bg-white shadow-sm text-black' : 'text-gray-500'}`}
+            aria-pressed={gender === "women"}
+            onClick={() => navigate("/shopping/women")}
           >
             Women
           </button>
+          <button
+            aria-pressed={gender === "men"}
+            onClick={() => navigate("/shopping/men")}
+          >
+            Men
+          </button>
         </div>
+        <label className="field">
+          Search
+          <input
+            type="search"
+            placeholder="Find a garment…"
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+          />
+        </label>
+        <label className="field">
+          Show
+          <select value={source} onChange={(e) => setSource(e.target.value)}>
+            <option value="all">All designs</option>
+            <option value="designer">Community designers</option>
+          </select>
+        </label>
+        <label className="field">
+          Sort
+          <select value={sort} onChange={(e) => setSort(e.target.value)}>
+            <option value="popular">Most liked</option>
+            <option value="newest">Newest</option>
+            <option value="price">Price: low to high</option>
+          </select>
+        </label>
       </div>
-
-      {loading ? (
-        <div className="flex justify-center py-20">
-          <Loader2 className="animate-spin text-black" />
-        </div>
-      ) : (
-        <>
-          {/* Categories */}
-          <div className="flex gap-2 overflow-x-auto pb-2 no-scrollbar">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
-                className={`px-6 py-2 rounded-full text-xs font-bold uppercase tracking-wider whitespace-nowrap transition-all border ${
-                  activeCategory === cat 
-                    ? 'bg-black text-white border-black' 
-                    : 'bg-white text-gray-500 border-gray-200 hover:border-gray-400'
-                }`}
-              >
-                {cat}
-              </button>
-            ))}
-          </div>
-
-          {/* Product Grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredProducts.map((product) => (
-              <motion.div
-                key={product.id}
-                layout
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                whileHover={{ y: -8 }}
-                className="bg-white rounded-3xl overflow-hidden shadow-sm border border-gray-100 group cursor-pointer"
-                onClick={() => navigate(`/product/${product.id}`)}
-              >
-                <div className="relative aspect-[3/4] overflow-hidden">
-                  <img 
-                    src={product.image} 
-                    className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110" 
-                    alt={product.name}
-                    referrerPolicy="no-referrer"
-                  />
-                  <div className="absolute top-4 right-4 flex flex-col gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
-                    <button className="p-3 bg-white/80 backdrop-blur-md rounded-full shadow-lg hover:bg-white transition-colors">
-                      <ShoppingCart size={18} className="text-black" />
-                    </button>
-                    <button className="p-3 bg-black/80 backdrop-blur-md rounded-full shadow-lg hover:bg-black transition-colors">
-                      <Sparkles size={18} className="text-white" />
-                    </button>
-                  </div>
-                  <div className="absolute bottom-4 left-4 px-3 py-1 bg-white/80 backdrop-blur-md rounded-full text-[10px] font-bold uppercase tracking-widest flex items-center gap-1">
-                    <Star size={10} className="fill-yellow-400 text-yellow-400" />
-                    {product.rating}
-                  </div>
-                </div>
-                <div className="p-6 space-y-1">
-                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{product.category}</p>
-                  <h3 className="text-lg font-bold text-black leading-tight">{product.name}</h3>
-                  <p className="text-xl font-black text-black">₹{product.price.toLocaleString()}</p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </>
+      <div className="category-list" aria-label="Categories">
+        {categories.map((c) => (
+          <button
+            key={c}
+            aria-pressed={c === category}
+            onClick={() => setCategory(c)}
+          >
+            {c}
+          </button>
+        ))}
+      </div>
+      {message && (
+        <p role="alert" className="notice">
+          {message}
+        </p>
       )}
+      <div className="product-grid">
+        {filtered.map((p) => (
+          <article className="product-card" key={p.id}>
+            <Link to={`/product/${p.id}`} className="product-image">
+              <img
+                src={p.image}
+                alt={p.name}
+                loading="lazy"
+                referrerPolicy="no-referrer"
+              />
+              {p.source === "designer" && (
+                <span className="product-badge">Community design</span>
+              )}
+            </Link>
+            <div className="product-info">
+              <p className="eyebrow">{p.category}</p>
+              <Link to={`/product/${p.id}`}>
+                <h3>{p.name}</h3>
+              </Link>
+              <div className="product-price">
+                <strong>
+                  {p.source === "designer"
+                    ? "Made to order"
+                    : money(p.price * 100)}
+                </strong>
+                <button
+                  aria-label={`Like ${p.name}`}
+                  aria-pressed={liked.includes(p.id)}
+                  disabled={pending === p.id || !config.communityReady}
+                  onClick={() => like(p)}
+                >
+                  <Heart
+                    size={18}
+                    fill={liked.includes(p.id) ? "currentColor" : "none"}
+                  />
+                  <span>{p.likes || 0}</span>
+                </button>
+              </div>
+              <button
+                className="primary"
+                disabled={!p.tryOnEnabled || !config.tryOnReady}
+                onClick={() => navigate(`/tryon?product=${p.id}`)}
+              >
+                {p.tryOnEnabled
+                  ? `Try on · ${money(config.tryOnPrice)}`
+                  : "Try-on unavailable"}
+              </button>
+              <Link className="secondary" to={`/boutique?product=${p.id}`}>
+                Ask a boutique
+              </Link>
+            </div>
+          </article>
+        ))}
+      </div>
+      {filtered.length === 0 && (
+        <section className="panel empty-state">
+          <h3>No designs here yet</h3>
+          <p>Try another collection or publish your own design.</p>
+          <Link className="text-link" to="/sketch">
+            Open Studio →
+          </Link>
+        </section>
+      )}
+      <p className="muted shop-footnote">
+        Try-ons require product approval and a separate payment for each
+        generation. Published designs become eligible after image review.
+      </p>
     </div>
   );
 }

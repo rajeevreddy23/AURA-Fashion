@@ -1,4 +1,10 @@
-export function resizeBase64Image(base64Str: string, maxDim: number = 800, quality: number = 0.8): Promise<string> {
+import { auth } from "../firebase";
+import { checkout } from "./api";
+export function resizeBase64Image(
+  base64Str: string,
+  maxDim: number = 800,
+  quality: number = 0.8,
+): Promise<string> {
   return new Promise((resolve) => {
     if (!base64Str || !base64Str.startsWith("data:")) {
       resolve(base64Str);
@@ -42,69 +48,32 @@ export function resizeBase64Image(base64Str: string, maxDim: number = 800, quali
   });
 }
 
-export async function tryOnDress(userImageBase64: string, dressImageBase64: string): Promise<string> {
-  try {
-    const compressedUser = await resizeBase64Image(userImageBase64, 800, 0.8);
-    const compressedDress = await resizeBase64Image(dressImageBase64, 800, 0.8);
-
-    const response = await fetch('/api/tryon', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ userImageBase64: compressedUser, dressImageBase64: compressedDress }),
-    });
-
-    if (!response.ok) {
-      const errData = await response.json().catch(() => ({}));
-      throw new Error(errData.error || `Failed to process virtual try-on: status ${response.status}`);
-    }
-
-    const data = await response.json();
-    return data.result;
-  } catch (error: any) {
-    console.error("Error in tryOnDress:", error);
-    throw error;
-  }
-}
-
-export async function processSketch(
-  sketchBase64: string, 
-  dressType: string, 
-  userImageBase64?: string | null,
-  instructions?: string
+export async function tryOnDress(
+  _person: string,
+  _garment: string,
 ): Promise<string> {
-  try {
-    const compressedSketch = await resizeBase64Image(sketchBase64, 800, 0.8);
-    let compressedUser: string | undefined = undefined;
-    if (userImageBase64) {
-      compressedUser = await resizeBase64Image(userImageBase64, 800, 0.8);
-    }
-
-    const response = await fetch('/api/process-sketch', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        sketchBase64: compressedSketch,
-        dressType,
-        userImageBase64: compressedUser,
-        instructions
-      }),
-    });
-
-    if (!response.ok) {
-      const errData = await response.json().catch(() => ({}));
-      throw new Error(errData.error || `Failed to process sketch: status ${response.status}`);
-    }
-
-    const data = await response.json();
-    return data.result;
-  } catch (error: any) {
-    console.error("Error in processSketch:", error);
-    throw error;
-  }
+  throw new Error(
+    "Choose an eligible Shop product and use its paid try-on flow.",
+  );
 }
-
-
+export async function processSketch(
+  sketch: string,
+  _type: string,
+  userPhoto?: string | null,
+  instructions?: string,
+): Promise<string> {
+  if (userPhoto)
+    throw new Error(
+      "Rendering a personal photo requires the approved Shop try-on flow. Remove the model photo to render this sketch.",
+    );
+  if (!auth.currentUser)
+    throw new Error(
+      "Please log in before paying for a render. Download your sketch to keep a copy.",
+    );
+  sessionStorage.setItem(
+    "aura-classic-render:" + auth.currentUser.uid,
+    JSON.stringify({ image: sketch, instructions: instructions || "" }),
+  );
+  await checkout("render");
+  throw new Error("Continue in the payment window.");
+}
