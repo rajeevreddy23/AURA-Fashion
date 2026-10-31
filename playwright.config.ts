@@ -1,11 +1,12 @@
 import { defineConfig } from "@playwright/test";
+const baseURL = process.env.PLAYWRIGHT_BASE_URL || "http://localhost:3000";
 export default defineConfig({
   testDir: "./tests/browser",
   timeout: 45000,
   expect: { timeout: 10000 },
   workers: 1,
   use: {
-    baseURL: "http://localhost:3000",
+    baseURL,
     launchOptions: { args: ["--enable-unsafe-swiftshader"] },
     trace: "retain-on-failure",
   },
@@ -30,7 +31,7 @@ export default defineConfig({
   ],
   webServer: {
     command: "npm run dev",
-    url: "http://localhost:3000/api/config",
+    url: `${baseURL}/api/config`,
     reuseExistingServer: true,
     timeout: 120000,
   },

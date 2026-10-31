@@ -362,6 +362,9 @@ export default function Studio() {
       <div className="page-heading">
         <div>
           <p className="eyebrow">AURA STUDIO</p>
+          <Link className="text-link" to="/studio">
+            Open advanced pattern & 3D workspace →
+          </Link>
           <h2>Make it yours.</h2>
           <p className="muted">
             Start with a garment. Add details. Explore more tools when you’re

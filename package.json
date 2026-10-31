@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "tsx server.ts",
     "build": "vite build && esbuild server.ts --bundle --platform=node --format=cjs --packages=external --sourcemap --outfile=dist/server.cjs",
-    "start": "node dist/server.cjs",
+    "start": "node scripts/start.mjs",
     "preview": "vite preview",
     "clean": "node scripts/clean.mjs",
     "lint": "tsc --noEmit",
@@ -58,6 +58,9 @@
     "vite": "^6.2.0"
   },
   "overrides": {
+    "rimraf": {
+      "glob": "^14.0.3"
+    },
     "@grpc/grpc-js": "^1.14.6",
     "qs": "^6.17.0",
     "@google-cloud/pubsub": {

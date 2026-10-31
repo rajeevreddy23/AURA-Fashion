@@ -142,6 +142,7 @@ test("main pages fit the screen and unavailable payments cannot be activated", a
   for (const path of [
     "/",
     "/shopping",
+    "/designs",
     "/tryon",
     "/subscription",
     "/boutique",

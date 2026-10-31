@@ -14,6 +14,8 @@ import {
 } from "lucide-react";
 import HomePage from "./pages/Home";
 const Shopping = lazy(() => import("./pages/Shopping"));
+const DesignHub = lazy(() => import("./pages/DesignHub"));
+const Atelier = lazy(() => import("./pages/Atelier"));
 const Studio = lazy(() => import("./pages/Studio"));
 const TryOn = lazy(() => import("./pages/TryOn"));
 const Subscription = lazy(() => import("./pages/Subscription"));
@@ -28,7 +30,7 @@ const Sketch = lazy(() => import("./pages/Sketch"));
 const items = [
   ["/", Home, "Home"],
   ["/shopping", ShoppingBag, "Shop"],
-  ["/sketch", Palette, "Studio"],
+  ["/studio", Palette, "Studio"],
   ["/tryon", Shirt, "Try-on"],
   ["/boutique", Store, "Boutiques"],
   ["/subscription", CreditCard, "Plans"],
@@ -77,6 +79,8 @@ export default function App() {
             <Route path="/shopping" element={<Shopping />} />
             <Route path="/shopping/:gender" element={<Shopping />} />
             <Route path="/product/:id" element={<ProductDetail />} />
+            <Route path="/studio" element={<Atelier />} />
+            <Route path="/designs" element={<DesignHub />} />
             <Route path="/sketch" element={<Studio />} />
             <Route path="/sketch/classic" element={<Sketch />} />
             <Route path="/tryon" element={<TryOn />} />

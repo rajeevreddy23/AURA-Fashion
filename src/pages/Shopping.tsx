@@ -100,11 +100,14 @@ export default function Shopping() {
             boutique.
           </p>
         </div>
-        <Link className="secondary" to="/sketch">
+        <Link className="secondary" to="/studio">
           Create a design <ArrowUpRight size={17} />
         </Link>
       </div>
       <div className="shop-controls">
+        <Link className="text-link" to="/designs">
+          Community & designer access
+        </Link>
         <div className="segmented">
           <button
             aria-pressed={gender === "women"}

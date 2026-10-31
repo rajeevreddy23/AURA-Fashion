@@ -87,6 +87,8 @@ test("billing, counters, server orders, quote routing and AI results reject all 
     "quotes/fake",
     "productStats/m1",
     "productStats/m1/likes/alice",
+    "designAccess/forged-approval",
+    "permissionLimits/alice-day",
     "users/alice/orders/fake",
     "users/alice/tryons/fake",
   ])
@@ -94,6 +96,7 @@ test("billing, counters, server orders, quote routing and AI results reject all 
       setDoc(doc(db, path), { uid: "alice", status: "paid", credits: 999 }),
     );
   await assertFails(getDoc(doc(db, "orders/paid-order")));
+  await assertFails(getDoc(doc(db, "designAccess/forged-approval")));
 });
 test("cart and drafts remain owner-only; catalog writes require a trusted custom admin claim", async () => {
   const db = alice();

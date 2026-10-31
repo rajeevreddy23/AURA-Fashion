@@ -1,0 +1,1381 @@
+/* The advanced workspace is scoped so existing shopping and account pages keep their layout. */
+body:has(.atelier-app) .app-main {
+  max-width: none;
+  padding: 0 0 108px;
+  background: #eef3f0;
+}
+body:has(.atelier-app) .app-header {
+  padding: 13px 28px;
+  min-height: 70px;
+}
+body:has(.atelier-app) .brand-dot {
+  color: #08745e;
+}
+body:has(.atelier-app) .app-nav .active {
+  color: #075b4b;
+  background: #deefe7;
+}
+.atelier-app {
+  --green: #076b55;
+  --ink: #16392f;
+  --line: #d5e3db;
+  --quiet: #587166;
+  color: var(--ink);
+  font-size: 12px;
+  max-width: 1900px;
+  margin: auto;
+}
+.atelier-app button,
+.atelier-app input,
+.atelier-app select,
+.atelier-app textarea {
+  font: inherit;
+}
+.atelier-app button {
+  min-height: 38px;
+}
+.atelier-page-heading {
+  padding: 25px 28px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  background:
+    radial-gradient(ellipse at 85% 30%, #cbeadd60, transparent 55%),
+    linear-gradient(120deg, #fbfdf9, #edf5ee);
+}
+.atelier-page-heading p {
+  font-size: 9px;
+  letter-spacing: 3px;
+  font-weight: 750;
+  color: #4b7562;
+  margin: 0 0 7px;
+}
+.atelier-page-heading h2 {
+  font-family: ui-sans-serif, system-ui, sans-serif;
+  font-size: clamp(25px, 2.6vw, 41px);
+  font-weight: 750;
+  letter-spacing: -1.8px;
+  margin: 0 0 5px;
+  line-height: 1.1;
+}
+.atelier-page-heading > div > span {
+  font-size: 11px;
+  color: #4b6d5a;
+  letter-spacing: 0.5px;
+}
+.atelier-heading-note {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #28684c;
+  font-size: 11px;
+}
+.atelier-heading-note small {
+  display: block;
+  font-size: 10px;
+  color: #5b7765;
+  margin-top: 3px;
+}
+.atelier-workspace-bar {
+  background: #fffefb;
+  border-block: 1px solid var(--line);
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.atelier-project-title {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 0;
+  flex-wrap: wrap;
+}
+.atelier-project-title > input {
+  font-size: 13px;
+  font-weight: 650;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  padding: 7px 9px;
+  background: transparent;
+  color: #234535;
+  min-width: 0;
+  width: 230px;
+  max-width: 100%;
+}
+.atelier-project-title > input:hover,
+.atelier-project-title > input:focus {
+  border-color: var(--line);
+  background: #fff;
+}
+.atelier-save-status {
+  font-size: 10px;
+  color: #496f5c;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 260px;
+}
+.atelier-save-status i,
+.atelier-footer i,
+.status-dot {
+  width: 6px;
+  height: 6px;
+  background: #159e72;
+  border-radius: 50%;
+  display: inline-block;
+  flex-shrink: 0;
+}
+.atelier-actions {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  flex-shrink: 0;
+}
+.atelier-actions button {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 10px;
+  color: #365d48;
+  background: #fff;
+  font-size: 10px;
+}
+.atelier-actions .accent {
+  background: #076b55;
+  color: white;
+  border-color: #076b55;
+}
+.atelier-tabs {
+  display: flex;
+  gap: 2px;
+  overflow: auto;
+  border-bottom: 1px solid var(--line);
+  padding: 8px 20px;
+  background: #f6faf6;
+  scrollbar-width: thin;
+}
+.atelier-tabs button {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+  border-radius: 6px;
+  font-size: 10px;
+  padding: 8px 12px;
+  color: #4d6e5b;
+}
+.atelier-tabs button[aria-pressed="true"] {
+  background: #076b55;
+  color: #fff;
+}
+.atelier-message {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #fff5d9;
+  color: #624b1a;
+  padding: 12px 20px;
+  margin: 0;
+  border-bottom: 1px solid #e6d8ac;
+  font-size: 12px;
+  overflow-wrap: anywhere;
+}
+.atelier-message button {
+  padding: 5px 12px;
+  font-size: 20px;
+}
+.atelier-layout {
+  display: grid;
+  grid-template-columns: 220px minmax(0, 1fr) 270px;
+  gap: 12px;
+  padding: 14px 18px;
+  align-items: start;
+}
+.atelier-left {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-width: 0;
+}
+.atelier-panel {
+  border: 1px solid var(--line);
+  background: #fffefb;
+  border-radius: 9px;
+  overflow: hidden;
+  min-width: 0;
+}
+.atelier-panel-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 9px 11px;
+  background: linear-gradient(100deg, #07654f, #0d7e61);
+  color: #fff;
+  min-height: 38px;
+}
+.atelier-panel-heading h3 {
+  font-size: 11px;
+  font-weight: 650;
+  letter-spacing: 0.1px;
+  margin: 0;
+  color: inherit;
+}
+.atelier-panel-heading > span {
+  font-size: 9px;
+  color: #e5f4e9;
+}
+.atelier-panel-heading select {
+  background: #eaf7f0;
+  color: #245642;
+  font-size: 9px;
+  border: 0;
+  border-radius: 4px;
+  max-width: 95px;
+  padding: 4px;
+  min-height: 28px;
+}
+.component-adder {
+  display: flex;
+  gap: 5px;
+  padding: 9px;
+  border-bottom: 1px solid #e7eee9;
+}
+.component-adder select {
+  width: 100%;
+  min-width: 0;
+  padding: 7px;
+  border: 1px solid var(--line);
+  border-radius: 5px;
+  background: white;
+  color: #31563f;
+  font-size: 10px;
+  min-height: 38px;
+}
+.component-adder button {
+  background: #dbeee3;
+  border-radius: 5px;
+  padding: 7px;
+  color: #08624a;
+  min-width: 36px;
+}
+.component-list {
+  max-height: 355px;
+  overflow: auto;
+}
+.component-row {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  padding: 1px 5px;
+  border-bottom: 1px solid #eef2ed;
+}
+.component-row.selected {
+  background: #e4f1e8;
+  box-shadow: inset 3px 0 #13805f;
+}
+.component-name {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  text-align: left;
+  font-size: 10px !important;
+  line-height: 1.35;
+  padding: 5px 2px;
+  color: #385b45;
+}
+.component-name small {
+  font-size: 8px;
+  margin-left: auto;
+  white-space: nowrap;
+  color: #617d69;
+}
+.component-swatch {
+  width: 15px;
+  height: 21px;
+  clip-path: polygon(20% 0, 80% 0, 100% 100%, 0 100%);
+  flex-shrink: 0;
+}
+.component-row > button:not(.component-name) {
+  padding: 5px;
+  color: #5e8069;
+  min-width: 27px;
+}
+.atelier-help {
+  font-size: 10px;
+  color: #597261;
+  line-height: 1.65;
+  margin: 10px 0;
+}
+.atelier-panel > .atelier-help {
+  padding: 0 11px;
+}
+.atelier-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 40px !important;
+  padding: 8px 11px;
+  border: 1px solid #cddfd2;
+  border-radius: 6px;
+  background: #fcfefb;
+  color: #28563d;
+  font-size: 11px !important;
+  text-decoration: none;
+  font-weight: 600;
+  text-align: center;
+  line-height: 1.4;
+}
+.atelier-button:hover:not(:disabled) {
+  background: #e9f4ec;
+}
+.atelier-button.green {
+  background: #076b55;
+  color: white;
+  border-color: #076b55;
+}
+.atelier-button.danger {
+  color: #9d3a37;
+  border-color: #e5d7d3;
+}
+.atelier-left .atelier-button {
+  margin: 8px 10px;
+  width: calc(100% - 20px);
+}
+.avatar-summary {
+  padding: 12px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.avatar-summary span {
+  font-size: 9px;
+  color: #647b6a;
+}
+.avatar-summary b {
+  display: block;
+  font-size: 12px;
+  color: #2d5540;
+  margin-top: 3px;
+}
+.ease-readings {
+  padding: 8px 12px;
+}
+.ease-readings > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  font-size: 10px;
+  padding: 5px 0;
+}
+.ease-readings strong {
+  color: #226c45;
+}
+.ease-readings strong.negative {
+  color: #a04438;
+}
+.atelier-old-editor {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  color: #4f745c;
+  padding: 7px;
+  text-decoration: none;
+}
+.atelier-center {
+  min-width: 0;
+}
+.atelier-view-tabs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: #e1ebe3;
+  border-radius: 7px;
+  padding: 5px;
+  margin-bottom: 8px;
+}
+.atelier-view-tabs button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  flex: 1;
+  min-height: 34px;
+  color: #3c6550;
+  font-size: 10px;
+  border-radius: 5px;
+  padding: 7px;
+}
+.atelier-view-tabs button[aria-pressed="true"] {
+  background: #fffefb;
+  color: #07624d;
+  box-shadow: 0 1px 5px #21463115;
+}
+.atelier-canvases {
+  display: grid;
+  gap: 10px;
+  align-items: stretch;
+}
+.atelier-canvases.view-split {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+}
+.atelier-canvases.view-3d,
+.atelier-canvases.view-2d {
+  grid-template-columns: minmax(0, 1fr);
+}
+.garment-panel {
+  display: flex;
+  flex-direction: column;
+}
+.atelier-viewport {
+  height: 480px;
+  position: relative;
+  overflow: hidden;
+  background: #edf0e8;
+}
+.atelier-viewport > canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+}
+.viewport-caption {
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #315b45;
+  pointer-events: none;
+  font-size: 9px;
+  background: #ffffffe0;
+  padding: 7px 9px;
+  border-radius: 6px;
+  flex-wrap: wrap;
+  max-width: calc(100% - 20px);
+}
+.viewport-caption small {
+  display: block;
+  width: 100%;
+  font-size: 8px;
+  color: #63796a;
+  margin-left: 12px;
+}
+.camera-controls {
+  display: flex;
+  gap: 4px;
+  justify-content: center;
+  padding: 5px;
+  border-top: 1px solid var(--line);
+  background: #f5f8f2;
+}
+.camera-controls button {
+  text-transform: capitalize;
+  font-size: 9px;
+  padding: 5px 10px;
+  color: #486d55;
+  min-height: 32px;
+}
+.cloth-transport {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  padding: 9px 11px;
+  background: #fffefb;
+  border-top: 1px solid var(--line);
+}
+.cloth-transport button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #e1f1e6;
+  border-radius: 50%;
+  width: 33px;
+  min-height: 33px;
+  color: #087058;
+}
+.cloth-transport > span {
+  flex: 1;
+  font-size: 10px;
+  color: #42654d;
+}
+.cloth-transport small {
+  display: block;
+  font-size: 8px;
+  color: #6c8170;
+  margin-top: 3px;
+}
+.pattern-panel {
+  display: flex;
+  flex-direction: column;
+}
+.pattern-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 9px;
+  background: #f6f9f3;
+  border-bottom: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+.pattern-tools label {
+  font-size: 8px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: #3f6550;
+}
+.pattern-tools input {
+  width: 13px;
+  height: 13px;
+  accent-color: #08664d;
+}
+.pattern-tools select {
+  border: 1px solid var(--line);
+  border-radius: 3px;
+  min-height: 27px;
+  background: white;
+  font-size: 8px;
+  max-width: 58px;
+}
+.pattern-scroll {
+  height: 480px;
+  overflow: auto;
+  background: #fffef9;
+  flex: 1;
+}
+.pattern-scroll > svg {
+  display: block;
+  min-height: 100%;
+  touch-action: none;
+  user-select: none;
+}
+.pattern-panel > .atelier-help {
+  font-size: 9px;
+  padding: 8px 10px;
+  margin: 0;
+  border-top: 1px solid var(--line);
+}
+.atelier-bottom-summary {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 13px 14px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fffefb;
+  margin-top: 11px;
+  flex-wrap: wrap;
+}
+.atelier-bottom-summary span {
+  font-size: 7px;
+  letter-spacing: 1px;
+  color: #698371;
+  display: block;
+}
+.atelier-bottom-summary strong {
+  font-size: 10px;
+  display: block;
+  margin-top: 3px;
+  color: #2b5540;
+}
+.atelier-bottom-summary button {
+  font-size: 10px;
+  color: #076b55;
+  font-weight: 650;
+  margin-left: auto;
+}
+.atelier-inspector {
+  padding: 15px;
+  background: #fffefb;
+  border: 1px solid var(--line);
+  border-radius: 9px;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+  min-width: 0;
+  max-height: 860px;
+  overflow: auto;
+}
+.atelier-inspector h3 {
+  font-size: 12px;
+  font-weight: 700;
+  margin: 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+  letter-spacing: 0;
+  color: #184b36;
+}
+.atelier-inspector h4 {
+  font-size: 11px;
+  font-weight: 650;
+  margin: 10px 0 0;
+}
+.atelier-inspector .atelier-help {
+  margin: 0;
+}
+.atelier-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  color: #42664e;
+  font-size: 10px;
+  font-weight: 600;
+  min-width: 0;
+}
+.atelier-field > span {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+}
+.atelier-field small {
+  color: #6c8371;
+  font-size: 9px;
+  font-weight: 400;
+}
+.atelier-field input,
+.atelier-field select,
+.atelier-field textarea {
+  width: 100%;
+  min-width: 0;
+  border: 1px solid #d5e1d4;
+  border-radius: 5px;
+  padding: 8px 9px;
+  background: #fbfdf9;
+  min-height: 37px;
+  color: #274c37;
+  font-size: 11px;
+}
+.atelier-field textarea {
+  min-height: 130px;
+  resize: vertical;
+}
+.atelier-two-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.atelier-color {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  color: #486e54;
+  flex-wrap: wrap;
+}
+.atelier-color input {
+  min-width: 40px;
+  width: 42px;
+  height: 32px;
+  padding: 3px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+}
+.atelier-color code {
+  font-family: inherit;
+  font-size: 10px;
+  color: #63806b;
+}
+.atelier-range {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  font-size: 10px;
+  color: #42664e;
+}
+.atelier-range > span {
+  display: flex;
+  justify-content: space-between;
+}
+.atelier-range output {
+  color: #6a7f6e;
+  font-size: 9px;
+}
+.atelier-range input {
+  width: 100%;
+  accent-color: #168266;
+  min-height: 24px;
+}
+.atelier-check {
+  font-size: 10px;
+  display: flex;
+  gap: 7px;
+  align-items: flex-start;
+  color: #3b614b;
+}
+.atelier-check input {
+  width: 16px;
+  height: 16px;
+  accent-color: #08745e;
+}
+.atelier-segmented {
+  display: flex;
+  background: #edf4ed;
+  padding: 3px;
+  border-radius: 5px;
+}
+.atelier-segmented button {
+  flex: 1;
+  font-size: 9px;
+  color: #52765b;
+  border-radius: 4px;
+}
+.atelier-segmented button[aria-pressed="true"] {
+  background: #fff;
+  border: 1px solid var(--line);
+  color: #08654d;
+}
+.atelier-callout {
+  font-size: 10px;
+  padding: 12px;
+  background: #ecf5ec;
+  border: 1px solid #d6e5d6;
+  border-radius: 6px;
+  color: #426e4d;
+  line-height: 1.7;
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+}
+.fabric-presets {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px;
+}
+.fabric-presets button {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  padding: 0;
+  text-align: left;
+  min-width: 0;
+  color: #56745e;
+}
+.fabric-presets button > span {
+  width: 100%;
+  height: 54px;
+  border-radius: 5px;
+  box-shadow: inset 0 0 25px #0003;
+  background-image: repeating-linear-gradient(
+    45deg,
+    transparent 0 10px,
+    #ffffff10 11px 12px
+  );
+}
+.fabric-presets small {
+  font-size: 8px;
+  line-height: 1.3;
+}
+.trim-editor {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background: #f8faf5;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+}
+.cost-line {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 9px 0;
+  border-bottom: 1px solid #e4ece1;
+  font-size: 10px;
+  color: #42664b;
+}
+.cost-line small {
+  display: block;
+  font-size: 9px;
+  color: #627e68;
+  margin-top: 3px;
+}
+.cost-line strong {
+  white-space: nowrap;
+  font-size: 11px;
+}
+.cost-total {
+  padding: 12px;
+  background: #e9f4e9;
+  border-radius: 6px;
+  color: #0b5c41;
+  font-size: 10px;
+}
+.cost-total strong {
+  display: block;
+  font-size: 23px;
+  letter-spacing: -0.5px;
+  margin-top: 4px;
+}
+.version-row,
+.project-library-card {
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 11px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.version-row strong,
+.project-library-card strong {
+  font-size: 11px;
+}
+.version-row small,
+.project-library-card small {
+  font-size: 9px;
+  color: #66806c;
+}
+.library-swatch {
+  height: 50px;
+  border-radius: 4px;
+}
+.atelier-footer {
+  margin: 0 18px 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  background: #fffefb;
+  padding: 9px 12px;
+  font-size: 9px;
+  color: #617c67;
+  flex-wrap: wrap;
+}
+.atelier-footer > span:first-child {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.atelier-footer a {
+  margin-left: auto;
+  color: #246e4d;
+  text-decoration: none;
+}
+.inspector-toggle,
+.inspector-mobile-heading {
+  display: none !important;
+}
+.atelier-techpack {
+  margin-top: 18px;
+  padding: 32px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: white;
+  color: #183a29;
+  font-size: 12px;
+}
+.atelier-techpack header {
+  border-bottom: 2px solid #146444;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+}
+.atelier-techpack header p {
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: #537d5d;
+}
+.atelier-techpack h2 {
+  font-size: 30px;
+  margin: 5px 0 10px;
+}
+.atelier-techpack h3 {
+  font-size: 15px;
+  margin: 20px 0 10px;
+}
+.atelier-techpack table {
+  border-collapse: collapse;
+  width: 100%;
+  font-size: 11px;
+  margin-bottom: 15px;
+}
+.atelier-techpack th,
+.atelier-techpack td {
+  text-align: left;
+  padding: 8px;
+  border-bottom: 1px solid #dfe8dc;
+  overflow-wrap: anywhere;
+}
+.atelier-techpack th {
+  text-transform: capitalize;
+  color: #386147;
+}
+.atelier-techpack p {
+  font-size: 10px;
+  line-height: 1.7;
+  color: #5d7662;
+}
+.tech-patterns {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+.tech-patterns figure {
+  margin: 0;
+  padding: 10px;
+  border: 1px solid #e1e9dc;
+  border-radius: 5px;
+  break-inside: avoid;
+}
+.tech-patterns svg {
+  height: 160px;
+  width: 100%;
+  display: block;
+}
+.tech-patterns figcaption {
+  font-size: 9px;
+  color: #56735c;
+  line-height: 1.6;
+}
+.construction-notes {
+  white-space: pre-wrap;
+}
+.print-only {
+  display: none;
+}
+@media (min-width: 1700px) {
+  .atelier-layout {
+    grid-template-columns: 250px minmax(0, 1fr) 300px;
+    gap: 15px;
+  }
+  .atelier-viewport {
+    height: 610px;
+  }
+  .pattern-scroll {
+    height: 610px;
+  }
+  .atelier-inspector {
+    max-height: 1030px;
+  }
+  .atelier-app {
+    font-size: 13px;
+  }
+  .component-name {
+    font-size: 11px !important;
+  }
+  .atelier-panel-heading h3 {
+    font-size: 12px;
+  }
+  .atelier-field {
+    font-size: 11px;
+  }
+}
+@media (max-width: 1190px) {
+  .atelier-layout {
+    grid-template-columns: 190px minmax(0, 1fr);
+  }
+  .atelier-inspector {
+    grid-column: 1/-1;
+    max-height: none;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+  }
+  .atelier-inspector h3,
+  .atelier-inspector > .atelier-help,
+  .atelier-inspector > .atelier-callout {
+    grid-column: 1/-1;
+  }
+  .atelier-inspector .fabric-presets {
+    grid-column: 1/-1;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+  }
+  .atelier-heading-note {
+    display: none;
+  }
+  .atelier-viewport {
+    height: 480px;
+  }
+  .pattern-scroll {
+    height: 480px;
+  }
+  .atelier-actions button {
+    padding: 7px 9px;
+  }
+  .atelier-actions button span {
+    font-size: 9px;
+  }
+  .atelier-page-heading {
+    padding-inline: 20px;
+  }
+}
+@media (max-width: 760px) {
+  body:has(.atelier-app) .app-main {
+    padding-bottom: 135px;
+  }
+  body:has(.atelier-app) .app-header {
+    padding: 13px 16px;
+  }
+  .atelier-page-heading {
+    padding: 22px 16px 16px;
+  }
+  .atelier-page-heading h2 {
+    font-size: 29px;
+    letter-spacing: -1.2px;
+  }
+  .atelier-page-heading > div > span {
+    font-size: 10px;
+  }
+  .atelier-workspace-bar {
+    padding: 10px 12px;
+    display: block;
+  }
+  .atelier-project-title {
+    gap: 7px;
+    justify-content: space-between;
+    margin-bottom: 8px;
+  }
+  .atelier-project-title > input {
+    width: min(215px, 65%);
+    padding-left: 3px;
+  }
+  .atelier-save-status {
+    font-size: 8px;
+    max-width: 100px;
+  }
+  .atelier-actions {
+    gap: 5px;
+    justify-content: space-between;
+  }
+  .atelier-actions button {
+    min-height: 40px;
+    flex: 1;
+    justify-content: center;
+    padding: 7px 8px;
+  }
+  .atelier-actions button span {
+    display: none;
+  }
+  .atelier-tabs {
+    padding: 6px 10px;
+  }
+  .atelier-tabs button {
+    font-size: 10px;
+    min-height: 40px;
+    padding: 8px 10px;
+  }
+  .atelier-layout {
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+  .atelier-left {
+    width: 100%;
+    order: 2;
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+  .atelier-left > .atelier-panel:nth-of-type(2) {
+    display: none;
+  }
+  .component-list {
+    max-height: 166px;
+  }
+  .component-row {
+    min-height: 39px;
+  }
+  .component-name {
+    font-size: 11px !important;
+  }
+  .component-row > button:not(.component-name) {
+    min-width: 36px;
+    min-height: 39px;
+  }
+  .atelier-left > .atelier-old-editor {
+    display: none;
+  }
+  .atelier-left > .atelier-panel > .atelier-help {
+    margin: 7px 0;
+  }
+  .atelier-center {
+    width: 100%;
+    order: 1;
+  }
+  .atelier-canvases.view-split {
+    grid-template-columns: 1fr;
+  }
+  .atelier-viewport {
+    height: 430px;
+  }
+  .pattern-scroll {
+    height: 450px;
+  }
+  .atelier-view-tabs button {
+    min-height: 42px;
+    font-size: 10px;
+  }
+  .atelier-view-tabs .inspector-toggle {
+    display: flex !important;
+  }
+  .atelier-inspector {
+    display: none;
+    width: 100%;
+    padding: 18px;
+  }
+  .atelier-inspector.mobile-open {
+    display: flex;
+    flex-direction: column;
+    order: 3;
+  }
+  .inspector-mobile-heading {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    color: #315c40;
+    font-size: 12px;
+  }
+  .inspector-mobile-heading button {
+    color: #076b55;
+    padding: 6px 14px;
+    border: 1px solid var(--line);
+    border-radius: 5px;
+  }
+  .atelier-inspector .fabric-presets {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .atelier-field,
+  .atelier-range,
+  .atelier-color,
+  .atelier-check {
+    font-size: 12px;
+  }
+  .atelier-field input,
+  .atelier-field select {
+    min-height: 44px;
+    font-size: 13px;
+  }
+  .atelier-range input {
+    min-height: 40px;
+  }
+  .atelier-inspector .atelier-button {
+    min-height: 44px !important;
+    font-size: 12px !important;
+  }
+  .atelier-help,
+  .atelier-callout {
+    font-size: 11px;
+  }
+  .atelier-bottom-summary {
+    gap: 14px;
+    padding: 12px;
+  }
+  .atelier-bottom-summary strong {
+    font-size: 10px;
+  }
+  .atelier-bottom-summary button {
+    margin: 0;
+    font-size: 11px;
+  }
+  .atelier-footer {
+    margin: 0 10px 10px;
+    padding: 10px;
+    font-size: 9px;
+    gap: 10px;
+  }
+  .atelier-footer > span:nth-child(2) {
+    display: none;
+  }
+  .atelier-techpack {
+    padding: 18px;
+  }
+  .tech-patterns {
+    grid-template-columns: 1fr 1fr;
+  }
+  .atelier-techpack h2 {
+    font-size: 25px;
+  }
+  .atelier-message {
+    padding: 12px;
+    font-size: 11px;
+  }
+  .camera-controls button {
+    min-height: 40px;
+    font-size: 10px;
+  }
+  .cloth-transport small {
+    font-size: 9px;
+  }
+  .atelier-inspector > .atelier-help {
+    font-size: 11px;
+  }
+  .pattern-tools label {
+    font-size: 9px;
+  }
+  .pattern-tools input {
+    height: 17px;
+    width: 17px;
+  }
+}
+@media print {
+  @page {
+    size: A4;
+    margin: 14mm;
+  }
+  body {
+    background: white !important;
+  }
+  body:has(.atelier-app) > #root .app-header,
+  body:has(.atelier-app) .app-nav,
+  body:has(.atelier-app) .skip-link,
+  .atelier-page-heading,
+  .atelier-workspace-bar,
+  .atelier-message,
+  .atelier-tabs,
+  .atelier-left,
+  .atelier-view-tabs,
+  .atelier-canvases,
+  .atelier-bottom-summary,
+  .atelier-inspector,
+  .atelier-footer {
+    display: none !important;
+  }
+  body:has(.atelier-app) .app-main {
+    padding: 0 !important;
+    max-width: none !important;
+  }
+  .atelier-layout,
+  .atelier-center {
+    display: block !important;
+    padding: 0 !important;
+  }
+  .print-only {
+    display: block !important;
+  }
+  .atelier-techpack {
+    border: 0;
+    padding: 0;
+    margin: 0;
+  }
+  .atelier-techpack section {
+    break-inside: avoid;
+  }
+  .atelier-techpack h3 {
+    break-after: avoid;
+  }
+  .atelier-techpack table {
+    font-size: 9px;
+  }
+  .atelier-techpack p {
+    font-size: 9px;
+  }
+  .tech-patterns figure {
+    break-inside: avoid;
+  }
+  .tech-patterns svg {
+    height: 120px;
+  }
+  a {
+    color: inherit !important;
+  }
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
+/* All small secondary labels retain AA contrast, including on selected rows. */
+.component-name small,
+.cloth-transport small,
+.atelier-bottom-summary span,
+.atelier-color code,
+.atelier-range output,
+.atelier-field small,
+.avatar-summary span,
+.version-row small,
+.project-library-card small,
+.cost-line small,
+.atelier-footer,
+.viewport-caption small {
+  color: #48634f;
+}
+@media screen and (max-width: 1099px) {
+  body:has(.atelier-app) #root {
+    display: flex;
+    flex-direction: column;
+  }
+  body:has(.atelier-app) .app-header {
+    order: 0;
+  }
+  body:has(.atelier-app) .app-nav {
+    order: 1;
+    position: relative;
+    top: auto;
+    bottom: auto;
+    left: auto;
+    transform: none;
+    width: 100%;
+    margin: 0;
+    display: flex;
+    overflow-x: auto;
+    border-radius: 0;
+    box-shadow: none;
+    padding: 4px;
+  }
+  body:has(.atelier-app) .app-nav a {
+    min-width: 62px;
+    flex: 1 0 62px;
+  }
+  body:has(.atelier-app) .app-main {
+    order: 2;
+    width: 100%;
+    margin: 0;
+    padding-bottom: 24px;
+  }
+}
+@media screen and (min-width: 1100px) {
+  body:has(.atelier-app) .app-header {
+    position: sticky;
+    top: 0;
+    height: 79px;
+    z-index: 70;
+  }
+  body:has(.atelier-app) .app-main {
+    margin-left: 74px;
+    margin-right: 0;
+    width: calc(100% - 74px);
+    padding-bottom: 30px;
+  }
+  body:has(.atelier-app) .app-nav {
+    left: 0;
+    top: 79px;
+    bottom: 0;
+    transform: none;
+    width: 74px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 5px;
+    border-radius: 0;
+    padding: 12px 5px;
+    background: linear-gradient(180deg, #075743, #043f35);
+    border: 0;
+    box-shadow: none;
+  }
+  body:has(.atelier-app) .app-nav a {
+    color: #d8e8dd;
+    min-height: 61px;
+    width: 100%;
+    font-size: 9px;
+    flex-shrink: 0;
+    border-radius: 6px;
+  }
+  body:has(.atelier-app) .app-nav a.active {
+    background: #deefe7;
+    color: #07513c;
+  }
+  body:has(.atelier-app) .header-actions .primary {
+    background: #076b55;
+    border-color: #076b55;
+  }
+}

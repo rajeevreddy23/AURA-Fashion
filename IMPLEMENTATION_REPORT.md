@@ -1,6 +1,6 @@
 # AURA Fashion — implementation and verification report
 
-Updated 30 October 2026.
+Updated 31 October 2026.
 
 Project: `D:\AURA Fashion`  
 Repository: https://github.com/rajeevreddy23/AURA-Fashion
@@ -11,24 +11,29 @@ The new repository was empty. The existing AuraFashion application was imported 
 
 | Area | Delivered | Limits or setup still required |
 |---|---|---|
-| 2D Studio | Garment templates; drag-and-drop and tap-to-add details; touch, mouse and pen drawing; editable layers; shapes; image import; duplication; ordering; keyboard movement | This is a concept editor, not a production pattern/CAD system |
-| Saving and history | Local autosave, 50-step undo/redo, JSON open/save, PNG/SVG export, guest-draft carryover on login | No cloud draft synchronization |
-| 3D preview | Synchronized, rotatable extruded shirt, dress and skirt previews with artwork | No fabric simulation, body fitting or arbitrary sketch-to-3D conversion; saree 3D explicitly unsupported |
+| Advanced workspace | Emerald `/studio` with split 2D/3D, focused mobile views, component and measurement editors, materials, trims, cloth settings, versions, costing and tech pack | Professional CAD certification and arbitrary freehand-to-3D conversion are not delivered |
+| Measured patterns | Lehenga, gown and blouse starters; supported parametric components; editable widths/length/seams/cut quantity; touch/mouse arrangement; keyboard and numeric positioning; visibility/locking | Fixed parametric outlines and grain lines; no curve drafting, rotation, darts/sewing tools, grading or optimized markers |
+| Concept sketching | Retained `/sketch` and classic raster editor; drag-and-drop/tap details, pointer drawing, layers, shapes, imports and keyboard movement | Concept artwork does not automatically become a measured pattern |
+| Saving and history | IndexedDB local project library, autosave, 50-step undo/redo, 20 named revisions, safe switching, validated JSON import/export and recovery export after storage failure | No cloud synchronization, encrypted device storage or automatic cross-device transfer; legacy guest draft carryover applies to the concept editor |
+| Assembled 3D | Measured mannequin, supported bodices, skirts/lining, sleeves, waistband and geometric dupatta; camera rotation/zoom/views, real material colors/procedural textures and trims | Approximate geometry; arbitrary component assemblies can intersect and are not guaranteed sewable |
+| Cloth and fit readings | Bounded mass-spring skirt solver, gravity/wind/stiffness/damping, approximate body/floor collision, reset; calculated circumference ease and dimensional conflicts | Other parts are geometric; no fabric self-collision, production draping, pressure/strain analysis or fit guarantee |
+| Production review exports | Actual-size SVG with calibration ruler, printable tech pack, BOM CSV, shelf-packing fabric estimate, waste, labour, overhead and markup | Tailor review and print calibration required; tech-pack diagrams are illustrative; no physical-printer validation |
 | Paid try-on/render | Stripe Checkout and Gemini adapters; one payment per product-specific try-on or sketch render; verified fulfillment; owner-only orders/results; refunds and stalled-job recovery | Live credentials, provider/model selection, costs, product-image approval and live acceptance testing required; paid actions currently disabled |
 | Publishing | One paid publication credit or prepaid 30-day pass with 30 uploads; atomic consumption and expiry checks | No automatic recurring renewal; live payments/storage configuration required |
-| Community | Published designs, unique account likes, most-liked/newest/price sorting | No coordinated-account fraud detection; stored catalog/list queries currently capped at 100 records |
+| Community and permissions | Published designs, unique account likes/ranking; advanced project consent, owner visibility/public-or-approval policy, private access requests, designer approval/revocation, authorized project download/open; restricted try-on checked before charging and again before generation | Downloaded copies cannot be recalled; no coordinated-account fraud detection; stored catalog/list queries capped at 100 records |
 | Boutiques | Approved directory; consent-based design quote requests; private customer/boutique history; assigned boutique replies and prices | Actual boutique records/accounts must be configured; no manufacturing, delivery or physical garment checkout |
 | Responsive UX | Five tested viewport sizes, progressive advanced tools, keyboard controls and touch interactions | Physical-device, Safari/Firefox and manual assistive-technology testing remain |
 
-## Verified results
+## Verification record
 
-All 52 completed automated tests passed:
+All **99 automated checks passed** for the advanced update: 28 domain/API, 6 database and 65 browser checks.
 
-- **16 API tests:** real local HTTP and Stripe signature verification, with simulated payments, AI and image storage. Tests cover authorization, server-owned prices, product approval, replay, concurrency, budgets, refunds, publishing credits/passes, likes and quote privacy.
-- **6 database tests:** Firestore emulator rules and a real Admin SDK transaction integration case. Two concurrent publications cannot spend one paid entitlement. Image storage is simulated in this integration case.
-- **30 Chromium browser tests:** five sizes — 320×800, 390×844, 768×1024, 1024×768 and 1440×1000. These include native detail drop, touch/mouse dragging, drawing, undo/redo, autosave/reload, exports, import rejection, synchronized 3D artwork, unavailable payment controls, page-width checks and automated accessibility scans. The saved report records zero failures, skips or flaky tests.
-- TypeScript checks and the production build passed. The browser suite was run against the locally served production build.
-- The production dependency audit rechecked on 30 October reports **zero known vulnerabilities**. This is an audit result, not a guarantee against undiscovered issues.
+- **28 domain/API tests passed:** real local HTTP and Stripe signature verification, with simulated payments, AI and image storage. Includes 19 API cases covering authorization, server-owned prices, replay, concurrency, budgets, refunds, publishing, likes, quote privacy, measurement consent and project permission approval/revocation; 9 domain cases cover bounded project imports, real geometry, packing/money calculations, safe exports, measurement transfer and cloth solver behavior.
+- **6 database tests passed after the dependency patch:** Firestore emulator rules reject forged entitlements and direct design-approval/counter access. A real Admin SDK transaction integration case proves two concurrent publications cannot spend one paid entitlement. Image storage is simulated in this integration case.
+- **65 Chromium browser checks passed in one final run against the locally served production build:** five sizes — 320×800, 390×844, 768×1024, 1024×768 and 1440×1000. Cases cover the advanced workspace, touch/mouse/keyboard placement, measured component edits, undo/redo, autosave/reload, revisions, safe project switching, material changes, trims/BOM, cloth controls, print styles, measured exports, unsafe import rejection, simulated storage-failure recovery, disabled paid controls, page-width checks and automated accessibility scans, alongside retained editor/commerce checks. Final run: zero failures, skips or retries.
+- TypeScript checks, the production build and updated database tests passed. Desktop and phone screenshots were visually inspected. These checks do not establish physical-device speed, accurate fit, print calibration or manual screen-reader usability.
+- `npm start` was smoke-tested with a development environment inherited from the shell: its cross-platform launcher still serves built assets in production mode, and unavailable payments remain disabled.
+- **Production dependency audit: zero known vulnerabilities** on 31 October, after a scoped `rimraf` → `glob` 14.0.3 override brought in patched minimatch 11.0.3. Synchronous/asynchronous glob compatibility checks, type checks, API/domain tests, production build and Firestore emulator checks passed with the patch. The all-dependencies audit still reports **9 moderate findings in Firebase CLI/development tooling**; they are not part of the production dependency audit and have not been hidden with a forced breaking upgrade. An audit result does not guarantee protection against undiscovered issues. Advisory references and the reason for the scoped override are in README.
 
 No live Stripe charge, actual AI generation, production Firebase authentication/storage integration, physical-device session or cloud deployment was tested. No real customer photo or payment was used. The model's garment fidelity and fit accuracy therefore remain unverified.
 

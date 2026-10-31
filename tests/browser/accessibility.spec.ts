@@ -9,6 +9,7 @@ test("core creation and commerce pages have no serious automated accessibility v
     "/tryon",
     "/subscription",
     "/boutique",
+    "/designs",
   ]) {
     await page.goto(path);
     await expect(page.locator("h2").first()).toBeVisible();

@@ -637,3 +637,220 @@ test("a verified full payment refund removes unused publishing access", async ()
     await f.close();
   }
 });
+
+// Advanced project sharing is authorized independently of payment.
+test("advanced publication requires measurement consent and public responses never disclose the project", async () => {
+  const { createProject } = await import("../shared/workspace");
+  const f = await fixture();
+  try {
+    const {
+      data: { orderId: id },
+    } = await f.request("/checkout", { kind: "publish" });
+    await f.pay(id);
+    const body = {
+      requestId: "advanced-private-pattern",
+      design: createProject(),
+      image,
+      rights: true,
+      gender: "women",
+      patternAccess: "approval",
+    };
+    assert.equal((await f.request("/designs", body)).status, 400);
+    assert.equal((await f.request("/me")).data.publishCredits, 1);
+    assert.equal(
+      (await f.request("/designs", { ...body, dataConsent: true })).status,
+      200,
+    );
+    const list = await f.request("/products", undefined, null);
+    const publicDesign = list.data.find((p: any) => p.id === body.requestId);
+    assert.equal(publicDesign.hasPattern, true);
+    assert.equal(publicDesign.patternAccess, "approval");
+    assert.equal(publicDesign.design, undefined);
+    assert.equal(publicDesign.measurements, undefined);
+    assert.equal(publicDesign.ownerId, undefined);
+    assert.equal(
+      (await f.request(`/designs/${body.requestId}/project`, undefined, "bob"))
+        .status,
+      403,
+    );
+    assert.equal(
+      (await f.request(`/designs/${body.requestId}/project`)).data.format,
+      "aura-studio",
+    );
+  } finally {
+    await f.close();
+  }
+});
+test("only the designer can grant or revoke editable access, and restricted try-on is blocked before charging", async () => {
+  const { createProject } = await import("../shared/workspace");
+  const f = await fixture();
+  try {
+    f.store.documents.set("products/advanced", {
+      id: "advanced",
+      ownerId: "alice",
+      name: "Private pattern",
+      published: true,
+      patternAccess: "approval",
+      category: "dresses",
+      tryOnEnabled: true,
+      design: createProject(),
+      image: "/api/designs/approved/image",
+      imagePath: "test/garment",
+    });
+    assert.equal(
+      (
+        await f.request(
+          "/checkout",
+          { kind: "tryon", productId: "advanced" },
+          "bob",
+        )
+      ).status,
+      403,
+    );
+    assert.equal(f.sessions.length, 0);
+    const first = await f.request(
+      "/designs/advanced/access-requests",
+      { message: "I would like to make this design for myself." },
+      "bob",
+    );
+    assert.equal(first.status, 200);
+    const requestId = first.data.id;
+    assert.equal(
+      (
+        await f.request(
+          "/designs/advanced/access-requests",
+          { message: "Please approve this design again." },
+          "bob",
+        )
+      ).data.id,
+      requestId,
+    );
+    assert.equal(
+      (await f.request("/access-requests", undefined, "charlie")).data.length,
+      0,
+    );
+    assert.equal(
+      (
+        await f.request(
+          `/access-requests/${requestId}`,
+          { status: "approved" },
+          "bob",
+          "PATCH",
+        )
+      ).status,
+      404,
+    );
+    assert.equal(
+      (
+        await f.request(
+          `/access-requests/${requestId}`,
+          { status: "approved", reply: "Personal use only." },
+          "alice",
+          "PATCH",
+        )
+      ).status,
+      200,
+    );
+    assert.equal(
+      (await f.request("/designs/advanced/project", undefined, "bob")).status,
+      200,
+    );
+    const paid = await f.request(
+      "/checkout",
+      { kind: "tryon", productId: "advanced" },
+      "bob",
+    );
+    assert.equal(paid.status, 200);
+    await f.pay(paid.data.orderId);
+    assert.equal(
+      (
+        await f.request(
+          `/access-requests/${requestId}`,
+          { status: "revoked" },
+          "alice",
+          "PATCH",
+        )
+      ).status,
+      200,
+    );
+    assert.equal(
+      (await f.request("/designs/advanced/project", undefined, "bob")).status,
+      403,
+    );
+    assert.equal(
+      (
+        await f.request(
+          `/orders/${paid.data.orderId}/run`,
+          { userImage: image, consent: true },
+          "bob",
+        )
+      ).status,
+      403,
+    );
+    assert.equal(f.generated, 0);
+    assert.equal(
+      (await f.request(`/orders/${paid.data.orderId}/refund`, {}, "bob"))
+        .status,
+      200,
+    );
+  } finally {
+    await f.close();
+  }
+});
+test("private uploads can only be managed by their owner and hidden projects revoke future public access", async () => {
+  const { createProject } = await import("../shared/workspace");
+  const f = await fixture();
+  try {
+    f.store.documents.set("products/shared", {
+      id: "shared",
+      ownerId: "alice",
+      name: "Shared pattern",
+      published: true,
+      patternAccess: "public",
+      design: createProject(),
+      image: "/api/designs/approved/image",
+    });
+    assert.equal(
+      (await f.request("/designs/shared/project", undefined, "bob")).status,
+      200,
+    );
+    assert.equal(
+      (await f.request("/my-designs", undefined, "bob")).data.length,
+      0,
+    );
+    assert.equal((await f.request("/my-designs")).data.length, 1);
+    assert.equal(
+      (
+        await f.request(
+          "/my-designs/shared",
+          { published: false, patternAccess: "approval" },
+          "bob",
+          "PATCH",
+        )
+      ).status,
+      404,
+    );
+    assert.equal(
+      (
+        await f.request(
+          "/my-designs/shared",
+          { published: false, patternAccess: "approval" },
+          "alice",
+          "PATCH",
+        )
+      ).status,
+      200,
+    );
+    assert.equal(
+      (await f.request("/products/shared", undefined, null)).status,
+      404,
+    );
+    assert.equal(
+      (await f.request("/designs/shared/project", undefined, "bob")).status,
+      403,
+    );
+    assert.equal((await f.request("/designs/shared/project")).status, 200);
+  } finally {
+    await f.close();
+  }
+});

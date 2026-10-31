@@ -3,10 +3,11 @@ import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import Stripe from "stripe";
 import { GoogleGenAI } from "@google/genai";
-import { randomUUID } from "node:crypto";
+import { randomUUID, createHash } from "node:crypto";
 import { z } from "zod";
 import { MEN_PRODUCTS, WOMEN_PRODUCTS } from "../src/constants";
 import { designSchema } from "../shared/studio";
+import { projectSchema } from "../shared/workspace";
 import {
   ApiError,
   requireCondition as check,
@@ -328,6 +329,22 @@ export function createApp(deps: Dependencies = {}) {
     check(seed, 404, "Product was not found.");
     return seed;
   }
+  const accessKey = (designId: string, uid: string) =>
+    createHash("sha256").update(`${designId}:${uid}`).digest("hex");
+  async function canUseProject(uid: string, product: any) {
+    if (product.design?.format !== "aura-studio" || product.ownerId === uid)
+      return true;
+    if (product.published === false) return false;
+    if (product.patternAccess === "public") return true;
+    const permission = await store().get(
+      `designAccess/${accessKey(product.id, uid)}`,
+    );
+    return (
+      permission?.requesterId === uid &&
+      permission?.ownerId === product.ownerId &&
+      permission?.status === "approved"
+    );
+  }
   async function publicProducts() {
     const saved = hasStore ? await store().list("products") : [];
     const all = new Map<string, any>(seeds.map((p) => [p.id, p]));
@@ -347,6 +364,11 @@ export function createApp(deps: Dependencies = {}) {
           rating: p.rating,
           description: p.description,
           source: p.source,
+          hasPattern: p.design?.format === "aura-studio",
+          patternAccess:
+            p.design?.format === "aura-studio"
+              ? p.patternAccess || "approval"
+              : null,
           createdAt: p.createdAt || 0,
           likes: stats?.likes || 0,
           tryOnEnabled: eligible(p),
@@ -373,6 +395,11 @@ export function createApp(deps: Dependencies = {}) {
         rating: p.rating,
         description: p.description,
         source: p.source,
+        hasPattern: p.design?.format === "aura-studio",
+        patternAccess:
+          p.design?.format === "aura-studio"
+            ? p.patternAccess || "approval"
+            : null,
         tryOnEnabled: eligible(p),
         tryOnPrice: costs.tryon || null,
       });
@@ -401,12 +428,10 @@ export function createApp(deps: Dependencies = {}) {
   app.all(
     ["/api/proxy-image", "/api/tryon", "/api/process-sketch"],
     (_req, res) =>
-      res
-        .status(410)
-        .json({
-          error:
-            "Use the paid order flow. Public image proxy and unpaid generation are disabled.",
-        }),
+      res.status(410).json({
+        error:
+          "Use the paid order flow. Public image proxy and unpaid generation are disabled.",
+      }),
   );
   app.use("/api", (req: any, _res, next) => {
     Promise.resolve()
@@ -489,6 +514,11 @@ export function createApp(deps: Dependencies = {}) {
       if (body.kind === "tryon") {
         check(readyAI, 503, "Try-on is not configured yet.");
         product = await findProduct(body.productId || "");
+        check(
+          await canUseProject(req.user.uid, product),
+          403,
+          "The designer must approve access before you pay for this custom try-on.",
+        );
         check(
           eligible(product),
           400,
@@ -733,6 +763,11 @@ export function createApp(deps: Dependencies = {}) {
         const person = parseImage(req.body.userImage);
         const p = await findProduct(order.productId);
         check(
+          await canUseProject(req.user.uid, p),
+          403,
+          "Design access has changed. You can refund this unused payment.",
+        );
+        check(
           eligible(p),
           409,
           "This product is no longer approved. Request a refund for this unused try-on.",
@@ -841,12 +876,19 @@ export function createApp(deps: Dependencies = {}) {
       const body = z
         .object({
           requestId: idSchema,
-          design: designSchema,
+          design: z.union([designSchema, projectSchema]),
           image: z.string(),
           rights: z.literal(true),
           gender: z.enum(["men", "women"]),
+          patternAccess: z.enum(["public", "approval"]).default("approval"),
+          dataConsent: z.literal(true).optional(),
         })
         .parse(req.body);
+      check(
+        !("format" in body.design) || body.dataConsent === true,
+        400,
+        "Confirm permission to share this project and its measurements.",
+      );
       check(
         JSON.stringify(body.design).length < 600000,
         400,
@@ -920,11 +962,15 @@ export function createApp(deps: Dependencies = {}) {
             image: `/api/designs/${id}/image`,
             imagePath,
             category:
-              body.design.template === "shirt"
-                ? "shirts"
-                : body.design.template === "saree"
-                  ? "saries"
-                  : "dresses",
+              "format" in body.design
+                ? body.design.garment === "blouse"
+                  ? "shirts"
+                  : "dresses"
+                : body.design.template === "shirt"
+                  ? "shirts"
+                  : body.design.template === "saree"
+                    ? "saries"
+                    : "dresses",
             gender: body.gender,
             price: 0,
             rating: 0,
@@ -936,6 +982,7 @@ export function createApp(deps: Dependencies = {}) {
             createdAt: Date.now(),
             grantOrderId: passValid ? pass.orderId : credit.id,
             design: body.design,
+            patternAccess: body.patternAccess,
           });
           used = true;
         });
@@ -967,6 +1014,184 @@ export function createApp(deps: Dependencies = {}) {
         return count;
       });
       res.json({ likes: value, liked });
+    }),
+  );
+  app.get(
+    "/api/my-designs",
+    route(async (req: any, res: any) => {
+      const designs = await store().where("products", "ownerId", req.user.uid);
+      res.json(
+        await Promise.all(
+          designs.map(async (d) => ({
+            id: d.id,
+            name: d.name,
+            image: d.image,
+            published: d.published !== false,
+            patternAccess: d.patternAccess || "approval",
+            hasPattern: d.design?.format === "aura-studio",
+            createdAt: d.createdAt,
+            likes: (await store().get(`productStats/${d.id}`))?.likes || 0,
+          })),
+        ),
+      );
+    }),
+  );
+  app.patch(
+    "/api/my-designs/:id",
+    route(async (req: any, res: any) => {
+      const id = idSchema.parse(req.params.id),
+        body = z
+          .object({
+            published: z.boolean(),
+            patternAccess: z.enum(["public", "approval"]),
+          })
+          .parse(req.body);
+      await store().transaction(async (tx) => {
+        const design = await tx.get(`products/${id}`);
+        check(
+          design && design.ownerId === req.user.uid,
+          404,
+          "Design was not found.",
+        );
+        tx.set(`products/${id}`, { ...design, ...body, updatedAt: Date.now() });
+      });
+      res.json({ updated: true });
+    }),
+  );
+  app.get(
+    "/api/designs/:id/project",
+    route(async (req: any, res: any) => {
+      const id = idSchema.parse(req.params.id),
+        product = await store().get(`products/${id}`);
+      check(
+        product?.design?.format === "aura-studio",
+        404,
+        "Editable project was not found.",
+      );
+      check(
+        product.ownerId === req.user.uid ||
+          (product.published !== false &&
+            (await canUseProject(req.user.uid, { ...product, id }))),
+        403,
+        "Request the designer’s approval before opening this project.",
+      );
+      res.json(projectSchema.parse(product.design));
+    }),
+  );
+  app.post(
+    "/api/designs/:id/access-requests",
+    route(async (req: any, res: any) => {
+      const id = idSchema.parse(req.params.id),
+        body = z
+          .object({ message: z.string().trim().min(10).max(500) })
+          .parse(req.body),
+        key = accessKey(id, req.user.uid),
+        day = new Date().toISOString().slice(0, 10);
+      let status = "pending";
+      await store().transaction(async (tx) => {
+        const product = await tx.get(`products/${id}`),
+          previous = await tx.get(`designAccess/${key}`),
+          limits = (await tx.get(
+            `permissionLimits/${accessKey(day, req.user.uid)}`,
+          )) || { count: 0 };
+        check(
+          product?.published !== false &&
+            product?.design?.format === "aura-studio",
+          404,
+          "Design was not found.",
+        );
+        check(
+          product.ownerId !== req.user.uid,
+          400,
+          "You already own this project.",
+        );
+        check(
+          product.patternAccess !== "public",
+          409,
+          "This project is already available to signed-in users.",
+        );
+        if (previous) {
+          check(
+            previous.ownerId === product.ownerId &&
+              previous.requesterId === req.user.uid,
+            409,
+            "The design owner has changed.",
+          );
+          check(
+            !["rejected", "revoked"].includes(previous.status),
+            409,
+            "Access was declined or revoked. Please respect the designer’s decision.",
+          );
+          status = previous.status;
+          return;
+        }
+        check(
+          limits.count < 10,
+          429,
+          "You have reached today’s design request limit.",
+        );
+        tx.set(`designAccess/${key}`, {
+          id: key,
+          designId: id,
+          designName: product.name,
+          ownerId: product.ownerId,
+          requesterId: req.user.uid,
+          message: body.message,
+          status: "pending",
+          createdAt: Date.now(),
+          reply: "",
+        });
+        tx.set(`permissionLimits/${accessKey(day, req.user.uid)}`, {
+          count: limits.count + 1,
+        });
+      });
+      res.json({ id: key, status });
+    }),
+  );
+  app.get(
+    "/api/access-requests",
+    route(async (req: any, res: any) => {
+      const [owned, requested] = await Promise.all([
+        store().where("designAccess", "ownerId", req.user.uid),
+        store().where("designAccess", "requesterId", req.user.uid),
+      ]);
+      res.json(
+        [
+          ...new Map([...owned, ...requested].map((r) => [r.id, r])).values(),
+        ].sort((a, b) => b.createdAt - a.createdAt),
+      );
+    }),
+  );
+  app.patch(
+    "/api/access-requests/:id",
+    route(async (req: any, res: any) => {
+      const id = idSchema.parse(req.params.id),
+        body = z
+          .object({
+            status: z.enum(["approved", "rejected", "revoked"]),
+            reply: z.string().trim().max(500).default(""),
+          })
+          .parse(req.body);
+      await store().transaction(async (tx) => {
+        const request = await tx.get(`designAccess/${id}`);
+        check(
+          request && request.ownerId === req.user.uid,
+          404,
+          "Access request was not found.",
+        );
+        const product = await tx.get(`products/${request.designId}`);
+        check(
+          product?.ownerId === req.user.uid,
+          403,
+          "Only the current design owner can decide this request.",
+        );
+        tx.set(`designAccess/${id}`, {
+          ...request,
+          ...body,
+          updatedAt: Date.now(),
+        });
+      });
+      res.json({ updated: true });
     }),
   );
   app.get(
@@ -1073,16 +1298,14 @@ export function createApp(deps: Dependencies = {}) {
   );
   app.use((err: any, _req: any, res: any, _next: any) => {
     const status = err instanceof z.ZodError ? 400 : err.status || 500;
-    res
-      .status(status)
-      .json({
-        error:
-          err instanceof z.ZodError
-            ? "Please check the supplied fields."
-            : status >= 500 && !(err instanceof ApiError)
-              ? "The service is unavailable. Please try again later."
-              : err.message,
-      });
+    res.status(status).json({
+      error:
+        err instanceof z.ZodError
+          ? "Please check the supplied fields."
+          : status >= 500 && !(err instanceof ApiError)
+            ? "The service is unavailable. Please try again later."
+            : err.message,
+    });
   });
   return app;
 }

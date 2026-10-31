@@ -138,7 +138,9 @@ export default function ProductDetailPage() {
               {product.name}
             </h1>
             <p className="text-3xl font-black text-black">
-              ₹{product.price.toLocaleString()}
+              {product.source === "designer"
+                ? "Made to order — request a quote"
+                : `₹${product.price.toLocaleString()}`}
             </p>
             <p className="text-gray-500 leading-relaxed font-medium">
               {product.description}
@@ -167,6 +169,14 @@ export default function ProductDetailPage() {
           </div>
 
           <div className="flex flex-col sm:flex-row gap-4">
+            {product.hasPattern && (
+              <button
+                className="secondary"
+                onClick={() => navigate(`/designs?design=${product.id}`)}
+              >
+                View pattern access & designer permission
+              </button>
+            )}
             <button
               onClick={addToCart}
               disabled={adding}

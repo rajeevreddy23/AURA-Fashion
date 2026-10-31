@@ -1,4 +1,6 @@
 export interface Product {
+  hasPattern?: boolean;
+  patternAccess?: "public" | "approval" | null;
   source?: string;
   likes?: number;
   createdAt?: number;
