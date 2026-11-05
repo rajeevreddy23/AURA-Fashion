@@ -1,6 +1,6 @@
 # AURA Fashion — implementation and verification report
 
-Updated 31 October 2026.
+Updated 5 November 2026.
 
 Project: `D:\AURA Fashion`  
 Repository: https://github.com/rajeevreddy23/AURA-Fashion
@@ -26,16 +26,18 @@ The new repository was empty. The existing AuraFashion application was imported 
 
 ## Verification record
 
-All **99 automated checks passed** for the advanced update: 28 domain/API, 6 database and 65 browser checks.
+The reference refresh passed type checks, the production build, **31 domain/API checks and 80 distinct browser cases**. After the final layout, zoom and authentication-handoff refinements, 55 affected browser cases were rerun successfully. Database rules were unchanged; their 6 emulator/integration checks last passed on 31 October and are not counted as newly rerun tests.
 
-- **28 domain/API tests passed:** real local HTTP and Stripe signature verification, with simulated payments, AI and image storage. Includes 19 API cases covering authorization, server-owned prices, replay, concurrency, budgets, refunds, publishing, likes, quote privacy, measurement consent and project permission approval/revocation; 9 domain cases cover bounded project imports, real geometry, packing/money calculations, safe exports, measurement transfer and cloth solver behavior.
+The refresh follows the supplied desktop/mobile design references through the shell, tool rail, numbered panels, editing trays, green/blush theme, branded landing page and photo-first try-on flow. The user explicitly chose to keep the working mannequin. This is not a pixel-identical reproduction of every illustrated feature: pose animations, pressure maps, full CAD tools, Razorpay/wallet payments and some production features remain unimplemented. See `docs/REFERENCE_REFRESH.md` for the implemented-versus-remaining matrix and the temporary photo retention details, and `docs/MEDIA_SOURCES.md` for image provenance.
+
+- **31 domain/API tests passed:** 19 API/guardrail cases use real local HTTP and Stripe signature verification with simulated payments, AI and image storage; 9 domain cases cover geometry, imports, packing/costs, exports and cloth behavior; 3 photo-handoff cases cover expiry, account/product scope, authentication restoration/sign-out, rejected formats and storage failure.
 - **6 database tests passed after the dependency patch:** Firestore emulator rules reject forged entitlements and direct design-approval/counter access. A real Admin SDK transaction integration case proves two concurrent publications cannot spend one paid entitlement. Image storage is simulated in this integration case.
-- **65 Chromium browser checks passed in one final run against the locally served production build:** five sizes — 320×800, 390×844, 768×1024, 1024×768 and 1440×1000. Cases cover the advanced workspace, touch/mouse/keyboard placement, measured component edits, undo/redo, autosave/reload, revisions, safe project switching, material changes, trims/BOM, cloth controls, print styles, measured exports, unsafe import rejection, simulated storage-failure recovery, disabled paid controls, page-width checks and automated accessibility scans, alongside retained editor/commerce checks. Final run: zero failures, skips or retries.
+- **80 Chromium browser cases passed against the locally served production build:** five standard sizes — 320×800, 390×844, 768×1024, 1024×768 and 1440×1000 — plus a 1672×941 reference capture. Cases cover creation/editing/history/exports, touch and keyboard placement, actual image loading, new shell navigation and colorways, home-to-shop search, photo preview/removal/consent, unavailable charges, layout width and automated accessibility scans. A final targeted run repeated 55 affected cases successfully after the last refinements. Both completed runs had zero failures; no live account or payment was used.
 - TypeScript checks, the production build and updated database tests passed. Desktop and phone screenshots were visually inspected. These checks do not establish physical-device speed, accurate fit, print calibration or manual screen-reader usability.
 - `npm start` was smoke-tested with a development environment inherited from the shell: its cross-platform launcher still serves built assets in production mode, and unavailable payments remain disabled.
 - **Production dependency audit: zero known vulnerabilities** on 31 October, after a scoped `rimraf` → `glob` 14.0.3 override brought in patched minimatch 11.0.3. Synchronous/asynchronous glob compatibility checks, type checks, API/domain tests, production build and Firestore emulator checks passed with the patch. The all-dependencies audit still reports **9 moderate findings in Firebase CLI/development tooling**; they are not part of the production dependency audit and have not been hidden with a forced breaking upgrade. An audit result does not guarantee protection against undiscovered issues. Advisory references and the reason for the scoped override are in README.
 
-No live Stripe charge, actual AI generation, production Firebase authentication/storage integration, physical-device session or cloud deployment was tested. No real customer photo or payment was used. The model's garment fidelity and fit accuracy therefore remain unverified.
+No live Stripe charge, app-provider try-on/render generation, production Firebase authentication/storage integration, physical-device session or cloud deployment was tested. No real customer photo or payment was used. A decorative bridal hero was generated during development; this is separate from the app's unverified live try-on integration. Garment fidelity and fit accuracy remain unverified.
 
 ## Security and cost changes
 
@@ -45,7 +47,7 @@ The unrestricted image proxy and unmetered generation endpoints were retired. Pr
 
 Configurable price floors, provider-cost reserves, percentage fee/tax reserves, minimum margin, daily spend caps and per-account limits gate AI availability. Failed attempts retain their spend reservation and request a refund. These controls depend on accurate configured cost estimates and cannot guarantee profitability if actual costs change.
 
-Input photos are not saved by the app. Result access expires after seven days and users can delete results sooner. Physical object cleanup requires the documented bucket lifecycle rule; provider retention follows its own terms.
+Input photos are not saved in the app's server database or image bucket. Photo-first checkout uses an explicitly consented temporary browser-session copy, scoped to the same account/product and expiring for reuse after 30 minutes. It is cleared after generation attempts/removal and on access after expiry; an inactive tab can retain expired bytes until the next access or browser-session cleanup. See `docs/REFERENCE_REFRESH.md` for details. Result access expires after seven days and users can delete results sooner. Physical result-object cleanup requires the documented bucket lifecycle rule; provider retention follows its own terms.
 
 ## Before accepting real payments
 

@@ -1,10 +1,16 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import {
+  Link,
+  useNavigate,
+  useParams,
+  useSearchParams,
+} from "react-router-dom";
 import { Heart, ArrowUpRight } from "lucide-react";
 import { MEN_PRODUCTS, WOMEN_PRODUCTS } from "../constants";
 import { api, money, useConfiguration } from "../services/api";
 import { Product } from "../types";
 import { auth } from "../firebase";
+import { catalogImage, missingCatalogImage } from "../services/catalogMedia";
 export default function Shopping() {
   const { gender = "women" } = useParams();
   const navigate = useNavigate();
@@ -15,7 +21,9 @@ export default function Shopping() {
   ]);
   const [category, setCategory] = useState("all");
   const [sort, setSort] = useState("popular");
-  const [query, setQuery] = useState("");
+  const [searchParams] = useSearchParams();
+  const [query, setQuery] = useState(searchParams.get("q") || "");
+  useEffect(() => setQuery(searchParams.get("q") || ""), [searchParams]);
   const [source, setSource] = useState("all");
   const [liked, setLiked] = useState<string[]>([]);
   const [message, setMessage] = useState("");
@@ -94,7 +102,7 @@ export default function Shopping() {
       <div className="page-heading">
         <div>
           <p className="eyebrow">THE AURA EDIT</p>
-          <h2>Find your next expression.</h2>
+          <h2>Shop</h2>
           <p className="muted">
             Discover garments and original designs. Bring your favorites to a
             boutique.
@@ -154,7 +162,15 @@ export default function Shopping() {
             aria-pressed={c === category}
             onClick={() => setCategory(c)}
           >
-            {c}
+            {c === "all"
+              ? "All"
+              : c === "saries"
+                ? "Sarees"
+                : c === "lehangas"
+                  ? "Lehengas"
+                  : c === "shirts" && gender === "women"
+                    ? "Blouses"
+                    : c.charAt(0).toUpperCase() + c.slice(1)}
           </button>
         ))}
       </div>
@@ -168,7 +184,8 @@ export default function Shopping() {
           <article className="product-card" key={p.id}>
             <Link to={`/product/${p.id}`} className="product-image">
               <img
-                src={p.image}
+                src={catalogImage(p)}
+                onError={missingCatalogImage}
                 alt={p.name}
                 loading="lazy"
                 referrerPolicy="no-referrer"

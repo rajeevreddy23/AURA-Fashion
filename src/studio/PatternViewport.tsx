@@ -114,7 +114,7 @@ export default function PatternViewport({
           aria-label="Editable garment pattern sheet in centimeters. Select a component in the list or drag a pattern."
           data-testid="pattern-sheet"
           viewBox={`0 0 ${width} ${height}`}
-          style={{ width: `${zoom}%`, minWidth: "100%" }}
+          style={{ width: `${zoom}%`, minWidth: `${zoom}%` }}
           onPointerMove={move}
           onPointerUp={() => finish()}
           onPointerCancel={() => finish(true)}

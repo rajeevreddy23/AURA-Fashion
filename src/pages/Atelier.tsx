@@ -189,7 +189,7 @@ export default function Atelier() {
     [entitlement, setEntitlement] = useState<any>(null);
   const publishId = useRef(newId()),
     loadedShared = useRef("");
-  const [searchParams] = useSearchParams();
+  const [searchParams, setSearchParams] = useSearchParams();
   const sharedDesign = searchParams.get("design");
   const apiRef = useRef<ViewportApi | null>(null),
     importRef = useRef<HTMLInputElement>(null),
@@ -405,8 +405,24 @@ export default function Atelier() {
   const setPanelOpen = (next: Panel) => {
     setPanel(next);
     setMobileInspector(true);
+    if (searchParams.get("tool") !== next)
+      setSearchParams(
+        (previous) => {
+          previous.set("tool", next);
+          return previous;
+        },
+        { replace: true },
+      );
     if (next === "projects") workspace.refresh();
   };
+  const requestedTool = searchParams.get("tool");
+  useEffect(() => {
+    if (requestedTool && sections.some((s) => s.id === requestedTool)) {
+      setPanel(requestedTool as Panel);
+      setMobileInspector(true);
+      if (requestedTool === "projects") workspace.refresh();
+    }
+  }, [requestedTool]);
   useEffect(() => {
     if (mobileInspector && matchMedia("(max-width: 760px)").matches)
       requestAnimationFrame(() =>
@@ -1507,80 +1523,24 @@ export default function Atelier() {
       </section>
     );
   return (
-    <div className="atelier-app">
+    <div className="atelier-app reference-atelier">
       <div className="atelier-page-heading">
         <div>
-          <p>THE AURA ATELIER</p>
-          <h2>Fashion Design Studio</h2>
-          <span>Create · construct · customize · preview · share</span>
+          <p>AURA FASHION · BRIDAL ATELIER</p>
+          <h2>3D Fashion Design Studio</h2>
+          <span>Create · Simulate · Customize · Analyze · Render · Share</span>
         </div>
         <div className="atelier-heading-note">
-          <ShieldCheck size={17} />
-          <span>
-            Your creativity. On your device.
-            <small>All core design tools work without API keys.</small>
+          <span className="reference-motto">
+            Design
+            <br />
+            Without Limits
+            <small>
+              FROM CONCEPT TO CREATION
+              <br />
+              IN 3D, 2D AND BEYOND
+            </small>
           </span>
-        </div>
-      </div>
-      <div className="atelier-workspace-bar">
-        <div className="atelier-project-title">
-          <input
-            ref={nameRef}
-            aria-label="Advanced project name"
-            maxLength={100}
-            value={project.name}
-            onChange={(e) => {
-              if (e.target.value.trim())
-                commit((p) => ({ ...p, name: e.target.value }));
-            }}
-          />
-          <span className="atelier-save-status" role="status">
-            <i />
-            {workspace.status}
-          </span>
-        </div>
-        <div className="atelier-actions">
-          <button
-            title="Undo"
-            aria-label="Advanced undo"
-            disabled={!workspace.canUndo}
-            onClick={workspace.undo}
-          >
-            <Undo2 size={17} />
-          </button>
-          <button
-            title="Redo"
-            aria-label="Advanced redo"
-            disabled={!workspace.canRedo}
-            onClick={workspace.redo}
-          >
-            <Redo2 size={17} />
-          </button>
-          <button
-            aria-label="Open versions"
-            title="Versions"
-            onClick={() => setPanelOpen("versions")}
-          >
-            <Save size={16} />
-            <span>Versions</span>
-          </button>
-          <button
-            aria-label="Download 3D image"
-            title="Download 3D image"
-            onClick={capture}
-          >
-            <Download size={16} />
-            <span>3D image</span>
-          </button>
-          <button
-            aria-label="Export project"
-            title="Export project"
-            className="accent"
-            onClick={exportProject}
-          >
-            <Download size={16} />
-            <span>Export project</span>
-          </button>
         </div>
       </div>
       {(message || workspace.error) && (
@@ -1613,7 +1573,9 @@ export default function Atelier() {
         <aside className="atelier-left">
           <section className="atelier-panel">
             <div className="atelier-panel-heading">
-              <h3>Garment components</h3>
+              <h3>
+                <b className="panel-number">2</b> Garment components
+              </h3>
               <span>{project.pieces.length}</span>
             </div>
             <div className="component-adder">
@@ -1695,8 +1657,54 @@ export default function Atelier() {
           </section>
           <section className="atelier-panel">
             <div className="atelier-panel-heading">
-              <h3>Avatar & fit</h3>
+              <h3>
+                <b className="panel-number">1</b> Avatar & pose
+              </h3>
               <Ruler size={15} />
+            </div>
+            <div className="reference-avatar">
+              <svg
+                viewBox="0 0 80 150"
+                role="img"
+                aria-label="Measurement mannequin illustration"
+              >
+                <defs>
+                  <linearGradient id="avatar-shade">
+                    <stop stopColor="#d5bfa6" />
+                    <stop offset=".5" stopColor="#f2dfc8" />
+                    <stop offset="1" stopColor="#bda68d" />
+                  </linearGradient>
+                </defs>
+                <circle cx="40" cy="15" r="10" fill="url(#avatar-shade)" />
+                <path
+                  d="M34 25L20 34 13 76 19 79 28 45 28 70 22 92 28 140 36 140 40 100 44 140 52 140 58 92 52 70 52 45 61 79 67 76 60 34 46 25Z"
+                  fill="url(#avatar-shade)"
+                />
+                <path
+                  d="M28 40Q40 46 52 40L50 56Q40 62 30 56ZM26 78Q40 84 54 78L56 92 43 99 40 90 37 99 24 92Z"
+                  fill="#67867b"
+                />
+                <path
+                  d="M20 35H60M27 57H53M25 80H55"
+                  stroke="#09634f"
+                  strokeDasharray="2 2"
+                />
+              </svg>
+              <div>
+                <strong>Custom mannequin</strong>
+                <p>Body measurements drive your preview.</p>
+                <button onClick={() => setPanelOpen("measurements")}>
+                  Measurements →
+                </button>
+                <button
+                  onClick={() => {
+                    setView("3d");
+                    apiRef.current?.setView("front");
+                  }}
+                >
+                  View avatar
+                </button>
+              </div>
             </div>
             <div className="avatar-summary">
               <span>
@@ -1740,29 +1748,99 @@ export default function Atelier() {
           </Link>
         </aside>
         <div className="atelier-center">
-          <div className="atelier-view-tabs">
-            <button aria-pressed={view === "3d"} onClick={() => setView("3d")}>
-              <Box size={15} />
-              3D view
-            </button>
-            <button aria-pressed={view === "2d"} onClick={() => setView("2d")}>
-              <Scissors size={15} />
-              2D pattern
-            </button>
-            <button
-              aria-pressed={view === "split"}
-              onClick={() => setView("split")}
-            >
-              <Columns2 size={15} />
-              Split view
-            </button>
-            <button
-              className="inspector-toggle"
-              onClick={() => setMobileInspector((v) => !v)}
-            >
-              <Settings2 size={15} />
-              {mobileInspector ? "Close tools" : "Edit tools"}
-            </button>
+          <div className="reference-command-row">
+            <div className="atelier-workspace-bar">
+              <div className="atelier-project-title">
+                <input
+                  ref={nameRef}
+                  aria-label="Advanced project name"
+                  maxLength={100}
+                  value={project.name}
+                  onChange={(e) => {
+                    if (e.target.value.trim())
+                      commit((p) => ({ ...p, name: e.target.value }));
+                  }}
+                />
+                <span className="atelier-save-status" role="status">
+                  <i />
+                  {workspace.status}
+                </span>
+              </div>
+              <div className="atelier-actions">
+                <button
+                  title="Undo"
+                  aria-label="Advanced undo"
+                  disabled={!workspace.canUndo}
+                  onClick={workspace.undo}
+                >
+                  <Undo2 size={17} />
+                </button>
+                <button
+                  title="Redo"
+                  aria-label="Advanced redo"
+                  disabled={!workspace.canRedo}
+                  onClick={workspace.redo}
+                >
+                  <Redo2 size={17} />
+                </button>
+                <button
+                  aria-label="Open versions"
+                  title="Versions"
+                  onClick={() => setPanelOpen("versions")}
+                >
+                  <Save size={16} />
+                  <span>Versions</span>
+                </button>
+                <button
+                  aria-label="Download 3D image"
+                  title="Download 3D image"
+                  onClick={capture}
+                >
+                  <Download size={16} />
+                  <span>3D image</span>
+                </button>
+                <button
+                  aria-label="Export project"
+                  title="Export project"
+                  className="accent"
+                  onClick={exportProject}
+                >
+                  <Download size={16} />
+                  <span>Export project</span>
+                </button>
+              </div>
+            </div>
+
+            <div className="atelier-view-tabs">
+              <button
+                aria-pressed={view === "3d"}
+                onClick={() => setView("3d")}
+              >
+                <Box size={15} />
+                3D view
+              </button>
+              <button
+                aria-pressed={view === "2d"}
+                onClick={() => setView("2d")}
+              >
+                <Scissors size={15} />
+                2D pattern
+              </button>
+              <button
+                aria-pressed={view === "split"}
+                onClick={() => setView("split")}
+              >
+                <Columns2 size={15} />
+                Split view
+              </button>
+              <button
+                className="inspector-toggle"
+                onClick={() => setMobileInspector((v) => !v)}
+              >
+                <Settings2 size={15} />
+                {mobileInspector ? "Close tools" : "Edit tools"}
+              </button>
+            </div>
           </div>
           <div className={`atelier-canvases view-${view}`}>
             {view !== "2d" && (
@@ -1786,6 +1864,59 @@ export default function Atelier() {
                     <option value="warm">Warm studio</option>
                     <option value="night">Evening</option>
                   </select>
+                </div>
+                <div
+                  className="reference-stage-tools"
+                  aria-label="Garment tools"
+                >
+                  <button
+                    title="Select component"
+                    aria-label="Select garment component"
+                    onClick={() => setPanelOpen("components")}
+                  >
+                    <Layers size={17} />
+                    <span>Select</span>
+                  </button>
+                  <button
+                    title="Arrange measured patterns"
+                    aria-label="Arrange patterns"
+                    onClick={() => setView("2d")}
+                  >
+                    <Columns2 size={17} />
+                    <span>Arrange</span>
+                  </button>
+                  <button
+                    title="Change fabric"
+                    aria-label="Edit garment fabric"
+                    onClick={() => setPanelOpen("materials")}
+                  >
+                    <Palette size={17} />
+                    <span>Fabric</span>
+                  </button>
+                  <button
+                    title="Edit dimensions"
+                    aria-label="Edit garment dimensions"
+                    onClick={() => setPanelOpen("components")}
+                  >
+                    <Ruler size={17} />
+                    <span>Size</span>
+                  </button>
+                  <button
+                    title="Add embroidery and trims"
+                    aria-label="Edit garment details"
+                    onClick={() => setPanelOpen("trims")}
+                  >
+                    <Scissors size={17} />
+                    <span>Details</span>
+                  </button>
+                  <button
+                    title="Save viewport image"
+                    aria-label="Capture garment viewport"
+                    onClick={capture}
+                  >
+                    <Download size={17} />
+                    <span>Capture</span>
+                  </button>
                 </div>
                 <Suspense
                   fallback={
@@ -1859,6 +1990,132 @@ export default function Atelier() {
               />
             )}
           </div>
+          <div className="reference-dock">
+            <section className="atelier-panel">
+              <div className="atelier-panel-heading">
+                <h3>
+                  <b className="panel-number">5</b> Trims & detailing
+                </h3>
+              </div>
+              <div className="reference-trim-tiles">
+                {["Border", "Embroidery", "Buttons", "Tassels"].map(
+                  (label, i) => (
+                    <button
+                      key={label}
+                      onClick={() => {
+                        setTrimKind(
+                          (
+                            [
+                              "border",
+                              "embroidery",
+                              "buttons",
+                              "tassels",
+                            ] as const
+                          )[i],
+                        );
+                        setPanelOpen("trims");
+                      }}
+                    >
+                      <span
+                        className={`trim-tile trim-${i}`}
+                        aria-hidden="true"
+                      >
+                        {["❧", "✥", "●", "♧"][i]}
+                      </span>
+                      {label}
+                    </button>
+                  ),
+                )}
+              </div>
+              <button
+                className="dock-text-button"
+                onClick={() => setPanelOpen("trims")}
+              >
+                Placement, scale & cost →
+              </button>
+            </section>
+            <section className="atelier-panel">
+              <div className="atelier-panel-heading">
+                <h3>
+                  <b className="panel-number">6</b> Design colorways
+                </h3>
+              </div>
+              <div className="reference-colorways">
+                {[
+                  ["#9f1839", "Royal ruby"],
+                  ["#075b4b", "Emerald"],
+                  ["#eadcb6", "Ivory"],
+                  ["#223c69", "Midnight"],
+                ].map(([color, label]) => (
+                  <button
+                    key={color}
+                    aria-label={`Use ${label} colorway`}
+                    onClick={() => patchMaterial({ color })}
+                  >
+                    <svg viewBox="0 0 48 70" aria-hidden="true">
+                      <path
+                        d="M18 4H30L34 22 46 66Q24 73 2 66L14 22Z"
+                        fill={color}
+                      />
+                      <path
+                        d="M6 58H42M10 46H38M15 22H33"
+                        stroke="#d7b877"
+                        strokeWidth="2"
+                      />
+                    </svg>
+                    <span>{label}</span>
+                  </button>
+                ))}
+              </div>
+              <button
+                className="dock-text-button"
+                onClick={() => setPanelOpen("versions")}
+              >
+                Save a colorway as a version →
+              </button>
+            </section>
+            <section className="atelier-panel">
+              <div className="atelier-panel-heading">
+                <h3>
+                  <b className="panel-number">7</b> Design assistant
+                </h3>
+              </div>
+              <p className="dock-copy">{designChecks(project)[0]?.message}</p>
+              <button
+                className="dock-text-button"
+                onClick={() => setPanelOpen("assistant")}
+              >
+                Review checks & AI services →
+              </button>
+            </section>
+            <section className="atelier-panel">
+              <div className="atelier-panel-heading">
+                <h3>
+                  <b className="panel-number">8</b> Fit analysis
+                </h3>
+              </div>
+              <div className="reference-fit">
+                {fitReadings(project).map((r) => (
+                  <div key={r.label}>
+                    <span>{r.label}</span>
+                    <b className={r.cm < 0 ? "negative" : ""}>
+                      {r.cm > 0 ? "+" : ""}
+                      {r.cm.toFixed(1)} cm
+                    </b>
+                  </div>
+                ))}
+              </div>
+              <p className="dock-copy">
+                Calculated ease · verify with a sewn sample
+              </p>
+              <button
+                className="dock-text-button"
+                onClick={() => setPanelOpen("measurements")}
+              >
+                Review measurements →
+              </button>
+            </section>
+          </div>
           <div className="atelier-bottom-summary">
             <div>
               <span>PROJECT</span>
@@ -1887,7 +2144,41 @@ export default function Atelier() {
             <strong>Design tools</strong>
             <button onClick={() => setMobileInspector(false)}>Done</button>
           </div>
-          {renderInspector()}
+          <div className="reference-inspector-title">
+            <b className="panel-number">3</b>
+            <span>{sections.find((s) => s.id === panel)?.label}</span>
+            <Settings2 size={14} />
+          </div>
+          <div className="reference-inspector-body">{renderInspector()}</div>
+          <section className="reference-physics">
+            <div className="atelier-panel-heading">
+              <h3>
+                <b className="panel-number">4</b> Simulation & physics
+              </h3>
+            </div>
+            <dl>
+              <div>
+                <dt>Gravity</dt>
+                <dd>{project.simulation.gravity} m/s²</dd>
+              </div>
+              <div>
+                <dt>Stiffness</dt>
+                <dd>{Math.round(project.simulation.stiffness * 100)}%</dd>
+              </div>
+              <div>
+                <dt>Body collision</dt>
+                <dd>{project.simulation.collisions ? "On" : "Off"}</dd>
+              </div>
+            </dl>
+            <div className="reference-physics-actions">
+              <button onClick={() => setPanelOpen("simulation")}>
+                Settings
+              </button>
+              <button onClick={() => setRunning((v) => !v)}>
+                {running ? "Pause" : "Simulate"}
+              </button>
+            </div>
+          </section>
         </aside>
       </div>
       <div className="atelier-footer">
@@ -1897,6 +2188,11 @@ export default function Atelier() {
         </span>
         <span>Pattern units: cm · {project.materials.length} fabrics</span>
         <Link to="/shopping">Shop & community</Link>
+        <Link to="/tryon">Virtual try-on →</Link>
+        <Link to="/boutique">Boutique quotes</Link>
+        <button onClick={() => setPanelOpen("techpack")}>
+          Tech pack & costing
+        </button>
       </div>
       {panel !== "techpack" && (
         <div className="print-only">

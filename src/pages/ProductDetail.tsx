@@ -15,6 +15,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { auth } from "../firebase";
+import { catalogImage, missingCatalogImage } from "../services/catalogMedia";
 import { db } from "../database";
 import {
   collection,
@@ -111,7 +112,8 @@ export default function ProductDetailPage() {
           className="aspect-[3/4] rounded-3xl overflow-hidden bg-white shadow-xl"
         >
           <img
-            src={product.image}
+            src={catalogImage(product)}
+            onError={missingCatalogImage}
             className="w-full h-full object-cover"
             alt={product.name}
             referrerPolicy="no-referrer"

@@ -14,7 +14,32 @@ async function open(page: any) {
   ).toBeVisible();
 }
 async function section(page: any, name: string) {
-  await page.getByRole("button", { name, exact: true }).first().click();
+  const button = page.getByRole("button", { name, exact: true }).first();
+  if (await button.isVisible()) {
+    await button.click();
+    return;
+  }
+  if (name === "Versions") {
+    await page
+      .getByRole("button", { name: "Open versions", exact: true })
+      .click();
+    return;
+  }
+  const names: Record<string, string> = {
+    Components: "Pattern Library",
+    Measurements: "Avatar & Fit",
+    Fabrics: "Fabrics & Materials",
+    "Trims & details": "Trims & Embellishments",
+    "Cloth preview": "Cloth Simulation",
+    "Costing & BOM": "Costing & BOM",
+    "My designs": "My Designs",
+    "Tech pack": "Tech Pack",
+    "AI & services": "AI Assistant",
+  };
+  await page
+    .getByRole("navigation", { name: "Main navigation", exact: true })
+    .getByRole("link", { name: names[name], exact: true })
+    .click();
 }
 async function overflow(page: any) {
   await expect
@@ -204,6 +229,9 @@ test("patterns support touch or mouse placement, keyboard movement and measured 
 }, info) => {
   await open(page);
   await page.getByRole("button", { name: "2D pattern", exact: true }).click();
+  await page
+    .getByRole("combobox", { name: "Pattern zoom", exact: true })
+    .selectOption("75");
   const pattern = page.getByRole("button", { name: /^Blouse front pattern/ });
   await pattern.focus();
   await page.keyboard.press("Shift+ArrowRight");

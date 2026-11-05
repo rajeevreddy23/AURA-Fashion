@@ -1,0 +1,1742 @@
+/* Reference-inspired shell, live workspace panels and responsive companion pages. */
+@media (min-width: 1051px) {
+  .reference-atelier .atelier-canvases > .garment-panel,
+  .reference-atelier .atelier-canvases > .pattern-panel {
+    height: 560px;
+    min-height: 0;
+  }
+  .reference-atelier .atelier-canvases .atelier-viewport,
+  .reference-atelier .atelier-canvases .pattern-scroll {
+    flex: 1;
+    min-height: 0;
+  }
+}
+.reference-atelier .reference-command-row {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 6px;
+  min-width: 0;
+}
+.reference-atelier .reference-command-row > .atelier-workspace-bar {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  padding: 0;
+  gap: 8px;
+  min-height: 32px;
+}
+.reference-atelier
+  .reference-command-row
+  > .atelier-workspace-bar
+  .atelier-project-title {
+  flex-wrap: nowrap;
+  gap: 6px;
+}
+.reference-atelier
+  .reference-command-row
+  > .atelier-workspace-bar
+  .atelier-project-title
+  > input {
+  width: 145px;
+  padding: 3px;
+  font-size: 10px;
+}
+.reference-atelier
+  .reference-command-row
+  > .atelier-workspace-bar
+  .atelier-save-status {
+  font-size: 7px;
+  max-width: 100px;
+}
+.reference-atelier
+  .reference-command-row
+  > .atelier-workspace-bar
+  .atelier-actions
+  button {
+  min-height: 28px;
+  padding: 4px 6px;
+  font-size: 8px;
+  gap: 4px;
+}
+.reference-atelier .reference-command-row > .atelier-view-tabs {
+  flex: 0 0 235px;
+  margin: 0;
+  min-height: 30px;
+}
+.reference-atelier .reference-command-row > .atelier-view-tabs button {
+  min-height: 26px;
+  font-size: 8px;
+  padding: 3px 5px;
+}
+@media (min-width: 1051px) {
+  body:has(.reference-atelier) .reference-header {
+    height: 50px;
+    padding-block: 5px;
+  }
+  body:has(.reference-atelier) .reference-rail {
+    top: 50px;
+  }
+  .reference-atelier.atelier-app .atelier-page-heading {
+    height: 80px;
+    min-height: 80px;
+    padding: 6px 20px;
+  }
+  .reference-atelier .atelier-page-heading > div > p {
+    display: none;
+  }
+  .reference-atelier .atelier-tabs {
+    display: none;
+  }
+  .reference-atelier.atelier-app .atelier-layout {
+    padding-top: 16px;
+  }
+  .reference-atelier .atelier-bottom-summary {
+    display: none;
+  }
+  .reference-atelier .garment-panel > .atelier-panel-heading {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    z-index: 3;
+    min-height: 0;
+    background: transparent;
+    padding: 0;
+  }
+  .reference-atelier .garment-panel > .atelier-panel-heading h3 {
+    display: none;
+  }
+  .reference-atelier .garment-panel > .atelier-panel-heading select {
+    min-height: 23px;
+    padding: 3px;
+    font-size: 9px;
+  }
+  .reference-atelier .atelier-canvases .atelier-viewport {
+    height: 510px;
+  }
+  .reference-atelier .atelier-canvases .pattern-scroll {
+    height: 500px;
+  }
+  .reference-atelier .reference-stage-tools {
+    top: 6px;
+  }
+  .reference-atelier .cloth-transport {
+    line-height: 1.2;
+  }
+  .reference-atelier .cloth-transport small {
+    font-size: 7px;
+    line-height: 1.2;
+  }
+  .reference-atelier .camera-controls button {
+    min-height: 26px;
+  }
+  .reference-atelier.atelier-app .atelier-footer {
+    margin-top: 6px;
+  }
+}
+@media (max-width: 1250px) {
+  .reference-atelier .reference-command-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .reference-atelier .reference-command-row > .atelier-workspace-bar {
+    flex: auto;
+  }
+  .reference-atelier .reference-command-row > .atelier-view-tabs {
+    flex: auto;
+    width: 100%;
+  }
+}
+@media (max-width: 760px) {
+  .reference-atelier
+    .reference-command-row
+    > .atelier-workspace-bar
+    .atelier-project-title {
+    justify-content: space-between;
+  }
+  .reference-atelier
+    .reference-command-row
+    > .atelier-workspace-bar
+    .atelier-project-title
+    > input {
+    width: 65%;
+    font-size: 11px;
+  }
+  .reference-atelier
+    .reference-command-row
+    > .atelier-workspace-bar
+    .atelier-save-status {
+    font-size: 8px;
+  }
+  .reference-atelier
+    .reference-command-row
+    > .atelier-workspace-bar
+    .atelier-actions
+    button {
+    min-height: 38px;
+    flex: 1;
+    font-size: 10px;
+  }
+  .reference-atelier .reference-command-row > .atelier-view-tabs button {
+    min-height: 42px;
+    font-size: 10px;
+  }
+  .reference-atelier .reference-command-row {
+    margin-bottom: 8px;
+  }
+}
+body:not(:has(.reference-atelier)) .app-nav {
+  grid-template-columns: repeat(9, minmax(0, 1fr));
+  width: min(850px, calc(100% - 32px));
+}
+.header-cart {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #006650;
+  min-width: 30px;
+  min-height: 36px;
+}
+.app-header .brand > span {
+  font-family: ui-sans-serif, system-ui;
+  font-size: 27px;
+  letter-spacing: -1px;
+}
+.aura-creator-card {
+  margin-top: 24px;
+  padding: 24px;
+  background: #e8f4ee;
+  border: 1px solid #c8e0d3;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.aura-creator-card p {
+  font-size: 9px;
+  letter-spacing: 1.5px;
+  color: #366452;
+  margin: 0 0 6px;
+}
+.aura-creator-card h3 {
+  font-size: 20px;
+  margin: 0 0 7px;
+}
+.aura-creator-card span {
+  font-size: 12px;
+  color: #3e6253;
+}
+.aura-creator-card .primary {
+  padding: 9px 15px;
+  text-decoration: none;
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  white-space: nowrap;
+  font-size: 12px;
+}
+@media (max-width: 760px) {
+  body:not(:has(.reference-atelier)) .app-nav {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    width: 100%;
+    left: 0;
+    bottom: 0;
+    transform: none;
+    border-radius: 0;
+    padding: 5px 3px;
+    box-shadow: 0 -3px 20px #154d3510;
+    background: #fcfffd;
+  }
+  body:not(:has(.reference-atelier)) .app-nav a[href="/tryon"],
+  body:not(:has(.reference-atelier)) .app-nav a[href="/boutique"],
+  body:not(:has(.reference-atelier)) .app-nav a[href="/subscription"],
+  body:not(:has(.reference-atelier)) .app-nav a[href="/cart"] {
+    display: none;
+  }
+  body:not(:has(.reference-atelier)) .app-nav a {
+    font-size: 9px;
+    min-height: 48px;
+  }
+  .app-header {
+    padding: 10px 12px;
+  }
+  .app-header .header-actions {
+    gap: 9px;
+  }
+  .app-header .header-actions .small {
+    padding: 8px;
+    font-size: 10px;
+  }
+  .app-header .header-actions a {
+    font-size: 10px;
+  }
+  .app-header .brand small {
+    font-size: 6px;
+  }
+  .aura-creator-card {
+    padding: 17px;
+    flex-direction: column;
+    align-items: start;
+    gap: 14px;
+  }
+  .aura-creator-card h3 {
+    font-size: 18px;
+  }
+  .aura-creator-card span {
+    font-size: 11px;
+  }
+}
+.aura-home-photo {
+  position: relative;
+  margin: 0;
+  min-width: 0;
+  overflow: hidden;
+}
+.aura-home-photo img {
+  display: block;
+}
+.aura-home-photo figcaption {
+  position: absolute;
+  bottom: 9px;
+  right: 9px;
+  background: #fff7f0e8;
+  color: #6e2843;
+  padding: 4px 7px;
+  border-radius: 4px;
+  font-size: 9px;
+}
+.reference-atelier .reference-stage-tools button {
+  font-size: 8px;
+}
+.reference-atelier .reference-trim-tiles button {
+  font-size: 8px;
+  line-height: 1.3;
+  overflow-wrap: anywhere;
+}
+.reference-atelier .reference-colorways button {
+  font-size: 8px;
+}
+.reference-atelier .reference-avatar button {
+  font-size: 9px;
+}
+.reference-atelier .reference-physics-actions button {
+  font-size: 10px;
+}
+.reference-atelier .reference-physics .atelier-panel-heading h3 {
+  color: white;
+}
+.reference-atelier .atelier-left .ease-readings {
+  display: none;
+}
+.reference-atelier
+  .atelier-left
+  > .atelier-panel:nth-of-type(2)
+  > .atelier-help {
+  display: none;
+}
+.reference-header {
+  position: sticky;
+  top: 0;
+}
+.app-header .brand {
+  font-family: ui-sans-serif, system-ui;
+  letter-spacing: -0.5px;
+  font-weight: 800;
+}
+.tryon-steps {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  padding: 14px;
+  list-style: none;
+  border-bottom: 1px solid #eadfe5;
+  margin: 0 0 24px;
+  font-size: 11px;
+  color: #566c62;
+}
+.tryon-steps li {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.tryon-steps b {
+  display: grid;
+  place-items: center;
+  width: 24px;
+  height: 24px;
+  border: 1px solid #b4cbbf;
+  border-radius: 50%;
+  font-size: 10px;
+}
+.tryon-steps [aria-current="step"] {
+  color: #00573f;
+  font-weight: 700;
+}
+.tryon-steps [aria-current="step"] b {
+  background: #006650;
+  color: white;
+}
+.aura-tryon-page .image-upload {
+  border: 1px dashed #9bb6ad;
+  background: linear-gradient(#f5faf9, #fff);
+  min-height: 220px;
+  border-radius: 10px;
+  color: #174936;
+}
+.aura-tryon-page .image-upload input {
+  max-width: 100%;
+}
+.aura-tryon-page .image-upload small {
+  font-size: 10px;
+}
+.photo-tip-row {
+  display: flex;
+  gap: 7px;
+  justify-content: space-around;
+  text-align: center;
+}
+.photo-tip-row span {
+  background: #eff7f3;
+  color: #375e4d;
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 10px;
+  flex: 1;
+}
+.tryon-processing {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 16px;
+  padding: 25px;
+  color: #075742;
+  font-size: 14px;
+}
+.tryon-processing small {
+  font-size: 10px;
+  color: #526b5c;
+  text-align: center;
+}
+.processing-ring {
+  height: 85px;
+  width: 85px;
+  border: 7px solid #e2efe8;
+  border-top-color: #00755b;
+  border-right-color: #00755b;
+  border-radius: 50%;
+  animation: aura-progress 1.3s linear infinite;
+}
+@keyframes aura-progress {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .processing-ring {
+    animation: none;
+  }
+}
+@media (max-width: 500px) {
+  .tryon-steps {
+    gap: 12px;
+    padding: 10px 0;
+    font-size: 9px;
+  }
+  .tryon-steps b {
+    width: 20px;
+    height: 20px;
+  }
+  .aura-tryon-page .tryon-grid {
+    display: flex;
+    flex-direction: column;
+  }
+  .aura-tryon-page .tryon-grid > section:first-child {
+    display: grid;
+    grid-template-columns: 62px 1fr;
+    column-gap: 12px;
+    padding: 12px;
+  }
+  .aura-tryon-page .tryon-garment {
+    height: 85px;
+    width: 62px;
+    grid-row: 1/4;
+    object-fit: cover;
+    margin: 0;
+  }
+  .aura-tryon-page .tryon-grid > section:first-child h3 {
+    font-size: 13px;
+    margin: 0;
+  }
+  .aura-tryon-page .tryon-grid > section:first-child p,
+  .aura-tryon-page .tryon-grid > section:first-child a {
+    font-size: 10px;
+    margin: 0;
+  }
+}
+.reference-header {
+  height: 58px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 7px 15px;
+  background: #fbfefe;
+  border-bottom: 1px solid #d8ece6;
+  z-index: 65;
+  color: #172e28;
+}
+.reference-brand {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+  text-decoration: none;
+  font-size: 21px;
+  font-weight: 800;
+  line-height: 1;
+}
+.reference-brand small {
+  display: block;
+  font-size: 16px;
+}
+.dress-mark {
+  color: #bf164c;
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 40px;
+  background: #fff1f4;
+  border-radius: 50%;
+  font-size: 32px;
+}
+.reference-top-tabs {
+  display: flex;
+  align-items: center;
+  background: #eef4f4;
+  border-radius: 24px;
+  padding: 3px;
+  white-space: nowrap;
+}
+.reference-top-tabs a {
+  font-size: 10px;
+  font-weight: 650;
+  text-decoration: none;
+  padding: 9px 12px;
+  border-radius: 20px;
+}
+.reference-top-tabs a:hover,
+.reference-top-tabs a.selected {
+  background: linear-gradient(#087a64, #005642);
+  color: white;
+}
+.reference-search {
+  flex: 1;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  background: #eff4f4;
+  border-radius: 22px;
+  padding: 8px 12px;
+  min-width: 100px;
+  color: #68796f;
+}
+.reference-search input {
+  border: 0;
+  background: transparent;
+  width: 100%;
+  min-width: 0;
+  font-size: 10px;
+}
+.reference-account {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-decoration: none;
+  white-space: nowrap;
+  font-size: 10px;
+  line-height: 1.3;
+}
+.reference-account svg {
+  color: #99550c;
+}
+.reference-account small {
+  display: block;
+  color: #006650;
+  font-weight: 700;
+}
+.reference-profile {
+  color: #006650;
+}
+.reference-rail {
+  position: fixed;
+  top: 58px;
+  bottom: 0;
+  left: 0;
+  width: 124px;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 6px;
+  background:
+    radial-gradient(ellipse at 90% 90%, #0c6c54aa, transparent 60%),
+    linear-gradient(140deg, #004b40, #002d28);
+  color: #eef9f5;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+.reference-rail > a {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 9px 7px;
+  min-height: 38px;
+  text-decoration: none;
+  font-size: 10px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  line-height: 1.35;
+  flex-shrink: 0;
+}
+.reference-rail > a svg {
+  flex-shrink: 0;
+}
+.reference-rail .selected,
+.reference-rail .active-tool {
+  background: #00735c;
+  border-color: #15957d;
+  box-shadow: inset 3px 0 #a5f2dc;
+}
+.reference-rail > a:hover {
+  background: #ffffff17;
+}
+.reference-rail .reference-premium {
+  margin-top: auto;
+  padding: 14px 8px;
+  flex-direction: column;
+  text-align: center;
+  border-color: #a59b4c;
+  color: #fff7ce;
+  gap: 7px;
+}
+.reference-premium strong {
+  font-size: 11px;
+}
+.reference-premium span {
+  font-size: 9px;
+}
+.reference-premium b {
+  padding: 5px;
+  border: 1px solid #a59b4c;
+  border-radius: 4px;
+  font-size: 10px;
+}
+body:has(.reference-atelier) #main {
+  margin: 0 0 0 124px;
+  width: calc(100% - 124px);
+  max-width: none;
+  padding: 0;
+  background: #edf7f3;
+}
+.reference-atelier {
+  max-width: none;
+  background: #f0f8f5;
+}
+.reference-atelier .atelier-page-heading {
+  padding: 11px 22px;
+  min-height: 91px;
+  background:
+    radial-gradient(ellipse at 80% 10%, #ffd8e3aa, transparent 32%),
+    radial-gradient(ellipse at 8% 0%, #c2ede0aa, transparent 48%),
+    linear-gradient(110deg, #f9fffc, #f2fbf7 60%, #fff1f6);
+  border-bottom: 1px solid #dbede5;
+}
+.reference-atelier .atelier-page-heading p {
+  font-size: 8px;
+  margin-bottom: 3px;
+  letter-spacing: 2px;
+}
+.reference-atelier .atelier-page-heading h2 {
+  font-size: clamp(25px, 2.5vw, 39px);
+  letter-spacing: -1.6px;
+  margin-bottom: 3px;
+  color: #0c1e19;
+}
+.reference-atelier .atelier-page-heading > div > span {
+  font-weight: 650;
+  color: #172d25;
+  font-size: 12px;
+}
+.reference-atelier .atelier-heading-note {
+  display: block;
+  min-width: 190px;
+  text-align: center;
+}
+.reference-motto {
+  font-family: Georgia, serif;
+  font-style: italic;
+  font-size: 27px !important;
+  line-height: 1;
+  color: #9d2543 !important;
+  display: block;
+  transform: rotate(-4deg);
+}
+.reference-motto small {
+  display: block;
+  font:
+    7px/1.5 ui-sans-serif,
+    system-ui;
+  letter-spacing: 2px;
+  margin-top: 8px;
+  color: #8d3451;
+  transform: rotate(4deg);
+}
+.reference-atelier .atelier-workspace-bar {
+  padding: 5px 14px;
+  min-height: 43px;
+}
+.reference-atelier .atelier-project-title > input {
+  font-size: 12px;
+}
+.reference-atelier .atelier-save-status {
+  font-size: 9px;
+}
+.reference-atelier .atelier-actions button {
+  min-height: 31px;
+  padding: 5px 10px;
+  font-size: 10px;
+}
+.reference-atelier .atelier-tabs {
+  padding: 4px 10px;
+  background: #fafffc;
+  gap: 3px;
+}
+.reference-atelier .atelier-tabs button {
+  min-height: 29px;
+  padding: 5px 8px;
+  font-size: 9px;
+  gap: 5px;
+  border: 1px solid #dcebe6;
+  background: white;
+}
+.reference-atelier .atelier-tabs button[aria-pressed="true"] {
+  background: #006650;
+}
+.reference-atelier .atelier-tabs svg {
+  width: 13px;
+  height: 13px;
+}
+.reference-atelier .atelier-layout {
+  grid-template-columns: 228px minmax(0, 1fr) 238px;
+  gap: 8px;
+  padding: 8px;
+  align-items: start;
+}
+.reference-atelier .atelier-left {
+  gap: 8px;
+}
+.reference-atelier .atelier-left > .atelier-panel:nth-of-type(2) {
+  order: -1;
+}
+.reference-atelier .atelier-panel {
+  border-radius: 6px;
+  border-color: #c6e1d6;
+  box-shadow: 0 0 0 2px #ffffff90;
+}
+.reference-atelier .atelier-panel-heading {
+  min-height: 26px;
+  padding: 5px 8px;
+  background: linear-gradient(100deg, #004e40, #00775c);
+  font-size: 10px;
+}
+.reference-atelier .atelier-panel-heading h3 {
+  font-size: 10px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.panel-number {
+  display: inline-grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #ffffff18;
+  border: 1px solid #a1d8c7;
+  width: 17px;
+  height: 17px;
+  font-size: 10px;
+  color: inherit;
+  flex-shrink: 0;
+}
+.reference-avatar {
+  display: flex;
+  gap: 6px;
+  padding: 9px 8px;
+  background: linear-gradient(140deg, #f3fbf8, #fff);
+}
+.reference-avatar svg {
+  height: 128px;
+  width: 69px;
+  flex-shrink: 0;
+  background: #eaf3f0;
+  border-radius: 5px;
+}
+.reference-avatar > div {
+  flex: 1;
+  padding-top: 7px;
+  font-size: 9px;
+}
+.reference-avatar strong {
+  font-size: 10px;
+}
+.reference-avatar p {
+  font-size: 9px;
+  line-height: 1.5;
+  color: #48634f;
+  margin: 7px 0;
+}
+.reference-avatar button {
+  font-size: 9px;
+  background: #e2f4ed;
+  border: 1px solid #cae6da;
+  border-radius: 4px;
+  min-height: 27px;
+  padding: 4px 6px;
+  margin-bottom: 5px;
+  color: #005944;
+}
+.reference-atelier .avatar-summary {
+  padding: 4px 10px;
+  gap: 5px 9px;
+}
+.reference-atelier .avatar-summary span {
+  font-size: 9px;
+}
+.reference-atelier .avatar-summary b {
+  font-size: 10px;
+  padding: 2px 6px;
+  background: #f0f8f4;
+  border-radius: 3px;
+}
+.reference-atelier .atelier-left > .atelier-panel > .atelier-button {
+  min-height: 29px;
+  font-size: 9px;
+  margin: 5px 9px;
+  padding: 5px 8px;
+}
+.reference-atelier .atelier-left .ease-readings {
+  padding: 5px 10px;
+  font-size: 9px;
+}
+.reference-atelier .atelier-left .atelier-help {
+  font-size: 9px;
+  margin: 4px 9px 8px;
+}
+.reference-atelier .component-adder {
+  padding: 5px;
+  gap: 3px;
+}
+.reference-atelier .component-adder select {
+  min-height: 29px;
+  font-size: 9px;
+}
+.reference-atelier .component-adder button {
+  min-height: 29px;
+  min-width: 31px;
+}
+.reference-atelier .component-list {
+  max-height: 280px;
+  overflow: auto;
+}
+.reference-atelier .component-row {
+  min-height: 31px;
+}
+.reference-atelier .component-name {
+  font-size: 9px !important;
+  padding: 5px;
+  gap: 5px;
+}
+.reference-atelier .component-row > button:not(.component-name) {
+  min-height: 30px;
+  min-width: 25px;
+}
+.reference-atelier .component-swatch {
+  height: 17px;
+  width: 15px;
+}
+.reference-atelier .atelier-view-tabs {
+  margin-bottom: 5px;
+  min-height: 29px;
+  padding: 2px;
+  background: #dcece5;
+}
+.reference-atelier .atelier-view-tabs button {
+  min-height: 27px;
+  font-size: 9px;
+  padding: 4px 8px;
+}
+.reference-atelier .atelier-canvases {
+  gap: 7px;
+}
+.reference-atelier .atelier-viewport {
+  height: 465px;
+}
+.reference-atelier .garment-panel {
+  position: relative;
+}
+.reference-atelier .viewport-caption {
+  left: 52px;
+  right: 9px;
+  top: 8px;
+  font-size: 8px;
+  padding: 6px;
+  background: #fffef0e8;
+  max-width: 230px;
+}
+.reference-atelier .viewport-caption small {
+  font-size: 7px;
+}
+.reference-atelier .camera-controls {
+  gap: 2px;
+  padding: 4px;
+}
+.reference-atelier .camera-controls button {
+  min-height: 25px;
+  font-size: 9px;
+  padding: 3px;
+  background: #e6f4ec;
+  border: 1px solid #c7dfd0;
+  border-radius: 3px;
+  text-transform: capitalize;
+}
+.reference-atelier .cloth-transport {
+  padding: 5px 8px;
+  gap: 7px;
+  font-size: 9px;
+}
+.reference-atelier .cloth-transport button {
+  min-height: 28px;
+  width: 28px;
+  height: 28px;
+}
+.reference-atelier .cloth-transport small {
+  font-size: 8px;
+}
+.reference-atelier .pattern-scroll {
+  height: 496px;
+}
+.reference-atelier .pattern-tools {
+  padding: 5px;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.reference-atelier .pattern-tools label {
+  font-size: 8px;
+}
+.reference-atelier .pattern-tools select {
+  min-height: 24px;
+}
+.reference-atelier .pattern-panel > .atelier-help {
+  font-size: 8px;
+  padding: 5px;
+  margin: 0;
+}
+.reference-stage-tools {
+  position: absolute;
+  left: 4px;
+  top: 32px;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 3px;
+  background: linear-gradient(#075d4ddd, #33483cbb);
+  border-radius: 4px;
+  color: white;
+}
+.reference-stage-tools button {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: 7px;
+  gap: 2px;
+  min-height: 39px;
+  width: 36px;
+  padding: 3px;
+  border-radius: 3px;
+}
+.reference-stage-tools button:hover {
+  background: #00705c;
+}
+.reference-atelier .atelier-inspector {
+  padding: 0;
+  background: #fbfffd;
+  border: 1px solid #c6e1d6;
+  overflow: hidden;
+  border-radius: 6px;
+}
+.reference-inspector-title {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+  background: linear-gradient(100deg, #004e40, #00775c);
+  color: white;
+  padding: 5px 7px;
+  font-size: 10px;
+  min-height: 27px;
+}
+.reference-inspector-title > span {
+  flex: 1;
+}
+.reference-inspector-body {
+  padding: 10px;
+  max-height: 478px;
+  overflow: auto;
+  scrollbar-width: thin;
+}
+.reference-atelier .atelier-inspector h3 {
+  font-size: 11px;
+}
+.reference-atelier .atelier-field {
+  font-size: 9px;
+  margin-bottom: 8px;
+  gap: 4px;
+}
+.reference-atelier .atelier-field input,
+.reference-atelier .atelier-field select {
+  min-height: 29px;
+  padding: 5px 7px;
+  font-size: 10px;
+}
+.reference-atelier .atelier-range,
+.reference-atelier .atelier-color,
+.reference-atelier .atelier-check {
+  font-size: 9px;
+  margin-bottom: 9px;
+}
+.reference-atelier .atelier-range input {
+  min-height: 20px;
+}
+.reference-atelier .atelier-inspector .atelier-help,
+.reference-atelier .atelier-inspector .atelier-callout {
+  font-size: 9px;
+}
+.reference-atelier .atelier-inspector .atelier-button {
+  font-size: 9px;
+  padding: 6px;
+  min-height: 30px;
+}
+.reference-atelier .fabric-presets {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+}
+.reference-atelier .fabric-presets button > span {
+  height: 37px;
+  background-image: repeating-radial-gradient(
+    ellipse at 25% 25%,
+    #d2ae6766 0 2px,
+    transparent 2px 7px
+  );
+  border-radius: 4px;
+}
+.reference-atelier .fabric-presets small {
+  font-size: 8px;
+}
+.reference-physics {
+  border-top: 3px solid #d7ece1;
+}
+.reference-physics dl {
+  padding: 7px 11px;
+  margin: 0;
+  display: grid;
+  gap: 5px;
+  font-size: 9px;
+}
+.reference-physics dl > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+}
+.reference-physics dd {
+  margin: 0;
+  color: #00604b;
+  font-weight: 700;
+}
+.reference-physics-actions {
+  display: flex;
+  gap: 5px;
+  padding: 4px 9px 9px;
+}
+.reference-physics-actions button {
+  flex: 1;
+  min-height: 28px;
+  border: 1px solid #c9e2d5;
+  border-radius: 4px;
+  font-size: 9px;
+}
+.reference-physics-actions button:last-child {
+  background: #006650;
+  color: white;
+}
+.reference-dock {
+  display: grid;
+  grid-template-columns: 1.1fr 1.1fr 1fr 0.85fr;
+  gap: 7px;
+  margin-top: 7px;
+}
+.reference-trim-tiles,
+.reference-colorways {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 3px;
+  padding: 5px;
+}
+.reference-trim-tiles button,
+.reference-colorways button {
+  font-size: 7px;
+  min-width: 0;
+  padding: 0;
+  min-height: 65px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+.trim-tile {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 44px;
+  background: #f1e4d0;
+  color: #9a5f15;
+  border-radius: 3px;
+  font-family: Georgia, serif;
+  font-size: 35px;
+  text-shadow: 1px 1px #f9dc93;
+}
+.trim-1 {
+  background: #961d39;
+  color: #e1b466;
+}
+.trim-2 {
+  background: #efe9e0;
+  color: #c7a35e;
+}
+.trim-3 {
+  background: #e9daca;
+  color: #9f1844;
+}
+.reference-colorways svg {
+  width: 100%;
+  height: 60px;
+}
+.reference-colorways span {
+  font-size: 7px;
+}
+.dock-text-button {
+  font-size: 8px !important;
+  color: #005c46;
+  min-height: 23px !important;
+  padding: 4px 7px !important;
+  text-align: left;
+  width: 100%;
+  border-top: 1px solid #e2eee7;
+}
+.dock-copy {
+  font-size: 8px;
+  line-height: 1.5;
+  padding: 7px;
+  margin: 0;
+  color: #365847;
+}
+.reference-fit {
+  padding: 7px;
+  display: grid;
+  gap: 6px;
+}
+.reference-fit > div {
+  display: flex;
+  justify-content: space-between;
+  font-size: 9px;
+}
+.reference-fit b {
+  background: #e4f5ea;
+  padding: 3px 5px;
+  border-radius: 4px;
+  color: #00553f;
+}
+.reference-fit .negative {
+  background: #ffe7e7;
+  color: #a51630;
+}
+.reference-atelier .atelier-bottom-summary {
+  margin-top: 7px;
+  padding: 7px 9px;
+  font-size: 9px;
+}
+.reference-atelier .atelier-bottom-summary span {
+  font-size: 7px;
+}
+.reference-atelier .atelier-bottom-summary strong {
+  font-size: 10px;
+}
+.reference-atelier .atelier-bottom-summary button {
+  font-size: 9px;
+  min-height: 27px;
+}
+.reference-atelier .atelier-footer {
+  margin: 0 8px 8px;
+  padding: 6px 10px;
+  gap: 14px;
+  font-size: 8px;
+  flex-wrap: wrap;
+}
+.reference-atelier .atelier-footer button {
+  min-height: 27px;
+  background: #e8f5ee;
+  border: 1px solid #cce0d5;
+  border-radius: 4px;
+  padding: 3px 9px;
+  font-size: 9px;
+}
+body:not(:has(.reference-atelier)) {
+  background: linear-gradient(160deg, #fff5f7, #f5faf7 65%);
+  color: #193c31;
+}
+body:not(:has(.reference-atelier)) .primary {
+  background: linear-gradient(#087f65, #005b48);
+  border-color: #006650;
+  color: white;
+  border-radius: 7px;
+}
+body:not(:has(.reference-atelier)) .brand {
+  color: #102f27;
+}
+body:not(:has(.reference-atelier)) h2 {
+  font-family: ui-sans-serif, system-ui;
+  font-weight: 750;
+  letter-spacing: -1.3px;
+}
+body:not(:has(.reference-atelier)) .panel,
+body:not(:has(.reference-atelier)) .product-card {
+  border-color: #e4e9e3;
+  border-radius: 12px;
+  background: #fffdfd;
+}
+body:not(:has(.reference-atelier)) .app-nav .active {
+  background: #e4f3ec;
+  color: #006650;
+}
+body:not(:has(.reference-atelier)) input[type="checkbox"] {
+  accent-color: #006650;
+}
+body:not(:has(.reference-atelier)) .category-list button[aria-pressed="true"],
+body:not(:has(.reference-atelier)) .segmented button[aria-pressed="true"] {
+  background: #006650;
+  color: white;
+}
+.aura-home {
+  max-width: 1150px;
+  margin: auto;
+}
+.aura-home-search {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  background: #edf2f1;
+  border-radius: 24px;
+  padding: 9px 15px;
+  margin-bottom: 18px;
+  color: #51695e;
+}
+.aura-home-search input {
+  width: 100%;
+  background: transparent;
+  border: 0;
+  min-height: 29px;
+  font-size: 13px;
+}
+.aura-home-hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 410px;
+  background:
+    radial-gradient(ellipse at 40% 40%, #f6cbd3, transparent 70%), #f8e5e8;
+  border-radius: 15px;
+  overflow: hidden;
+}
+.aura-home-hero > div {
+  padding: 40px;
+  z-index: 1;
+}
+.aura-home-hero h2 {
+  font-size: clamp(30px, 5vw, 63px);
+  line-height: 1.02;
+  font-weight: 800;
+  color: #202124;
+  letter-spacing: -2px;
+}
+.aura-home-hero p {
+  font-size: 13px;
+  color: #523b43;
+}
+.aura-home-hero img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+  max-height: 480px;
+}
+.aura-home-hero .primary {
+  display: inline-flex;
+  gap: 15px;
+  align-items: center;
+  text-decoration: none;
+  padding: 11px 22px;
+}
+.aura-home-shortcuts {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  margin: 16px 0 30px;
+}
+.aura-home-shortcuts a {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 18px;
+  background: #eff6f3;
+  border: 1px solid #dcebe3;
+  border-radius: 11px;
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 650;
+  color: #004d3a;
+}
+.aura-home-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 25px 0 14px;
+}
+.aura-home-heading h3 {
+  font-size: 20px;
+  margin: 0;
+}
+.aura-home-heading a {
+  font-size: 12px;
+  color: #005d47;
+}
+.aura-category-tiles {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+}
+.aura-category-tiles a {
+  text-decoration: none;
+  font-size: 12px;
+  font-weight: 650;
+  text-align: center;
+}
+.aura-category-tiles img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 6px solid #ffedf1;
+  margin-bottom: 7px;
+}
+.aura-home-products {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 15px;
+}
+.aura-home-products a {
+  text-decoration: none;
+  background: white;
+  border: 1px solid #e8e1e4;
+  border-radius: 10px;
+  overflow: hidden;
+}
+.aura-home-products img {
+  width: 100%;
+  height: 245px;
+  object-fit: cover;
+}
+.aura-home-products h4 {
+  font-size: 12px;
+  margin: 8px 10px 4px;
+}
+.aura-home-products span {
+  font-size: 12px;
+  font-weight: 700;
+  display: block;
+  padding: 0 10px 12px;
+  color: #006650;
+}
+@media (min-width: 1600px) {
+  .reference-atelier .atelier-layout {
+    grid-template-columns: 272px minmax(0, 1fr) 254px;
+  }
+  .reference-atelier .atelier-viewport {
+    height: 505px;
+  }
+  .reference-atelier .pattern-scroll {
+    height: 536px;
+  }
+}
+@media (max-width: 1250px) {
+  .reference-search {
+    display: none;
+  }
+  .reference-top-tabs a {
+    padding: 8px 10px;
+  }
+  .reference-atelier .atelier-layout {
+    grid-template-columns: 190px minmax(0, 1fr) 205px;
+  }
+  .reference-atelier .reference-dock {
+    grid-template-columns: 1fr 1fr;
+  }
+  .reference-atelier .atelier-heading-note {
+    display: none;
+  }
+}
+@media (max-width: 1050px) {
+  .reference-top-tabs {
+    overflow: auto;
+    min-width: 0;
+    flex: 1;
+  }
+  .reference-account {
+    display: none;
+  }
+  .reference-rail {
+    width: 94px;
+  }
+  .reference-rail > a {
+    font-size: 9px;
+    gap: 6px;
+    padding: 8px 3px;
+  }
+  body:has(.reference-atelier) #main {
+    margin-left: 94px;
+    width: calc(100% - 94px);
+  }
+  .reference-atelier .atelier-layout {
+    grid-template-columns: 170px minmax(0, 1fr);
+  }
+  .reference-atelier .atelier-inspector {
+    grid-column: 1/-1;
+  }
+  .reference-atelier .reference-inspector-body {
+    max-height: none;
+  }
+  .reference-atelier .reference-dock {
+    grid-template-columns: 1fr 1fr;
+  }
+  .reference-atelier .atelier-left {
+    display: flex;
+  }
+  .reference-atelier .atelier-center {
+    order: 0;
+  }
+  .reference-atelier .atelier-inspector.mobile-open {
+    display: block;
+  }
+  .reference-atelier .reference-physics {
+    display: none;
+  }
+}
+@media (max-width: 760px) {
+  body:has(.reference-atelier) #root {
+    display: block !important;
+  }
+  .reference-header {
+    height: 56px;
+    padding: 7px 12px;
+    gap: 10px;
+  }
+  .reference-brand {
+    font-size: 19px;
+  }
+  .reference-brand small {
+    font-size: 13px;
+  }
+  .reference-top-tabs {
+    margin-left: auto;
+    flex: 0 1 auto;
+  }
+  .reference-top-tabs a {
+    display: none;
+  }
+  .reference-top-tabs a:first-child,
+  .reference-top-tabs a:last-child {
+    display: block;
+    font-size: 10px;
+  }
+  .reference-profile svg {
+    width: 24px;
+  }
+  .reference-rail {
+    position: relative;
+    top: auto;
+    bottom: auto;
+    width: 100%;
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 4px 6px;
+    gap: 3px;
+  }
+  .reference-rail > a {
+    min-width: 76px;
+    max-width: 95px;
+    min-height: 46px;
+    font-size: 9px;
+    padding: 5px;
+    flex-direction: column;
+    gap: 3px;
+    text-align: center;
+  }
+  .reference-rail .reference-premium {
+    display: none;
+  }
+  body:has(.reference-atelier) #main {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  .reference-atelier .atelier-page-heading {
+    min-height: 83px;
+    padding: 13px 12px;
+  }
+  .reference-atelier .atelier-page-heading h2 {
+    font-size: 26px;
+    letter-spacing: -1px;
+  }
+  .reference-atelier .atelier-page-heading > div > span {
+    font-size: 10px;
+  }
+  .reference-atelier .atelier-workspace-bar {
+    padding: 7px 9px;
+  }
+  .reference-atelier .atelier-actions button {
+    min-height: 38px;
+    flex: 1;
+  }
+  .reference-atelier .atelier-tabs {
+    padding: 5px;
+  }
+  .reference-atelier .atelier-tabs button {
+    min-height: 39px;
+    font-size: 10px;
+  }
+  .reference-atelier .atelier-layout {
+    display: flex;
+    padding: 8px;
+    gap: 10px;
+  }
+  .reference-atelier .atelier-center {
+    order: 1;
+    width: 100%;
+  }
+  .reference-atelier .atelier-left {
+    order: 2;
+    width: 100%;
+  }
+  .reference-atelier .atelier-inspector {
+    order: 3;
+    display: none;
+    width: 100%;
+  }
+  .reference-atelier .atelier-inspector.mobile-open {
+    display: block;
+  }
+  .reference-atelier .inspector-mobile-heading {
+    padding: 10px;
+  }
+  .reference-atelier .reference-inspector-body {
+    padding: 14px;
+  }
+  .reference-atelier .atelier-inspector .atelier-field {
+    font-size: 12px;
+  }
+  .reference-atelier .atelier-field input,
+  .reference-atelier .atelier-field select {
+    min-height: 44px;
+    font-size: 13px;
+  }
+  .reference-atelier .atelier-inspector .atelier-button {
+    min-height: 44px;
+    font-size: 12px;
+  }
+  .reference-atelier .atelier-inspector .atelier-help,
+  .reference-atelier .atelier-inspector .atelier-callout,
+  .reference-atelier .atelier-range,
+  .reference-atelier .atelier-color,
+  .reference-atelier .atelier-check {
+    font-size: 11px;
+  }
+  .reference-atelier .atelier-range input {
+    min-height: 32px;
+  }
+  .reference-atelier .atelier-view-tabs button {
+    min-height: 42px;
+    font-size: 10px;
+  }
+  .reference-atelier .atelier-viewport {
+    height: 450px;
+  }
+  .reference-atelier .pattern-scroll {
+    height: 480px;
+  }
+  .reference-atelier .reference-dock {
+    display: none;
+  }
+  .reference-atelier .component-name {
+    font-size: 11px !important;
+  }
+  .reference-atelier .component-row {
+    min-height: 44px;
+  }
+  .reference-atelier .component-row > button:not(.component-name) {
+    min-height: 44px;
+    min-width: 36px;
+  }
+  .reference-atelier .component-adder select,
+  .reference-atelier .component-adder button {
+    min-height: 42px;
+    font-size: 11px;
+  }
+  .reference-atelier .camera-controls button {
+    min-height: 40px;
+    font-size: 10px;
+  }
+  .reference-atelier .reference-stage-tools button {
+    min-height: 44px;
+    width: 35px;
+  }
+  .reference-atelier .atelier-footer {
+    gap: 9px;
+    font-size: 9px;
+  }
+  .reference-atelier .pattern-tools label,
+  .reference-atelier .pattern-panel > .atelier-help {
+    font-size: 10px;
+  }
+  .aura-home-hero {
+    min-height: 285px;
+  }
+  .aura-home-hero > div {
+    padding: 22px 0 22px 18px;
+  }
+  .aura-home-hero h2 {
+    font-size: 31px;
+    letter-spacing: -1px;
+  }
+  .aura-home-hero p {
+    font-size: 9px;
+  }
+  .aura-home-hero img {
+    min-height: 285px;
+    object-position: 50% center;
+  }
+  .aura-home-hero .primary {
+    font-size: 11px;
+    padding: 9px 13px;
+    gap: 5px;
+  }
+  .aura-home-search {
+    margin-bottom: 12px;
+    padding: 7px 12px;
+  }
+  .aura-home-search input {
+    font-size: 11px;
+  }
+  .aura-home-shortcuts {
+    gap: 5px;
+    margin: 10px 0 20px;
+  }
+  .aura-home-shortcuts a {
+    font-size: 9px;
+    padding: 11px 3px;
+    gap: 6px;
+  }
+  .aura-home-heading {
+    margin: 20px 0 10px;
+  }
+  .aura-home-heading h3 {
+    font-size: 16px;
+  }
+  .aura-home-heading a {
+    font-size: 10px;
+  }
+  .aura-category-tiles {
+    gap: 8px;
+  }
+  .aura-category-tiles a {
+    font-size: 10px;
+  }
+  .aura-category-tiles img {
+    border-width: 3px;
+  }
+  .aura-home-products {
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+  }
+  .aura-home-products img {
+    height: 210px;
+  }
+  body:not(:has(.reference-atelier)) .app-main {
+    padding: 18px 12px 125px;
+  }
+  body:not(:has(.reference-atelier)) .product-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 9px;
+  }
+  body:not(:has(.reference-atelier)) .product-info {
+    padding: 9px;
+  }
+  body:not(:has(.reference-atelier)) .product-info h3 {
+    font-size: 12px;
+  }
+  body:not(:has(.reference-atelier)) .product-info .primary,
+  body:not(:has(.reference-atelier)) .product-info .secondary {
+    font-size: 10px;
+    min-height: 35px;
+    padding: 6px;
+  }
+  body:not(:has(.reference-atelier)) .product-image {
+    height: 210px;
+  }
+  body:not(:has(.reference-atelier)) .product-price strong {
+    font-size: 12px;
+  }
+  body:not(:has(.reference-atelier)) .category-list {
+    flex-wrap: nowrap;
+    overflow: auto;
+    padding-bottom: 6px;
+  }
+  body:not(:has(.reference-atelier)) .category-list button {
+    flex-shrink: 0;
+    min-height: 33px;
+    font-size: 10px;
+  }
+}
+@media print {
+  .reference-header,
+  .reference-rail,
+  .reference-dock,
+  .reference-stage-tools,
+  .reference-physics {
+    display: none !important;
+  }
+  body:has(.reference-atelier) #main {
+    margin: 0 !important;
+    width: 100% !important;
+    padding: 0 !important;
+  }
+  .reference-atelier .atelier-layout {
+    display: block !important;
+  }
+}

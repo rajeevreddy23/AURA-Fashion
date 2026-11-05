@@ -251,47 +251,51 @@ export const WOMEN_PRODUCTS: Product[] = [
   },
   {
     id: "w3",
-    name: "Satin Floral Blouse",
+    name: "Classic White Blouse",
     price: 999,
     image:
       "https://images.unsplash.com/photo-1551163943-3f6a855d1153?auto=format&fit=crop&w=800&q=80",
     category: "shirts",
     gender: "women",
     rating: 4.5,
-    description: "Lightweight satin blouse with elegant floral prints.",
+    description:
+      "Classic white button-front blouse. Sample fashion image; verify fabric and measurements with the seller.",
   },
   {
     id: "w4",
-    name: "Bridal Red Lehanga",
+    name: "Ivory Occasion Set",
     price: 8999,
     image:
       "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?auto=format&fit=crop&w=800&q=80",
-    category: "lehangas",
+    category: "dresses",
     gender: "women",
     rating: 4.8,
-    description: "Stunning bridal red lehanga with heavy embroidery.",
+    description:
+      "Ivory occasion set with decorative details. Sample fashion image; verify construction and measurements with the seller.",
   },
   {
     id: "w5",
-    name: "Designer Punjabi Suit",
+    name: "White Ribbed Top",
     price: 2499,
     image:
       "https://images.unsplash.com/photo-1589156229687-496a31ad1d1f?auto=format&fit=crop&w=800&q=80",
-    category: "punjabhi dress",
+    category: "shirts",
     gender: "women",
     rating: 4.6,
-    description: "Traditional Punjabi suit with modern designer touches.",
+    description:
+      "White sleeveless ribbed top. Sample fashion image; verify material and sizing with the seller.",
   },
   {
     id: "w6",
-    name: "Emerald Green Evening Gown",
+    name: "Plum Evening Dress",
     price: 4299,
     image:
       "https://images.unsplash.com/photo-1566174053879-31528523f8ae?auto=format&fit=crop&w=800&q=80",
     category: "dresses",
     gender: "women",
     rating: 4.7,
-    description: "Elegant emerald green gown for parties and formal dinners.",
+    description:
+      "Plum off-shoulder evening dress. Sample fashion image; verify material and sizing with the seller.",
   },
   {
     id: "w7",

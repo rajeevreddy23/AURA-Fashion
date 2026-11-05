@@ -9,6 +9,12 @@ import {
   useConfiguration,
 } from "../services/api";
 import { auth } from "../firebase";
+import { catalogImage, missingCatalogImage } from "../services/catalogMedia";
+import {
+  clearTryOnPhoto,
+  rememberTryOnPhoto,
+  restoreTryOnPhoto,
+} from "../services/tryOnHandoff";
 export default function TryOn() {
   const [params] = useSearchParams();
   const location = useLocation();
@@ -34,8 +40,17 @@ export default function TryOn() {
   useEffect(() => {
     setProduct(null);
     setResult("");
-    setPhoto("");
-    setConsent(false);
+    let restored = "";
+    try {
+      if (auth.currentUser)
+        restored = restoreTryOnPhoto(
+          sessionStorage,
+          auth.currentUser?.uid || "",
+          productId || "",
+        );
+    } catch {}
+    setPhoto(restored);
+    setConsent(Boolean(restored));
     if (productId)
       api(`/products/${productId}`)
         .then(setProduct)
@@ -61,6 +76,18 @@ export default function TryOn() {
   const buy = async () => {
     setBusy(true);
     try {
+      if (!auth.currentUser)
+        throw new Error("Log in before continuing to payment.");
+      if (!photo || !consent)
+        throw new Error(
+          "Choose a photo and confirm permission before payment.",
+        );
+      rememberTryOnPhoto(
+        sessionStorage,
+        auth.currentUser.uid,
+        product.id,
+        photo,
+      );
       await checkout("tryon", product.id);
     } catch (e: any) {
       setMessage(e.message);
@@ -71,6 +98,8 @@ export default function TryOn() {
     if (!f) return;
     try {
       setPhoto(await readImage(f));
+      setConsent(false);
+      clearTryOnPhoto(sessionStorage);
       setMessage("");
     } catch (e: any) {
       setMessage(e.message);
@@ -81,17 +110,21 @@ export default function TryOn() {
     setMessage("");
     try {
       await api(`/orders/${order.id}/run`, { userImage: photo, consent });
+      clearTryOnPhoto(sessionStorage);
       setPhoto("");
       await refresh();
     } catch (e: any) {
       setMessage(e.message);
       await refresh();
     } finally {
+      try {
+        clearTryOnPhoto(sessionStorage);
+      } catch {}
       setBusy(false);
     }
   };
   return (
-    <div className="narrow-page">
+    <div className="narrow-page aura-tryon-page">
       <div className="page-heading">
         <div>
           <p className="eyebrow">A NEW WAY TO IMAGINE</p>
@@ -102,6 +135,17 @@ export default function TryOn() {
           </p>
         </div>
       </div>
+      <ol className="tryon-steps" aria-label="Try-on steps">
+        <li aria-current={!orderId ? "step" : undefined}>
+          <b>1</b> Upload photo
+        </li>
+        <li aria-current={orderId && !paid && !result ? "step" : undefined}>
+          <b>2</b> Payment
+        </li>
+        <li aria-current={paid || result ? "step" : undefined}>
+          <b>3</b> Your result
+        </li>
+      </ol>
       {message && (
         <p className="notice" role="alert">
           {message}
@@ -124,7 +168,8 @@ export default function TryOn() {
           <section className="panel">
             <img
               className="tryon-garment"
-              src={product.image}
+              src={catalogImage(product)}
+              onError={missingCatalogImage}
               alt={product.name}
             />
             <h3>{product.name}</h3>
@@ -136,15 +181,77 @@ export default function TryOn() {
           <section className="panel form-stack">
             {!orderId ? (
               <>
-                <h3>1. Pay for one try-on</h3>
+                <h3>Upload your photo</h3>
+                <label className="image-upload">
+                  <input
+                    aria-label="Your try-on photo"
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp"
+                    onChange={(e) => {
+                      file(e.target.files?.[0]);
+                      e.target.value = "";
+                    }}
+                  />
+                  {photo ? (
+                    <img src={photo} alt="Your selected photo" />
+                  ) : (
+                    <span>
+                      Choose your photo
+                      <br />
+                      <small>
+                        Clear front photo · PNG, JPEG or WebP · up to 3 MB
+                      </small>
+                    </span>
+                  )}
+                </label>
+                {photo && (
+                  <button
+                    className="secondary"
+                    onClick={() => {
+                      setPhoto("");
+                      setConsent(false);
+                      clearTryOnPhoto(sessionStorage);
+                    }}
+                  >
+                    Remove photo
+                  </button>
+                )}
+                <div className="photo-tip-row">
+                  <span>Good lighting</span>
+                  <span>Front pose</span>
+                  <span>Clear image</span>
+                </div>
+                <label className="check">
+                  <input
+                    type="checkbox"
+                    checked={consent}
+                    onChange={(e) => setConsent(e.target.checked)}
+                  />
+                  I have permission to use this photo, consent to AI processing,
+                  and allow a temporary copy in this browser tab to continue
+                  after payment.
+                </label>
+                <p className="muted">
+                  The temporary copy expires for reuse after 30 minutes and is
+                  cleared after generation or removal. It is not uploaded to the
+                  app’s database. Provider retention follows its terms.
+                </p>
+                <h3>Continue to payment</h3>
                 <p className="plan-price">{money(config.tryOnPrice)}</p>
                 <p>
-                  You’ll choose your photo after payment. Failed generations
+                  Your photo will be ready when you return. Failed generations
                   request a refund. You can refund an unused paid try-on.
                 </p>
                 <button
                   className="primary"
-                  disabled={busy || !config.tryOnReady || !product.tryOnEnabled}
+                  disabled={
+                    busy ||
+                    !config.tryOnReady ||
+                    !product.tryOnEnabled ||
+                    !photo ||
+                    !consent ||
+                    !auth.currentUser
+                  }
                   onClick={buy}
                 >
                   {busy
@@ -199,6 +306,7 @@ export default function TryOn() {
                     onClick={() => {
                       setPhoto("");
                       setConsent(false);
+                      clearTryOnPhoto(sessionStorage);
                     }}
                   >
                     Remove photo
@@ -233,6 +341,15 @@ export default function TryOn() {
                 Order status: {order?.status || "Checking…"}. Open your order to
                 refresh its status or manage a refund.
               </p>
+            )}
+            {busy && paid && (
+              <div className="tryon-processing" role="status">
+                <span className="processing-ring" />
+                Generating your try-on…
+                <small>
+                  The result will appear when the provider responds.
+                </small>
+              </div>
             )}
             {orderId && (
               <Link className="secondary" to={`/payment?order=${orderId}`}>

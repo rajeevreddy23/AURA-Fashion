@@ -1,5 +1,12 @@
 import React, { useEffect, useState, Suspense, lazy } from "react";
-import { BrowserRouter, Routes, Route, NavLink, Link } from "react-router-dom";
+import {
+  BrowserRouter,
+  Routes,
+  Route,
+  NavLink,
+  Link,
+  useLocation,
+} from "react-router-dom";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { auth } from "./firebase";
 import {
@@ -11,8 +18,12 @@ import {
   ShoppingCart,
   UserCircle,
   Store,
+  Heart,
 } from "lucide-react";
 import HomePage from "./pages/Home";
+import StudioChrome from "./studio/StudioChrome";
+import { scopeTryOnPhotoToUser } from "./services/tryOnHandoff";
+import "./studio/reference.css";
 const Shopping = lazy(() => import("./pages/Shopping"));
 const DesignHub = lazy(() => import("./pages/DesignHub"));
 const Atelier = lazy(() => import("./pages/Atelier"));
@@ -31,6 +42,7 @@ const items = [
   ["/", Home, "Home"],
   ["/shopping", ShoppingBag, "Shop"],
   ["/studio", Palette, "Studio"],
+  ["/designs", Heart, "Community"],
   ["/tryon", Shirt, "Try-on"],
   ["/boutique", Store, "Boutiques"],
   ["/subscription", CreditCard, "Plans"],
@@ -38,40 +50,64 @@ const items = [
   ["/profile", UserCircle, "Profile"],
 ] as const;
 export default function App() {
-  const [user, setUser] = useState<User | null>(auth.currentUser);
-  useEffect(() => onAuthStateChanged(auth, setUser), []);
   return (
     <BrowserRouter>
+      <AppFrame />
+    </BrowserRouter>
+  );
+}
+function AppFrame() {
+  const studio = useLocation().pathname === "/studio";
+  const [user, setUser] = useState<User | null>(auth.currentUser);
+  useEffect(
+    () =>
+      onAuthStateChanged(auth, (next) => {
+        try {
+          scopeTryOnPhotoToUser(sessionStorage, next?.uid || "");
+        } catch {}
+        setUser(next);
+      }),
+    [],
+  );
+  return (
+    <>
       <a href="#main" className="skip-link">
         Skip to content
       </a>
-      <header className="app-header">
-        <Link to="/" className="brand">
-          <span>
-            AURA<span className="brand-dot">.</span>
-          </span>
-          <small>FASHION, BY YOU</small>
-        </Link>
-        <div className="header-actions">
-          {user ? (
-            <>
-              <Link to="/profile">{user.displayName || "My account"}</Link>
-              <button onClick={() => auth.signOut()}>Log out</button>
-            </>
-          ) : (
-            <>
-              <Link to="/login">Log in</Link>
-              <Link
-                className="primary small"
-                to="/login"
-                state={{ mode: "signup" }}
-              >
-                Join AURA
-              </Link>
-            </>
-          )}
-        </div>
-      </header>
+      {studio ? (
+        <StudioChrome user={user} />
+      ) : (
+        <header className="app-header">
+          <Link to="/" className="brand">
+            <span>
+              AURA<span className="brand-dot">.</span>
+            </span>
+            <small>FASHION, BY YOU</small>
+          </Link>
+          <div className="header-actions">
+            <Link className="header-cart" to="/cart" aria-label="Shopping cart">
+              <ShoppingCart size={20} />
+            </Link>
+            {user ? (
+              <>
+                <Link to="/profile">{user.displayName || "My account"}</Link>
+                <button onClick={() => auth.signOut()}>Log out</button>
+              </>
+            ) : (
+              <>
+                <Link to="/login">Log in</Link>
+                <Link
+                  className="primary small"
+                  to="/login"
+                  state={{ mode: "signup" }}
+                >
+                  Join AURA
+                </Link>
+              </>
+            )}
+          </div>
+        </header>
+      )}
       <main id="main" className="app-main" key={user?.uid || "guest"}>
         <Suspense fallback={<p role="status">Loading your page…</p>}>
           <Routes>
@@ -103,14 +139,16 @@ export default function App() {
           </Routes>
         </Suspense>
       </main>
-      <nav className="app-nav" aria-label="Main navigation">
-        {items.map(([path, Icon, label]) => (
-          <NavLink key={path} to={path} end={path === "/"}>
-            <Icon size={20} />
-            <span>{label}</span>
-          </NavLink>
-        ))}
-      </nav>
-    </BrowserRouter>
+      {!studio && (
+        <nav className="app-nav" aria-label="Main navigation">
+          {items.map(([path, Icon, label]) => (
+            <NavLink key={path} to={path} end={path === "/"}>
+              <Icon size={20} />
+              <span>{label}</span>
+            </NavLink>
+          ))}
+        </nav>
+      )}
+    </>
   );
 }
