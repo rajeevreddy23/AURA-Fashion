@@ -2,6 +2,8 @@
 
 Updated 8 November 2026.
 
+Latest visual update: [Editorial app design refresh](docs/VISUAL_REFRESH.md), with shared styling across Home, Shop, account, try-on, plans, dress library, modeling and Studio. This update passed 35 browser cases across five size profiles and six desktop accessibility scans with no serious/critical issues. Live provider/payment/account behavior was not retested.
+
 Latest addition: [Meshy modeling and 18 editable dress designs](docs/MESHY_MODELING.md). The adapter includes image/text generation, texture changes on completed owned tasks, bounded credit reservations and authenticated model downloads. Meshy keys, approved accounts and limits are not configured; live generation has not been verified. The verification figures below describe the earlier reference refresh; the linked Meshy report records the new checks.
 
 Project: `D:\AURA Fashion`  

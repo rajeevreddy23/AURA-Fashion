@@ -24,6 +24,7 @@ import HomePage from "./pages/Home";
 import StudioChrome from "./studio/StudioChrome";
 import { scopeTryOnPhotoToUser } from "./services/tryOnHandoff";
 import "./studio/reference.css";
+import "./studio/polish.css";
 const Shopping = lazy(() => import("./pages/Shopping"));
 const DesignHub = lazy(() => import("./pages/DesignHub"));
 const Looks = lazy(() => import("./pages/Looks"));
@@ -86,6 +87,13 @@ function AppFrame() {
             </span>
             <small>FASHION, BY YOU</small>
           </Link>
+          <nav className="editorial-header-nav" aria-label="Explore AURA">
+            <NavLink to="/shopping">Discover fashion</NavLink>
+            <NavLink to="/looks">Dress library</NavLink>
+            <NavLink to="/studio">Design studio</NavLink>
+            <NavLink to="/modeling">AI modeling</NavLink>
+            <NavLink to="/boutique">Boutiques</NavLink>
+          </nav>
           <div className="header-actions">
             <Link className="header-cart" to="/cart" aria-label="Shopping cart">
               <ShoppingCart size={20} />
@@ -143,6 +151,34 @@ function AppFrame() {
           </Routes>
         </Suspense>
       </main>
+      {!studio && (
+        <footer className="editorial-footer">
+          <div>
+            <Link to="/" className="footer-wordmark">
+              AURA<span>✦</span>
+            </Link>
+            <p>
+              From a little inspiration
+              <br />
+              to something entirely yours.
+            </p>
+            <small>DESIGN · IMAGINE · MAKE IT YOURS</small>
+          </div>
+          <div>
+            <span>Discover</span>
+            <Link to="/shopping">Browse fashion</Link>
+            <Link to="/looks">Find your next design</Link>
+            <Link to="/designs">Explore the community</Link>
+          </div>
+          <div>
+            <span>Create</span>
+            <Link to="/studio">Open garment Studio</Link>
+            <Link to="/modeling">Explore 3D modeling</Link>
+            <Link to="/boutique">Meet the boutiques</Link>
+            <Link to="/subscription">Publishing options</Link>
+          </div>
+        </footer>
+      )}
       {!studio && (
         <nav className="app-nav" aria-label="Main navigation">
           {items.map(([path, Icon, label]) => (

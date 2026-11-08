@@ -61,20 +61,32 @@ export default function HomePage() {
       </form>
       <section className="aura-home-hero">
         <div>
-          <p>AURA · MADE FOR YOUR MOMENT</p>
-          <h2>
-            Design.
+          <p className="hero-kicker">
+            <span /> THE AURA ATELIER
+          </p>
+          <h1>
+            An idea.
             <br />
-            Try On.
+            An outfit.
             <br />
-            Shop Fashion
-            <br />
-            with AI.
-          </h2>
-          <p>Your ideas. Your style. Your AURA.</p>
-          <Link className="primary" to="/shopping">
-            Get started <ArrowRight size={16} />
-          </Link>
+            <em>Entirely yours.</em>
+          </h1>
+          <p className="hero-description">
+            Dream up your next occasion. Explore beautiful pieces, design your
+            own, and see where your imagination takes you.
+          </p>
+          <div className="hero-actions">
+            <Link className="primary" to="/shopping">
+              Get started <ArrowRight size={17} />
+            </Link>
+            <Link className="hero-studio-link" to="/studio">
+              Enter the design studio <ArrowRight size={16} />
+            </Link>
+          </div>
+          <div className="hero-footnote">
+            <span>YOUR PERSONAL FASHION WORKSPACE</span>
+            <span>01 / THE BRIDAL EDIT</span>
+          </div>
         </div>
         <figure className="aura-home-photo">
           <img
@@ -82,9 +94,18 @@ export default function HomePage() {
             alt="Illustrative bridal design inspiration, created with AI"
             fetchPriority="high"
           />
-          <figcaption>Bridal inspiration</figcaption>
+          <figcaption>
+            <span>THE OCCASION EDIT</span>Made for your moment.
+            <small>AI-created bridal inspiration</small>
+          </figcaption>
         </figure>
       </section>
+      <div className="editorial-ribbon">
+        <span>Imagine it.</span>
+        <span>Design it.</span>
+        <span>Make it yours.</span>
+        <span aria-hidden="true">✦</span>
+      </div>
       <nav className="aura-home-shortcuts" aria-label="Create your look">
         {shortcuts.map(({ path, Icon, label }) => (
           <Link to={path} key={label}>

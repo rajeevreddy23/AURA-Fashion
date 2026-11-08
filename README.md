@@ -2,6 +2,8 @@
 
 The project is maintained in `D:\AURA Fashion` and targets https://github.com/rajeevreddy23/AURA-Fashion. The initial code was imported from the existing `rajeevreddy23/AuraFashion` application because the new repository was empty.
 
+Latest UI: [Editorial visual refresh and checks](docs/VISUAL_REFRESH.md).
+
 ## Run locally
 
 For the latest dress library and Meshy workspace, use `npm run build` then `npm run start:local`. Open http://localhost:3001/looks or http://localhost:3001/modeling. This avoids the separate attendance application using port 3000 on this computer. See [Meshy setup, supported features and limits](docs/MESHY_MODELING.md).

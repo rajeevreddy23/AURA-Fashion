@@ -1,0 +1,1151 @@
+/* AURA's shared editorial identity. Studio retains its compact editing geometry. */
+:root {
+  --aura-ink: #173d34;
+  --aura-green: #185544;
+  --aura-gold: #aa7a38;
+  --aura-paper: #faf7f0;
+  --aura-line: #e4ddd0;
+  color: var(--aura-ink);
+  background: var(--aura-paper);
+}
+body {
+  background:
+    radial-gradient(ellipse at 100% 0, #f0e8da66, transparent 40%),
+    var(--aura-paper);
+}
+body:not(:has(.reference-atelier)) .app-main {
+  max-width: 1400px;
+  padding-top: 38px;
+  padding-bottom: 65px;
+}
+body .app-header {
+  background: #faf7f0f2;
+  border-bottom: 1px solid var(--aura-line);
+  min-height: 95px;
+  padding: 20px max(24px, calc((100vw - 1352px) / 2));
+  backdrop-filter: blur(18px);
+}
+body .app-header .brand > span {
+  font-family: Georgia, serif;
+  font-size: 34px;
+  font-weight: 400;
+  letter-spacing: 5px;
+  color: #173d34;
+}
+.app-header .brand-dot {
+  color: #aa7a38;
+}
+.app-header .brand small {
+  font-size: 7px;
+  letter-spacing: 2.4px;
+  color: #6d6b5b;
+}
+.editorial-header-nav {
+  display: flex;
+  align-items: center;
+  gap: 26px;
+}
+.editorial-header-nav a {
+  font-size: 12px;
+  text-decoration: none;
+  position: relative;
+  padding: 13px 0;
+  color: #4e5b50;
+}
+.editorial-header-nav a:after {
+  content: "";
+  position: absolute;
+  bottom: 6px;
+  left: 0;
+  right: 100%;
+  height: 1px;
+  background: var(--aura-gold);
+  transition: right 0.2s;
+}
+.editorial-header-nav a:hover:after,
+.editorial-header-nav a.active:after {
+  right: 0;
+}
+body .primary {
+  background: #185544;
+  border: 1px solid #185544;
+  color: white;
+  border-radius: 7px;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  padding: 13px 21px;
+  box-shadow: 0 5px 15px #143f3210;
+}
+body .primary:hover:not(:disabled) {
+  background: #0e3e30;
+}
+body .secondary {
+  background: #fffdf7;
+  border-color: #cfc9b9;
+  color: #274d3f;
+  border-radius: 7px;
+}
+body .primary:disabled,
+body .secondary:disabled {
+  opacity: 0.55;
+}
+body .text-link {
+  color: #28604c;
+}
+body .eyebrow {
+  color: #876329;
+  font-size: 10px;
+  letter-spacing: 2.3px;
+}
+body .muted {
+  color: #616b60;
+}
+body input[type="checkbox"],
+body input[type="range"] {
+  accent-color: #185544;
+}
+body :is(a, button, input, select, textarea):focus-visible {
+  outline-color: #a57b35;
+}
+body:not(:has(.reference-atelier)) :is(.panel, .product-card, .look-card) {
+  background: #fffdf8;
+  border: 1px solid var(--aura-line);
+  box-shadow: 0 8px 28px #51453106;
+  border-radius: 13px;
+}
+body:not(:has(.reference-atelier)) .page-heading {
+  padding: 18px 0 28px;
+  border-bottom: 1px solid var(--aura-line);
+  margin-bottom: 30px;
+}
+.page-heading h2 {
+  font-weight: 400;
+  letter-spacing: -1.2px;
+  color: #173d34;
+}
+.page-heading .muted {
+  max-width: 600px;
+  font-size: 14px;
+  line-height: 1.8;
+}
+body
+  .field
+  :is(input:not([type="color"]):not([type="range"]), select, textarea) {
+  background: #fffdf8;
+  border-color: #dcd7cb;
+  color: #23473b;
+  border-radius: 7px;
+}
+body .field {
+  color: #596352;
+}
+body .notice {
+  background: #f0eee1;
+  border-color: #ded6be;
+  color: #514a32;
+}
+body .featured-plan {
+  border: 1px solid #b69a62;
+  background: linear-gradient(145deg, #fffdf5, #f3eddf);
+}
+body .plan-grid .panel {
+  padding: 34px;
+}
+.plan-grid h3 {
+  font-family: Georgia, serif;
+  font-size: 27px;
+  font-weight: 400;
+}
+.plan-grid .plan-price {
+  color: #185544;
+}
+body .app-nav {
+  background: #fffdf7f5;
+  border-color: #ddd6c6;
+  border-radius: 17px;
+  box-shadow: 0 8px 32px #2c3b2d12;
+  padding: 7px;
+}
+.app-nav a.active {
+  background: #e8eee5;
+  color: #174b39;
+}
+.app-nav a {
+  color: #626c5c;
+}
+.app-nav a svg {
+  stroke-width: 1.5;
+}
+.editorial-footer {
+  max-width: 1352px;
+  margin: 15px auto 105px;
+  padding: 44px 24px 30px;
+  border-top: 1px solid var(--aura-line);
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  gap: 30px;
+}
+.footer-wordmark {
+  font-family: Georgia, serif;
+  font-size: 34px;
+  letter-spacing: 5px;
+  text-decoration: none;
+}
+.footer-wordmark span {
+  font-size: 20px;
+  color: #aa7a38;
+  margin-left: 7px;
+}
+.editorial-footer p {
+  font-family: Georgia, serif;
+  font-size: 22px;
+  line-height: 1.45;
+  margin: 14px 0;
+}
+.editorial-footer small {
+  font-size: 8px;
+  letter-spacing: 1.7px;
+  color: #767664;
+}
+.editorial-footer > div:not(:first-child) {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.editorial-footer > div > span {
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: #876329;
+  margin: 8px 0;
+}
+.editorial-footer > div > a:not(.footer-wordmark) {
+  font-size: 12px;
+  text-decoration: none;
+  min-height: 28px;
+  color: #53614f;
+}
+body .aura-home {
+  max-width: none;
+}
+body .aura-home-search {
+  max-width: 450px;
+  margin: 0 0 23px auto;
+  padding: 8px 16px;
+  background: #f0eee5;
+  border: 1px solid #e4ded0;
+  border-radius: 5px;
+}
+.aura-home-search input::placeholder {
+  color: #687260;
+}
+body .aura-home-hero {
+  grid-template-columns: 1.05fr 1fr;
+  min-height: 580px;
+  background: #eeeadd;
+  border: 1px solid #e4ddd0;
+  border-radius: 3px;
+  position: relative;
+}
+body .aura-home-hero > div {
+  padding: 65px 54px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  background: radial-gradient(ellipse at 0 100%, #dce5d855, transparent 65%);
+}
+.aura-home-hero .hero-kicker {
+  font-size: 9px;
+  letter-spacing: 2.8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #786234;
+  margin-bottom: 30px;
+}
+.hero-kicker > span {
+  display: block;
+  width: 27px;
+  height: 1px;
+  background: #a78241;
+}
+.aura-home-hero h1 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 400;
+  font-size: clamp(45px, 5.2vw, 76px);
+  line-height: 1.08;
+  letter-spacing: -2.5px;
+  margin: 0 0 27px;
+  color: #183c2d;
+}
+.aura-home-hero h1 em {
+  font-weight: 400;
+  color: #8f6a35;
+}
+.aura-home-hero .hero-description {
+  font-size: 14px;
+  max-width: 350px;
+  line-height: 1.8;
+  color: #596251;
+  margin-bottom: 28px;
+}
+.hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 20px;
+}
+.hero-studio-link {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  text-decoration: none;
+  border-bottom: 1px solid #a5ab98;
+  min-height: 44px;
+}
+.hero-footnote {
+  width: 100%;
+  margin-top: auto;
+  padding-top: 40px;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  font-size: 7px;
+  letter-spacing: 1.2px;
+  color: #727761;
+}
+.aura-home-hero .aura-home-photo {
+  margin: 0;
+  position: relative;
+  min-height: 580px;
+}
+.aura-home-hero .aura-home-photo img {
+  max-height: none;
+  height: 100%;
+  object-position: 50% 28%;
+}
+.aura-home-hero .aura-home-photo:after {
+  content: "";
+  position: absolute;
+  inset: 50% 0 0;
+  background: linear-gradient(transparent, #162d21a6);
+  pointer-events: none;
+}
+.aura-home-photo figcaption {
+  left: 30px;
+  right: auto;
+  bottom: 30px;
+  background: none;
+  color: #fff9e9;
+  font-family: Georgia, serif;
+  font-size: 28px;
+  z-index: 1;
+  text-align: left;
+  padding: 0;
+}
+.aura-home-photo figcaption > span,
+.aura-home-photo figcaption > small {
+  display: block;
+  font-family: Arial, sans-serif;
+  font-size: 8px;
+  letter-spacing: 2px;
+  margin-bottom: 10px;
+}
+.aura-home-photo figcaption > small {
+  font-size: 8px;
+  letter-spacing: 0.5px;
+  margin: 9px 0 0;
+  color: #e3e4d5;
+}
+.editorial-ribbon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 65px;
+  padding: 19px 0;
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--aura-line);
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 2.2px;
+  color: #6b715b;
+}
+.editorial-ribbon > span:last-child {
+  font-size: 17px;
+  color: #a68042;
+}
+body .aura-home-shortcuts {
+  gap: 16px;
+  margin: 22px 0 50px;
+}
+body .aura-home-shortcuts a {
+  background: #fffdf7;
+  align-items: flex-start;
+  flex-direction: row;
+  gap: 15px;
+  min-height: 84px;
+  padding: 27px 24px;
+  border-color: var(--aura-line);
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
+}
+.aura-home-shortcuts a svg {
+  color: #96733d;
+  stroke-width: 1.3;
+}
+body .aura-home-shortcuts a:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 22px #2b4a2e0c;
+}
+body .aura-home-heading {
+  margin: 35px 0 21px;
+}
+.aura-home-heading h3 {
+  font-family: Georgia, serif;
+  font-size: 29px;
+  font-weight: 400;
+  letter-spacing: -0.6px;
+}
+.aura-home-heading a {
+  font-size: 11px;
+  text-decoration: none;
+  border-bottom: 1px solid #c0c7b5;
+  padding-bottom: 4px;
+}
+body .aura-category-tiles {
+  gap: 22px;
+  margin-bottom: 50px;
+}
+.aura-category-tiles a {
+  position: relative;
+  text-align: left;
+}
+.aura-category-tiles img {
+  aspect-ratio: 1.2;
+  object-position: 50% 20%;
+  border-radius: 3px;
+  border: 0;
+  margin-bottom: 11px;
+}
+.aura-category-tiles span {
+  font-size: 13px;
+  font-weight: 500;
+}
+.aura-home-products {
+  gap: 22px;
+}
+.aura-home-products a {
+  border: 0;
+  background: none;
+  border-radius: 3px;
+}
+.aura-home-products img {
+  height: 330px;
+  object-position: 50% 20%;
+  border-radius: 3px;
+}
+.aura-home-products h4 {
+  font-size: 14px;
+  font-weight: 500;
+  margin: 14px 0 6px;
+}
+.aura-home-products span {
+  font-size: 13px;
+  padding: 0;
+  color: #5c6652;
+  font-weight: 400;
+}
+body .aura-creator-card {
+  margin: 55px 0 25px;
+  background: #193f33;
+  color: #f6f1df;
+  border: 0;
+  border-radius: 4px;
+  padding: 40px;
+}
+.aura-creator-card p {
+  color: #d1be91;
+  letter-spacing: 2px;
+}
+.aura-creator-card h3 {
+  font-family: Georgia, serif;
+  font-size: 32px;
+  font-weight: 400;
+  line-height: 1.2;
+}
+.aura-creator-card span {
+  color: #d0daca;
+  font-size: 13px;
+}
+.aura-creator-card .primary {
+  background: #ede4cb;
+  border-color: #ede4cb;
+  color: #173d34;
+}
+body .dress-library {
+  padding: 38px 0;
+}
+.look-heading h2 {
+  font-family: Georgia, serif;
+  font-weight: 400;
+  font-size: 33px;
+  letter-spacing: -1px;
+}
+.look-heading p {
+  font-size: 13px;
+  color: #65705e;
+}
+.look-heading > a {
+  font-size: 12px;
+}
+.look-copy h3 {
+  font-family: Georgia, serif;
+  font-weight: 400;
+  font-size: 23px;
+}
+.look-copy p {
+  color: #65705e;
+  line-height: 1.7;
+}
+.look-copy small {
+  font-size: 9px;
+  color: #876329;
+}
+.look-art {
+  border-bottom: 1px solid #e4ddd0;
+}
+.look-buttons a {
+  font-size: 11px;
+}
+.look-art span {
+  border: 1px solid #e1d8c1;
+  color: #695b37;
+}
+body .shop-controls {
+  padding: 20px;
+  background: #fffdf8;
+  border: 1px solid var(--aura-line);
+  border-radius: 10px;
+  margin-bottom: 25px;
+}
+.segmented {
+  background: #ebece1;
+  border: 1px solid #dfe1d3;
+}
+.segmented .active {
+  background: #245340;
+  color: #fff;
+}
+.product-grid {
+  gap: 24px;
+}
+body .product-image {
+  background: #eeeade;
+  aspect-ratio: 3/4;
+}
+.product-image img {
+  transition: transform 0.4s;
+  object-position: 50% 20%;
+}
+.product-card:hover .product-image img {
+  transform: scale(1.035);
+}
+body .product-info {
+  padding: 18px;
+}
+.product-info h3 {
+  font-family: Georgia, serif;
+  font-weight: 400;
+  font-size: 23px;
+  color: #23473b;
+}
+.product-info > .eyebrow {
+  font-size: 9px;
+  color: #8c6b32;
+}
+.product-info .product-price {
+  margin: 12px 0;
+}
+.product-info .product-price button {
+  color: #63745f;
+}
+.product-badge {
+  background: #fff9e9ed;
+  color: #5a532d;
+  border: 1px solid #e5d8b6;
+  font-size: 9px;
+}
+.library-entry {
+  background: #edf0e3;
+  border-color: #dce1ce;
+  color: #4e6148;
+  padding: 22px;
+}
+.library-entry strong {
+  font-family: Georgia, serif;
+  font-size: 24px;
+  font-weight: 400;
+}
+body .modeling-page {
+  padding: 0;
+}
+.modeling-page > header {
+  padding: 14px 0 24px;
+  border-bottom: 1px solid var(--aura-line);
+}
+.modeling-page > header a {
+  font-size: 12px;
+  color: #718165;
+  text-decoration: none;
+}
+.modeling-page h1 {
+  font-family: Georgia, serif;
+  font-size: 46px;
+  font-weight: 400;
+  letter-spacing: -1.3px;
+  color: #173d34;
+}
+.modeling-page > header p {
+  color: #68715e;
+  font-size: 14px;
+}
+.modeling-layout {
+  gap: 24px;
+  grid-template-columns: 330px minmax(0, 1fr);
+}
+.modeling-layout aside {
+  padding: 26px;
+  background: #fffdf8;
+}
+.modeling-layout h2 {
+  font-family: Georgia, serif;
+  font-size: 25px;
+  font-weight: 400;
+}
+.modeling-layout p {
+  font-size: 12px;
+  color: #5f6c58;
+}
+.modeling-layout :is(select, textarea) {
+  border: 1px solid #d8d4c5;
+  border-radius: 6px;
+  background: #faf8ef;
+  max-width: 100%;
+  padding: 10px;
+  font-size: 12px;
+}
+.modeling-layout input[type="file"] {
+  font-size: 11px;
+  max-width: 100%;
+}
+.modeling-layout label {
+  font-size: 12px;
+  color: #4c6047;
+}
+.modeling-stage {
+  border: 1px solid #cfdbcf;
+  border-radius: 12px;
+  box-shadow: 0 16px 40px #1a3f3214;
+}
+.modeling-actions {
+  background: #f0f1e6;
+  border-top: 1px solid #d7dfd0;
+}
+.modeling-actions button {
+  font-size: 12px;
+}
+.meshy-panel {
+  border-top: 1px solid var(--aura-line);
+  padding-top: 24px;
+  margin-top: 12px;
+}
+.meshy-panel .primary {
+  padding: 12px;
+}
+.modeling-layout aside > button:not(.primary) {
+  border: 1px solid #d8ddcf;
+  border-radius: 6px;
+}
+body .aura-auth {
+  max-width: 1050px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  padding: 15px 0 0;
+}
+.auth-editorial {
+  border-radius: 10px 0 0 10px;
+  min-height: 640px;
+  position: relative;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  color: #fff9eb;
+  background:
+    linear-gradient(#183d3433, #152c22e6),
+    url("/brand/bridal-hero.webp") center 28% / cover;
+}
+.auth-editorial > span {
+  font-size: 10px;
+  letter-spacing: 3px;
+}
+.auth-editorial h1 {
+  font-family: Georgia, serif;
+  font-size: 43px;
+  line-height: 1.13;
+  font-weight: 400;
+  letter-spacing: -1px;
+  margin: auto 0 24px;
+}
+.auth-editorial p {
+  font-size: 13px;
+  max-width: 290px;
+  line-height: 1.8;
+  color: #e0e6d9;
+}
+.auth-editorial small {
+  font-size: 9px;
+  color: #c3d0bd;
+  margin-top: 26px;
+}
+.aura-auth > div:last-child {
+  border-radius: 0 10px 10px 0;
+  box-shadow: none;
+  border-color: #e4ddd0;
+  background: #fffdf8;
+}
+.aura-auth h2 {
+  font-family: Georgia, serif;
+  font-size: 35px;
+  text-transform: none;
+  font-weight: 400;
+  letter-spacing: -1px;
+}
+.aura-auth input {
+  border-color: #e0dccf;
+  background: #f8f6ee;
+  border-radius: 7px;
+}
+.aura-auth button[type="submit"] {
+  background: #185544;
+  border-radius: 7px;
+  font-weight: 500;
+  text-transform: none;
+  letter-spacing: 0.03em;
+  box-shadow: none;
+}
+.aura-product-detail h1 {
+  font-family: Georgia, serif;
+  font-weight: 400;
+  font-size: clamp(32px, 4vw, 55px);
+  letter-spacing: -1.5px;
+}
+.aura-product-detail .bg-black {
+  background: #185544;
+}
+.aura-product-detail .shadow-xl {
+  box-shadow: 0 10px 32px #34523a0b;
+}
+body .reference-header {
+  background: #fffdf7;
+  border-bottom: 1px solid #dce4d6;
+}
+.reference-rail {
+  background: linear-gradient(160deg, #123f34, #062e27);
+}
+.reference-atelier .atelier-panel {
+  box-shadow: 0 3px 9px #143e2b05;
+}
+.reference-atelier .atelier-panel-heading {
+  background: linear-gradient(100deg, #145b46, #087356);
+}
+.reference-atelier .atelier-banner {
+  background: linear-gradient(110deg, #e8f0e6, #f7f0df 65%, #eadcc5);
+}
+@media (max-width: 1150px) {
+  .editorial-header-nav {
+    gap: 16px;
+  }
+  .editorial-header-nav a {
+    font-size: 11px;
+  }
+  .header-actions {
+    gap: 14px;
+  }
+  .aura-home-hero h1 {
+    font-size: 58px;
+  }
+  body .aura-home-hero > div {
+    padding: 45px 32px 28px;
+  }
+  .hero-actions {
+    gap: 12px;
+  }
+  .hero-footnote {
+    flex-direction: column;
+    gap: 5px;
+  }
+}
+@media (max-width: 950px) {
+  .editorial-header-nav {
+    display: none;
+  }
+  body .aura-home-hero {
+    min-height: 490px;
+  }
+  .aura-home-hero .aura-home-photo {
+    min-height: 490px;
+  }
+  .aura-home-hero h1 {
+    font-size: 49px;
+  }
+  body .aura-home-hero > div {
+    padding: 40px 27px 25px;
+  }
+  .hero-studio-link {
+    font-size: 10px;
+  }
+  body .aura-home-shortcuts a {
+    padding: 20px 16px;
+    gap: 9px;
+  }
+  .aura-home-products img {
+    height: 250px;
+  }
+  .editorial-ribbon {
+    gap: 35px;
+  }
+  .modeling-layout {
+    grid-template-columns: 290px minmax(0, 1fr);
+  }
+  .aura-auth {
+    grid-template-columns: 0.9fr 1fr;
+  }
+  .auth-editorial {
+    padding: 28px;
+  }
+  .auth-editorial h1 {
+    font-size: 34px;
+  }
+}
+@media (max-width: 800px) {
+  .modeling-layout {
+    grid-template-columns: 1fr;
+  }
+  .modeling-stage {
+    grid-row: 1;
+  }
+  .aura-auth .auth-editorial {
+    display: none;
+  }
+  body .aura-auth {
+    display: block;
+    max-width: 470px;
+  }
+  .aura-auth > div:last-child {
+    border-radius: 12px;
+  }
+}
+@media (max-width: 600px) {
+  body .app-header {
+    min-height: 75px;
+    padding: 16px;
+  }
+  .app-header .brand > span {
+    font-size: 28px !important;
+    letter-spacing: 3px !important;
+  }
+  .app-header .brand small {
+    font-size: 6px;
+    letter-spacing: 1.8px;
+  }
+  .header-actions {
+    gap: 10px;
+  }
+  .app-header .header-actions .small {
+    font-size: 10px;
+    padding: 10px 12px;
+    border-radius: 5px;
+  }
+  .app-header .header-actions a {
+    font-size: 11px;
+  }
+  body:not(:has(.reference-atelier)) .app-main {
+    padding: 20px 16px 35px;
+  }
+  body .aura-home-search {
+    margin-bottom: 18px;
+    max-width: none;
+    border-radius: 6px;
+  }
+  .aura-home-search input {
+    font-size: 12px;
+  }
+  body .aura-home-hero {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+  .aura-home-hero .aura-home-photo {
+    min-height: 0;
+    height: 340px;
+    grid-row: 1;
+  }
+  .aura-home-hero .aura-home-photo img {
+    object-position: 50% 28%;
+  }
+  body .aura-home-hero > div {
+    padding: 28px 25px 24px;
+  }
+  .aura-home-hero h1 {
+    font-size: 49px;
+    letter-spacing: -2px;
+    margin-bottom: 19px;
+  }
+  .aura-home-hero .hero-kicker {
+    font-size: 8px;
+    margin-bottom: 17px;
+  }
+  .aura-home-hero .hero-description {
+    font-size: 12px;
+    line-height: 1.8;
+    margin-bottom: 18px;
+  }
+  .hero-footnote {
+    display: none;
+  }
+  .hero-actions {
+    gap: 15px;
+  }
+  .aura-home-photo figcaption {
+    font-size: 24px;
+    left: 22px;
+    bottom: 22px;
+  }
+  .aura-home-hero .primary {
+    font-size: 11px;
+    padding: 11px 17px;
+  }
+  .editorial-ribbon {
+    gap: 17px;
+    padding: 17px 0;
+    font-size: 7px;
+    letter-spacing: 1px;
+  }
+  .editorial-ribbon > span:last-child {
+    font-size: 13px;
+  }
+  body .aura-home-shortcuts {
+    gap: 9px;
+    margin: 10px 0 34px;
+  }
+  body .aura-home-shortcuts a {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 15px 4px;
+    min-height: 87px;
+    font-size: 9px;
+    gap: 9px;
+  }
+  .aura-home-shortcuts a svg {
+    width: 22px;
+    height: 22px;
+  }
+  .aura-home-heading h3 {
+    font-size: 26px;
+  }
+  .aura-home-heading a {
+    font-size: 10px;
+  }
+  body .aura-category-tiles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 20px 14px;
+    margin-bottom: 32px;
+  }
+  .aura-category-tiles img {
+    aspect-ratio: 1.1;
+  }
+  .aura-category-tiles span {
+    font-size: 12px;
+  }
+  .aura-home-products {
+    gap: 14px;
+  }
+  .aura-home-products img {
+    height: 230px;
+  }
+  .aura-home-products h4 {
+    font-size: 12px;
+    margin: 11px 0 5px;
+  }
+  .aura-home-products span {
+    font-size: 12px;
+  }
+  body .aura-creator-card {
+    margin: 35px 0 15px;
+    padding: 27px;
+  }
+  .aura-creator-card h3 {
+    font-size: 29px;
+  }
+  .aura-creator-card span {
+    font-size: 12px;
+  }
+  .look-heading h2 {
+    font-size: 29px;
+  }
+  .look-copy h3 {
+    font-size: 21px;
+  }
+  .look-copy p {
+    font-size: 12px;
+  }
+  .look-buttons {
+    gap: 8px;
+  }
+  .look-buttons a {
+    font-size: 10px;
+  }
+  .editorial-footer {
+    grid-template-columns: 1fr 1fr;
+    gap: 25px;
+    padding: 30px 16px;
+    margin-bottom: 90px;
+  }
+  .editorial-footer > div:first-child {
+    grid-column: 1/-1;
+  }
+  .editorial-footer p {
+    font-size: 24px;
+  }
+  .editorial-footer > div > a:not(.footer-wordmark) {
+    font-size: 11px;
+  }
+  .page-heading h2 {
+    font-size: 36px;
+  }
+  .page-heading .muted {
+    font-size: 12px;
+  }
+  .page-heading {
+    gap: 15px;
+    flex-wrap: wrap;
+  }
+  .modeling-page h1 {
+    font-size: 38px;
+  }
+  .modeling-layout aside {
+    padding: 22px;
+  }
+  .aura-product-detail .gap-12 {
+    gap: 25px;
+  }
+  .aura-product-detail h1 {
+    font-size: 36px;
+  }
+  body .shop-controls {
+    padding: 15px;
+  }
+  .product-grid {
+    gap: 15px;
+  }
+  .product-info h3 {
+    font-size: 19px;
+  }
+  body .product-info {
+    padding: 13px;
+  }
+  .aura-auth > div:last-child {
+    padding: 28px 23px;
+  }
+  .aura-auth h2 {
+    font-size: 33px;
+  }
+  body .plan-grid .panel {
+    padding: 25px;
+  }
+  .skip-link {
+    left: 8px;
+    transform: translateY(-200%);
+  }
+  .skip-link:focus {
+    transform: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  body *,
+  body *:before,
+  body *:after {
+    transition: none !important;
+    animation: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+@media print {
+  .editorial-footer,
+  .editorial-header-nav {
+    display: none !important;
+  }
+}
+/* Override the earlier reference theme at equal specificity. */
+body:not(:has(.reference-atelier)) {
+  background:
+    radial-gradient(ellipse at 100% 0, #f0e8da66, transparent 40%), #faf7f0;
+  color: #173d34;
+}
+body:not(:has(.reference-atelier)) h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 400;
+  letter-spacing: -0.8px;
+}
+body:not(:has(.reference-atelier)) .primary {
+  background: #185544;
+  border-color: #185544;
+}
+body:not(:has(.reference-atelier)) .primary:hover:not(:disabled) {
+  background: #0e3e30;
+}
+body:not(:has(.reference-atelier)) .aura-creator-card .primary {
+  background: #ede4cb;
+  border-color: #ede4cb;
+  color: #173d34;
+}
+body:not(:has(.reference-atelier)) .app-nav .active {
+  background: #e8eee5;
+  color: #174b39;
+}
+@media (max-width: 600px) {
+  .aura-home-hero .aura-home-photo img {
+    object-position: 50% 0%;
+  }
+  .aura-home-hero h1 {
+    font-size: clamp(40px, 12vw, 49px);
+  }
+}
+body .aura-home-hero {
+  height: 650px;
+}
+body .aura-auth .text-gray-400 {
+  color: #63705b;
+}
+@media (max-width: 950px) {
+  body .aura-home-hero {
+    height: 600px;
+  }
+}
+@media (max-width: 600px) {
+  body .aura-home-hero {
+    height: auto;
+  }
+  .aura-home-hero .aura-home-photo {
+    height: 280px;
+  }
+}
+body .aura-home-hero .aura-home-photo img {
+  object-position: 50% 0%;
+}

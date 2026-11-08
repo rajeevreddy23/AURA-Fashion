@@ -128,7 +128,20 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="max-w-md mx-auto py-12">
+    <div className="aura-auth max-w-md mx-auto py-12">
+      <div className="auth-editorial">
+        <span>AURA ATELIER</span>
+        <h1>
+          A world of
+          <br />
+          <em>your own design.</em>
+        </h1>
+        <p>
+          Keep your ideas, discover your style, and bring your next look to
+          life.
+        </p>
+        <small>AI-created bridal inspiration</small>
+      </div>
       <motion.div
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
@@ -160,6 +173,8 @@ export default function LoginPage() {
               />
               <input
                 type="text"
+                aria-label="Full name"
+                autoComplete="name"
                 placeholder="Full Name"
                 required
                 value={name}
@@ -175,6 +190,8 @@ export default function LoginPage() {
             />
             <input
               type="email"
+              aria-label="Email address"
+              autoComplete="email"
               placeholder="Email Address"
               required
               value={email}
@@ -189,6 +206,8 @@ export default function LoginPage() {
             />
             <input
               type="password"
+              aria-label="Password"
+              autoComplete={isLogin ? "current-password" : "new-password"}
               placeholder="Password"
               required
               value={password}

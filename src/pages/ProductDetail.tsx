@@ -96,7 +96,7 @@ export default function ProductDetailPage() {
     );
 
   return (
-    <div className="space-y-8">
+    <div className="aura-product-detail space-y-8">
       <button
         onClick={() => navigate(-1)}
         className="flex items-center gap-2 text-sm font-bold text-gray-500 hover:text-black transition-colors"
