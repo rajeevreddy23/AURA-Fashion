@@ -62,8 +62,8 @@ export default function StudioChrome({ user }: { user: User | null }) {
           <Link className="selected" to="/studio">
             Studio
           </Link>
-          <Link to="/studio?tool=assistant">Design AI</Link>
-          <Link to="/designs">Collection</Link>
+          <Link to="/modeling">AI 3D Modeling</Link>
+          <Link to="/looks">Dress Library</Link>
           <Link to="/studio?tool=materials">Fabrics</Link>
           <Link to="/studio?tool=assistant">Render</Link>
           <Link to="/studio?tool=techpack">Tech Pack</Link>
@@ -106,6 +106,14 @@ export default function StudioChrome({ user }: { user: User | null }) {
         <NavLink to="/">
           <Home size={17} />
           Home
+        </NavLink>
+        <NavLink to="/looks">
+          <Layers size={17} />
+          Dress designs
+        </NavLink>
+        <NavLink to="/modeling">
+          <Box size={17} />
+          AI 3D Modeling
         </NavLink>
         <NavLink to="/studio" className="selected">
           <Box size={18} />

@@ -1,0 +1,132 @@
+.dress-library {
+  padding: 24px 0;
+  max-width: 1400px;
+  margin: auto;
+}
+.look-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 20px;
+}
+.look-heading h2 {
+  font-size: 26px;
+  line-height: 1.2;
+  margin: 8px 0;
+}
+.look-heading p {
+  line-height: 1.5;
+  max-width: 640px;
+}
+.look-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+.look-card {
+  border: 1px solid #dbe6df;
+  border-radius: 14px;
+  overflow: hidden;
+  background: white;
+  min-width: 0;
+}
+.look-art {
+  height: 250px;
+  position: relative;
+  text-align: center;
+}
+.look-art svg {
+  height: 100%;
+  max-width: 100%;
+}
+.look-art span {
+  position: absolute;
+  bottom: 10px;
+  left: 12px;
+  background: #fffdf0;
+  padding: 4px 9px;
+  border-radius: 12px;
+  font-size: 11px;
+}
+.look-copy {
+  padding: 18px;
+}
+.look-copy small {
+  text-transform: uppercase;
+  letter-spacing: 0.13em;
+  color: #26715b;
+}
+.look-copy h3 {
+  font-size: 20px;
+  margin: 8px 0;
+}
+.look-copy p {
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 44px;
+}
+.look-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 14px;
+  margin-top: 16px;
+}
+.look-buttons a {
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+.look-filter {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+.look-filter select {
+  padding: 10px;
+  border: 1px solid #aac4b8;
+  border-radius: 8px;
+}
+.looks-page {
+  padding: 24px;
+}
+.library-entry {
+  display: block;
+  padding: 16px;
+  background: #ecf5ef;
+  border: 1px solid #bed9c8;
+  border-radius: 10px;
+  margin: 18px 0;
+}
+.library-entry strong {
+  display: block;
+  margin-bottom: 5px;
+}
+@media (max-width: 760px) {
+  .look-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .look-art {
+    height: 200px;
+  }
+  .look-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+  .look-copy {
+    padding: 12px;
+  }
+  .look-copy h3 {
+    font-size: 17px;
+  }
+  .looks-page {
+    padding: 14px;
+  }
+}
+@media (max-width: 380px) {
+  .look-grid {
+    grid-template-columns: 1fr;
+  }
+}

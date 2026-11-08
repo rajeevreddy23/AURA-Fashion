@@ -51,6 +51,7 @@ import PatternViewport from "../studio/PatternViewport";
 import TechPack from "../studio/TechPack";
 import type { ViewportApi } from "../studio/GarmentViewport";
 import "../studio/atelier.css";
+import { createDressLook } from "../../shared/lookLibrary";
 const GarmentViewport = lazy(() => import("../studio/GarmentViewport"));
 type Panel =
   | "components"
@@ -191,6 +192,34 @@ export default function Atelier() {
     loadedShared = useRef("");
   const [searchParams, setSearchParams] = useSearchParams();
   const sharedDesign = searchParams.get("design");
+  const requestedLook = searchParams.get("look");
+  const loadedLook = useRef("");
+  useEffect(() => {
+    if (
+      workspace.loading ||
+      !requestedLook ||
+      loadedLook.current === requestedLook ||
+      sharedDesign
+    )
+      return;
+    loadedLook.current = requestedLook;
+    setBusy(true);
+    Promise.resolve()
+      .then(() =>
+        workspace.openProject({
+          project: createDressLook(requestedLook),
+          revisions: [],
+        }),
+      )
+      .then(() => {
+        setMessage(
+          "Dress preset opened as a new project. Your previous design is saved.",
+        );
+        setSearchParams({});
+      })
+      .catch((error) => setMessage(error.message))
+      .finally(() => setBusy(false));
+  }, [workspace.loading, requestedLook, sharedDesign]);
   const apiRef = useRef<ViewportApi | null>(null),
     importRef = useRef<HTMLInputElement>(null),
     nameRef = useRef<HTMLInputElement>(null);
@@ -1258,6 +1287,9 @@ export default function Atelier() {
       return (
         <>
           <h3>My local designs</h3>
+          <Link className="atelier-button green" to="/looks">
+            Browse 18 dress designs
+          </Link>
           <label className="atelier-field">
             Start from
             <select
@@ -1399,6 +1431,9 @@ export default function Atelier() {
           without API keys.
         </div>
         <h4>AI design rendering</h4>
+        <Link className="atelier-button green" to="/modeling">
+          Open Meshy 3D modeling
+        </Link>
         <p className="atelier-help">
           {config.tryOnReady
             ? "Configured. Use the paid render flow in the sketch editor."

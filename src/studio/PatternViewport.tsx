@@ -1,5 +1,6 @@
-import React, { useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { Project, Piece, piecePath } from "../../shared/workspace";
+import { fabricCanvas } from "./fabricCanvas";
 export default function PatternViewport({
   project,
   selected,
@@ -14,6 +15,20 @@ export default function PatternViewport({
   const svg = useRef<SVGSVGElement>(null);
   const [zoom, setZoom] = useState(100);
   const [grid, setGrid] = useState(true);
+  const [showFabric, setShowFabric] = useState(true);
+  const fabricImages = useMemo(
+    () =>
+      Object.fromEntries(
+        project.pieces.map((p) => [
+          p.id,
+          fabricCanvas(
+            project.materials.find((m) => m.id === p.materialId)!,
+            project.trims.filter((t) => t.pieceId === p.id),
+          ).toDataURL(),
+        ]),
+      ),
+    [project.materials, project.trims, project.pieces],
+  );
   const [seams, setSeams] = useState(true);
   const [drag, setDrag] = useState<{ id: string; x: number; y: number } | null>(
     null,
@@ -79,6 +94,14 @@ export default function PatternViewport({
         <label>
           <input
             type="checkbox"
+            checked={showFabric}
+            onChange={(e) => setShowFabric(e.target.checked)}
+          />
+          Fabric
+        </label>
+        <label>
+          <input
+            type="checkbox"
             checked={grid}
             onChange={(e) => setGrid(e.target.checked)}
           />
@@ -121,12 +144,42 @@ export default function PatternViewport({
           onLostPointerCapture={() => finish()}
         >
           <defs>
+            {project.pieces.map((p) => (
+              <pattern
+                key={p.id}
+                id={`fabric-${p.id}`}
+                width="1"
+                height="1"
+                patternContentUnits="objectBoundingBox"
+              >
+                <image
+                  href={fabricImages[p.id]}
+                  width="1"
+                  height="1"
+                  preserveAspectRatio="none"
+                />
+              </pattern>
+            ))}
+            <pattern
+              id="atelier-fine-grid"
+              width="1"
+              height="1"
+              patternUnits="userSpaceOnUse"
+            >
+              <path
+                d="M1 0H0V1"
+                fill="none"
+                stroke="#dce7e2"
+                strokeWidth=".06"
+              />
+            </pattern>
             <pattern
               id="atelier-grid"
               width="10"
               height="10"
               patternUnits="userSpaceOnUse"
             >
+              <rect width="10" height="10" fill="url(#atelier-fine-grid)" />
               <path
                 d="M10 0H0V10"
                 fill="none"
@@ -186,7 +239,7 @@ export default function PatternViewport({
                 {seams && (
                   <path
                     d={piecePath(p)}
-                    stroke={selected === p.id ? "#137c66" : "#b4c5bb"}
+                    stroke={selected === p.id ? "#8db9aa" : "#c4abae"}
                     strokeWidth={p.seamCm * 2}
                     strokeLinejoin="round"
                     fill="none"
@@ -194,10 +247,10 @@ export default function PatternViewport({
                 )}
                 <path
                   d={piecePath(p)}
-                  fill={material.color}
-                  fillOpacity=".18"
+                  fill={showFabric ? `url(#fabric-${p.id})` : material.color}
+                  fillOpacity={showFabric ? 0.85 : 0.24}
                   stroke={selected === p.id ? "#08745e" : "#6a8b7a"}
-                  strokeWidth={selected === p.id ? ".7" : ".35"}
+                  strokeWidth={selected === p.id ? ".45" : ".25"}
                 />
                 <path
                   d={`M${w / 2} 4V${Math.max(5, p.lengthCm - 5)}`}
@@ -205,19 +258,16 @@ export default function PatternViewport({
                   strokeWidth=".25"
                   strokeDasharray="2 1"
                 />
-                {project.trims
-                  .filter((t) => t.pieceId === p.id)
-                  .map((t) => (
-                    <path
-                      key={t.id}
-                      d={`M${w * 0.1} ${p.lengthCm * t.position}H${w * 0.9}`}
-                      stroke={t.color}
-                      strokeWidth={Math.min(t.size, 5)}
-                      strokeDasharray={
-                        t.kind === "border" ? undefined : "1.5 1.5"
-                      }
-                    />
-                  ))}
+                <rect
+                  x={w / 2 - Math.min(w - 3, 44) / 2}
+                  y={p.lengthCm / 2 - 4}
+                  width={Math.min(w - 3, 44)}
+                  height="11"
+                  rx="1"
+                  fill="#fffdf4"
+                  opacity=".92"
+                  pointerEvents="none"
+                />
                 <text
                   x={w / 2}
                   y={p.lengthCm / 2}

@@ -1,3 +1,8 @@
+import {
+  DRESS_LOOKS,
+  createDressLook,
+  dressPrompt,
+} from "../shared/lookLibrary";
 import { test } from "node:test";
 import assert from "node:assert/strict";
 import {
@@ -176,5 +181,18 @@ test("bodice and avatar sections remain finite and allow positive-ease torso cov
       body = avatarSection(p, p.measurements.height * 0.8 - piece.lengthCm * t);
     assert.ok(cloth.x > body.x);
     assert.ok(cloth.z > body.z);
+  }
+});
+
+test("all eighteen dress looks have independent valid parts and coordinated trims", () => {
+  assert.equal(DRESS_LOOKS.length, 18);
+  assert.equal(new Set(DRESS_LOOKS.map((l) => l.id)).size, 18);
+  for (const look of DRESS_LOOKS) {
+    const project = createDressLook(look.id);
+    assert.ok(projectSchema.safeParse(project).success);
+    assert.equal(project.materials[0].color, look.color);
+    assert.ok(project.trims.length >= 6);
+    assert.ok(dressPrompt(look).length <= 800);
+    assert.notEqual(createDressLook(look.id).id, project.id);
   }
 });

@@ -1,6 +1,8 @@
 # AURA Fashion — implementation and verification report
 
-Updated 5 November 2026.
+Updated 8 November 2026.
+
+Latest addition: [Meshy modeling and 18 editable dress designs](docs/MESHY_MODELING.md). The adapter includes image/text generation, texture changes on completed owned tasks, bounded credit reservations and authenticated model downloads. Meshy keys, approved accounts and limits are not configured; live generation has not been verified. The verification figures below describe the earlier reference refresh; the linked Meshy report records the new checks.
 
 Project: `D:\AURA Fashion`  
 Repository: https://github.com/rajeevreddy23/AURA-Fashion

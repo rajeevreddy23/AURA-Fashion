@@ -3,110 +3,12 @@ import { Project, Material, Piece } from "../../shared/workspace";
 import { SkirtCloth } from "../../shared/cloth";
 import { avatarSection, bodiceSection } from "../../shared/garmentGeometry";
 
+import { fabricCanvas } from "./fabricCanvas";
 export function fabricTexture(
   material: Material,
   trims: Project["trims"] = [],
 ) {
-  const canvas = document.createElement("canvas");
-  canvas.width = 512;
-  canvas.height = 512;
-  const c = canvas.getContext("2d")!;
-  c.fillStyle = material.color;
-  c.fillRect(0, 0, 512, 512);
-  c.strokeStyle = "#f3d18c";
-  c.fillStyle = "#edc77e";
-  c.globalAlpha = 0.58;
-  const spacing = 64 / material.textureScale;
-  for (let y = 0; y < 512; y += spacing)
-    for (let x = 0; x < 512; x += spacing) {
-      if (material.pattern === "brocade" || material.pattern === "floral") {
-        c.save();
-        c.translate(x + spacing / 2, y + spacing / 2);
-        for (let petal = 0; petal < 6; petal++) {
-          c.rotate(Math.PI / 3);
-          c.beginPath();
-          c.ellipse(
-            0,
-            spacing * 0.12,
-            spacing * 0.055,
-            spacing * 0.14,
-            0,
-            0,
-            Math.PI * 2,
-          );
-          c.stroke();
-        }
-        c.beginPath();
-        c.arc(0, 0, spacing * 0.04, 0, Math.PI * 2);
-        c.fill();
-        if (material.pattern === "brocade") {
-          c.beginPath();
-          c.moveTo(0, -spacing * 0.4);
-          c.lineTo(spacing * 0.4, 0);
-          c.lineTo(0, spacing * 0.4);
-          c.lineTo(-spacing * 0.4, 0);
-          c.closePath();
-          c.lineWidth = 0.7;
-          c.stroke();
-        }
-        c.restore();
-      }
-    }
-  if (material.pattern === "stripes" || material.pattern === "checks") {
-    c.lineWidth = Math.max(1, spacing * 0.13);
-    for (let x = 0; x < 512; x += spacing) {
-      c.beginPath();
-      c.moveTo(x, 0);
-      c.lineTo(x, 512);
-      c.stroke();
-    }
-    if (material.pattern === "checks")
-      for (let y = 0; y < 512; y += spacing) {
-        c.beginPath();
-        c.moveTo(0, y);
-        c.lineTo(512, y);
-        c.stroke();
-      }
-  }
-  c.globalAlpha = 1;
-  trims.forEach((t) => {
-    c.fillStyle = t.color;
-    c.strokeStyle = t.color;
-    const y = t.position * 512,
-      h = Math.max(2, t.size * 4);
-    if (t.kind === "border") {
-      c.fillRect(0, y - h / 2, 512, h);
-      c.fillStyle = material.color;
-      c.globalAlpha = 0.5;
-      for (let x = 4; x < 512; x += 16) {
-        c.beginPath();
-        c.arc(x, y, h * 0.2, 0, Math.PI * 2);
-        c.fill();
-      }
-      c.globalAlpha = 1;
-    }
-    if (t.kind === "embroidery")
-      for (let x = 12; x < 512; x += 40) {
-        c.beginPath();
-        c.arc(x, y, 8, 0, Math.PI * 2);
-        c.stroke();
-      }
-    if (t.kind === "buttons")
-      for (let x = 48; x < 512; x += 80) {
-        c.beginPath();
-        c.arc(x, y, h * 0.5, 0, Math.PI * 2);
-        c.fill();
-      }
-    if (t.kind === "tassels")
-      for (let x = 16; x < 512; x += 60) {
-        c.beginPath();
-        c.moveTo(x, y);
-        c.lineTo(x, y + h * 2);
-        c.lineWidth = 3;
-        c.stroke();
-      }
-  });
-  const texture = new THREE.CanvasTexture(canvas);
+  const texture = new THREE.CanvasTexture(fabricCanvas(material, trims));
   texture.colorSpace = THREE.SRGBColorSpace;
   texture.anisotropy = 4;
   return texture;
@@ -143,8 +45,8 @@ export function createGarmentModel(project: Project): GarmentModel {
     return mesh;
   };
   const skin = new THREE.MeshStandardMaterial({
-    color: "#bba391",
-    roughness: 0.7,
+    color: "#bd896b",
+    roughness: 0.58,
   });
   materials.push(skin);
   const bodyRadius = (y: number) => {
@@ -159,14 +61,11 @@ export function createGarmentModel(project: Project): GarmentModel {
       : (project.measurements.hip / (Math.PI * 2)) * 0.88;
   };
   if (project.scene.showAvatar) {
-    const points = [
-      new THREE.Vector2(project.measurements.hip / (Math.PI * 2), h * 0.47),
-      new THREE.Vector2(project.measurements.hip / (Math.PI * 2), h * 0.51),
-      new THREE.Vector2(project.measurements.waist / (Math.PI * 2), waistY),
-      new THREE.Vector2(project.measurements.bust / (Math.PI * 2), h * 0.73),
-      new THREE.Vector2(project.measurements.shoulder / 2, h * 0.8),
-      new THREE.Vector2(6, h * 0.85),
-    ];
+    // Dense cross sections keep measurement changes continuous along the torso.
+    const points = Array.from(
+      { length: 65 },
+      (_, i) => new THREE.Vector2(1, h * (0.47 + (0.38 * i) / 64)),
+    );
     const torsoGeometry = new THREE.LatheGeometry(
       points.map((p) => new THREE.Vector2(1, p.y)),
       40,
@@ -179,9 +78,69 @@ export function createGarmentModel(project: Project): GarmentModel {
     }
     torsoGeometry.computeVertexNormals();
     add(torsoGeometry, skin);
-    const head = add(new THREE.SphereGeometry(9, 24, 20), skin);
-    head.position.set(0, h * 0.93, 0);
-    head.scale.set(0.85, 1.18, 0.88);
+    const hair = new THREE.MeshStandardMaterial({
+      color: "#241714",
+      roughness: 0.48,
+    });
+    const eyes = new THREE.MeshStandardMaterial({
+      color: "#241b18",
+      roughness: 0.35,
+    });
+    const lips = new THREE.MeshStandardMaterial({
+      color: "#954e4c",
+      roughness: 0.52,
+    });
+    const whites = new THREE.MeshStandardMaterial({
+      color: "#e3d5c7",
+      roughness: 0.4,
+    });
+    materials.push(hair, eyes, lips, whites);
+    const headY = h * 0.925;
+    const ellipsoid = (
+      mat: THREE.Material,
+      x: number,
+      y: number,
+      z: number,
+      sx: number,
+      sy: number,
+      sz: number,
+    ) => {
+      const mesh = add(new THREE.SphereGeometry(1, 32, 24), mat);
+      mesh.position.set(x, y, z);
+      mesh.scale.set(sx, sy, sz);
+      return mesh;
+    };
+    ellipsoid(skin, 0, headY, 0, 7.3, 10.2, 7.2);
+    ellipsoid(skin, 0, headY - 5.8, 2.1, 5.2, 4.3, 4.8);
+    // Hair cap covers the back and crown while leaving a clear face in front.
+    const cap = add(
+      new THREE.SphereGeometry(1, 40, 24, 0, Math.PI * 2, 0, 1.37),
+      hair,
+    );
+    cap.position.set(0, headY + 0.5, -0.4);
+    cap.scale.set(7.65, 10.4, 7.7);
+    ellipsoid(hair, 0, headY - 1.5, -4.4, 7.2, 8.6, 4.5);
+    ellipsoid(hair, 0, headY - 3, -9, 5.4, 5.6, 4.5);
+    for (const side of [-1, 1]) {
+      ellipsoid(skin, side * 7.1, headY - 1, 0, 1.1, 2.3, 1.4);
+      ellipsoid(whites, side * 2.75, headY + 0.5, 6.45, 1.45, 0.65, 0.55);
+      ellipsoid(eyes, side * 2.75, headY + 0.5, 6.91, 0.55, 0.55, 0.22);
+      const brow = ellipsoid(
+        hair,
+        side * 2.8,
+        headY + 2,
+        6.45,
+        1.65,
+        0.25,
+        0.25,
+      );
+      brow.rotation.z = side * -0.12;
+      ellipsoid(skin, side * 3.6, headY - 2.3, 4.4, 2.2, 1.8, 1.2);
+    }
+    ellipsoid(skin, 0, headY - 1, 6.7, 0.85, 2, 1.25);
+    ellipsoid(skin, 0, headY - 2.3, 6.9, 0.8, 0.6, 0.65);
+    ellipsoid(lips, 0, headY - 4.1, 6.55, 1.65, 0.37, 0.36);
+    ellipsoid(lips, 0, headY - 4.65, 6.42, 1.45, 0.4, 0.35);
     const neck = add(new THREE.CylinderGeometry(5.5, 6, 9, 20), skin);
     neck.position.y = h * 0.85;
     for (const side of [-1, 1]) {
@@ -200,6 +159,15 @@ export function createGarmentModel(project: Project): GarmentModel {
         0,
       );
       arm.rotation.z = side * 0.2;
+      const handX =
+        side *
+        (project.measurements.shoulder / 2 +
+          8 +
+          (Math.sin(0.2) * project.measurements.arm) / 2);
+      const handY = h * 0.65 - (Math.cos(0.2) * project.measurements.arm) / 2;
+      const hand = ellipsoid(skin, handX, handY - 2, 0, 2.5, 4.8, 1.6);
+      hand.rotation.z = side * 0.2;
+      ellipsoid(skin, handX - side * 2.1, handY - 1, 0.7, 1, 2.8, 1);
     }
   }
   project.pieces
@@ -211,8 +179,14 @@ export function createGarmentModel(project: Project): GarmentModel {
         project.trims.filter((t) => t.pieceId === p.id),
       );
       textures.push(texture);
-      const mat = new THREE.MeshStandardMaterial({
+      const mat = new THREE.MeshPhysicalMaterial({
         map: texture,
+        sheen: 0.55,
+        sheenRoughness: 0.65,
+        sheenColor: new THREE.Color(source.color).lerp(
+          new THREE.Color("#fff0da"),
+          0.35,
+        ),
         color: "#ffffff",
         roughness: source.roughness,
         metalness: source.metalness,
@@ -311,7 +285,7 @@ export function createGarmentModel(project: Project): GarmentModel {
         }
       } else if (p.kind === "dupatta") {
         const geometry = new THREE.PlaneGeometry(
-          p.topCm * 0.52,
+          p.topCm * 0.32,
           p.lengthCm * 0.56,
           14,
           24,
@@ -324,7 +298,7 @@ export function createGarmentModel(project: Project): GarmentModel {
         }
         geometry.computeVertexNormals();
         const mesh = add(geometry, mat, p);
-        mesh.position.set(-project.measurements.shoulder * 0.65, h * 0.49, 12);
+        mesh.position.set(-project.measurements.shoulder * 0.85, h * 0.49, -6);
         mesh.rotation.z = -0.12;
       }
     });

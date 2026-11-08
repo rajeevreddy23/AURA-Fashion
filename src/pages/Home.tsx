@@ -5,11 +5,12 @@ import { WOMEN_PRODUCTS } from "../constants";
 import { api, money } from "../services/api";
 import type { Product } from "../types";
 import { catalogImage, missingCatalogImage } from "../services/catalogMedia";
+import DressLibrary from "../components/DressLibrary";
 const shortcuts = [
   { path: "/tryon", Icon: Shirt, label: "Try On" },
   { path: "/studio", Icon: Palette, label: "Design Studio" },
   { path: "/boutique", Icon: Store, label: "Boutiques" },
-  { path: "/studio", Icon: Box, label: "3D View" },
+  { path: "/modeling", Icon: Box, label: "3D View" },
 ];
 export default function HomePage() {
   const navigate = useNavigate();
@@ -154,6 +155,7 @@ export default function HomePage() {
           View plans <ArrowRight size={15} />
         </Link>
       </section>
+      <DressLibrary compact />
     </div>
   );
 }

@@ -49,7 +49,7 @@ export default function GarmentViewport({
     renderer.shadowMap.type = THREE.PCFSoftShadowMap;
     renderer.shadowMap.autoUpdate = false;
     renderer.toneMapping = THREE.ACESFilmicToneMapping;
-    renderer.toneMappingExposure = 1.35;
+    renderer.toneMappingExposure = 1.1;
     renderer.domElement.setAttribute("role", "img");
     renderer.domElement.setAttribute(
       "aria-label",
@@ -58,7 +58,7 @@ export default function GarmentViewport({
     el.appendChild(renderer.domElement);
     const scene = new THREE.Scene(),
       camera = new THREE.PerspectiveCamera(35, 1, 0.1, 2000);
-    camera.position.set(190, 125, 310);
+    camera.position.set(35, 105, 340);
     const controls = new OrbitControls(camera, renderer.domElement);
     controls.target.set(0, 83, 0);
     controls.enableDamping = true;
@@ -70,8 +70,8 @@ export default function GarmentViewport({
     controls.maxDistance = 650;
     controls.maxPolarAngle = Math.PI * 0.88;
     controls.update();
-    scene.add(new THREE.HemisphereLight(0xfff6e9, 0x42635b, 3));
-    const light = new THREE.DirectionalLight(0xfff4df, 4);
+    scene.add(new THREE.HemisphereLight(0xfff6e9, 0x736052, 2));
+    const light = new THREE.DirectionalLight(0xfff4df, 3);
     light.position.set(110, 250, 180);
     light.castShadow = true;
     light.shadow.mapSize.set(1024, 1024);

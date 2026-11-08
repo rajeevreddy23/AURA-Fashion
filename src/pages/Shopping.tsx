@@ -1,3 +1,4 @@
+import "../studio/looks.css";
 import React, { useEffect, useMemo, useState } from "react";
 import {
   Link,
@@ -247,6 +248,11 @@ export default function Shopping() {
         Try-ons require product approval and a separate payment for each
         generation. Published designs become eligible after image review.
       </p>
+      <Link className="library-entry" to="/looks">
+        <strong>Explore 18 editable dress designs</strong>Lehengas, gowns and
+        blouses with coordinated fabrics and embroidery. Open a sample in Studio
+        or use its Meshy prompt.
+      </Link>
     </div>
   );
 }

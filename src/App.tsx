@@ -26,6 +26,8 @@ import { scopeTryOnPhotoToUser } from "./services/tryOnHandoff";
 import "./studio/reference.css";
 const Shopping = lazy(() => import("./pages/Shopping"));
 const DesignHub = lazy(() => import("./pages/DesignHub"));
+const Looks = lazy(() => import("./pages/Looks"));
+const Modeling = lazy(() => import("./pages/Modeling"));
 const Atelier = lazy(() => import("./pages/Atelier"));
 const Studio = lazy(() => import("./pages/Studio"));
 const TryOn = lazy(() => import("./pages/TryOn"));
@@ -116,6 +118,8 @@ function AppFrame() {
             <Route path="/shopping/:gender" element={<Shopping />} />
             <Route path="/product/:id" element={<ProductDetail />} />
             <Route path="/studio" element={<Atelier />} />
+            <Route path="/modeling" element={<Modeling />} />
+            <Route path="/looks" element={<Looks />} />
             <Route path="/designs" element={<DesignHub />} />
             <Route path="/sketch" element={<Studio />} />
             <Route path="/sketch/classic" element={<Sketch />} />

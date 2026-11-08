@@ -1,3 +1,4 @@
+import "../studio/looks.css";
 import React, { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { api, useConfiguration } from "../services/api";
@@ -449,6 +450,11 @@ export default function DesignHub() {
           )}
         </>
       )}
+      <Link className="library-entry" to="/looks">
+        <strong>Explore 18 editable dress designs</strong>Lehengas, gowns and
+        blouses with coordinated fabrics and embroidery. Open a sample in Studio
+        or use its Meshy prompt.
+      </Link>
     </div>
   );
 }

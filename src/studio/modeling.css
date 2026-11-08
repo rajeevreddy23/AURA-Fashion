@@ -1,0 +1,119 @@
+.modeling-page {
+  max-width: 1600px;
+  margin: auto;
+  padding: 24px;
+}
+.modeling-page h1 {
+  font-size: 32px;
+  margin: 12px 0;
+}
+.modeling-layout {
+  display: grid;
+  grid-template-columns: 320px minmax(0, 1fr);
+  gap: 18px;
+  margin-top: 24px;
+}
+.modeling-layout aside {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 24px;
+}
+.modeling-layout h2 {
+  font-size: 20px;
+}
+.modeling-layout p {
+  line-height: 1.6;
+}
+.modeling-layout input[type="file"] {
+  max-width: 100%;
+}
+.modeling-stage {
+  position: relative;
+  align-self: start;
+  min-width: 0;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #172a29;
+}
+.modeling-canvas {
+  height: 620px;
+}
+.modeling-canvas canvas {
+  display: block;
+  touch-action: none;
+}
+.modeling-empty {
+  position: absolute;
+  inset: 45% 20px auto;
+  text-align: center;
+  color: #c7d7d4;
+  pointer-events: none;
+}
+.modeling-actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: #edf4f1;
+}
+.modeling-actions button {
+  min-height: 44px;
+  padding: 8px 14px;
+}
+.modeling-actions label {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+@media (max-width: 800px) {
+  .modeling-page {
+    padding: 16px;
+  }
+  .modeling-layout {
+    grid-template-columns: 1fr;
+  }
+  .modeling-stage {
+    grid-row: 1;
+  }
+  .modeling-canvas {
+    height: 420px;
+  }
+}
+.meshy-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.meshy-panel label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.meshy-panel select,
+.meshy-panel textarea {
+  width: 100%;
+  max-width: 100%;
+  padding: 10px;
+  border: 1px solid #9cafaa;
+  border-radius: 8px;
+}
+.meshy-panel textarea {
+  min-height: 120px;
+}
+.meshy-panel input[type="checkbox"] {
+  align-self: flex-start;
+}
+.meshy-panel img {
+  max-height: 180px;
+  object-fit: contain;
+}
+.meshy-task {
+  border: 1px solid #9cafaa;
+  border-radius: 8px;
+  padding: 12px;
+}
+.meshy-panel button {
+  min-height: 44px;
+}

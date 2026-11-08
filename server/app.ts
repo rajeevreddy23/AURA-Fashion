@@ -1,4 +1,5 @@
 import express from "express";
+import { mountMeshy } from "./meshy";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import Stripe from "stripe";
@@ -20,6 +21,7 @@ import {
 import { firestoreStore, verifyToken, Store } from "./store";
 
 export interface Dependencies {
+  meshyFetch?: typeof fetch;
   env?: NodeJS.ProcessEnv;
   store?: Store;
   verify?: (token: string) => Promise<{ uid: string; admin?: boolean }>;
@@ -153,6 +155,7 @@ export function createApp(deps: Dependencies = {}) {
                 imgSrc: ["'self'", "data:", "blob:", "https:"],
                 connectSrc: [
                   "'self'",
+                  "blob:",
                   "https://*.googleapis.com",
                   "https://*.firebaseio.com",
                   "wss://*.firebaseio.com",
@@ -451,6 +454,7 @@ export function createApp(deps: Dependencies = {}) {
       })
       .catch(next);
   });
+  mountMeshy(app, env, store, deps.meshyFetch);
   app.get(
     "/api/me",
     route(async (req: any, res: any) => {
